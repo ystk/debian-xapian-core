@@ -172,8 +172,14 @@ Each <a class="el" href="namespaceXapian_1_1Unicode.html" title="Functions assoc
 Convert a single non-ASCII <a class="el" href="namespaceXapian_1_1Unicode.html" title="Functions associated with handling Unicode characters.">Unicode</a> character to UTF-8. 
 <p>
 This is intended mainly as a helper method for <a class="el" href="namespaceXapian_1_1Unicode.html#10a58219f2ed79ddb1ea1d2f3fe8529d" title="Convert a single Unicode character to UTF-8.">to_utf8()</a>.<p>
-The character <em>ch</em> (which must be &gt; 128) is written to the buffer <em>buf</em> and the length of the resultant UTF-8 character is returned.<p>
-NB buf must have space for (at least) 4 bytes. 
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>ch</em>&nbsp;</td><td>The character (which must be &gt; 128) to write to <em>buf</em>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>buf</em>&nbsp;</td><td>The buffer to write the character to - it must have space for (at least) 4 bytes.</td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The length of the resultant UTF-8 character in bytes. </dd></dl>
+
 <p>Referenced by <a class="el" href="namespaceXapian_1_1Unicode.html#10a58219f2ed79ddb1ea1d2f3fe8529d">to_utf8()</a>.</p>
 
 </div>
@@ -206,8 +212,14 @@ NB buf must have space for (at least) 4 bytes.
 <p>
 Convert a single <a class="el" href="namespaceXapian_1_1Unicode.html" title="Functions associated with handling Unicode characters.">Unicode</a> character to UTF-8. 
 <p>
-The character <em>ch</em> is written to the buffer <em>buf</em> and the length of the resultant UTF-8 character is returned.<p>
-NB buf must have space for (at least) 4 bytes. 
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>ch</em>&nbsp;</td><td>The character to write to <em>buf</em>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>buf</em>&nbsp;</td><td>The buffer to write the character to - it must have space for (at least) 4 bytes.</td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The length of the resultant UTF-8 character in bytes. </dd></dl>
+
 <p>References <a class="el" href="namespaceXapian_1_1Unicode.html#e10e7195c9c7b854fbd62e6fad433ce7">nonascii_to_utf8()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceXapian_1_1Unicode.html#0c2b6a7eb58789472eb53420d2457168">append_utf8()</a>.</p>
@@ -217,8 +229,8 @@ NB buf must have space for (at least) 4 bytes.
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

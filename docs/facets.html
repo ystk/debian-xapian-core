@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
-<title>Xapian Categorisation Support</title>
+<title>Xapian Faceting Support</title>
 <style type="text/css">
 
 /*
@@ -284,19 +284,23 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="xapian-categorisation-support">
-<h1 class="title">Xapian Categorisation Support</h1>
+<div class="document" id="xapian-faceting-support">
+<h1 class="title">Xapian Faceting Support</h1>
 
-<!-- Copyright (C) 2007 Olly Betts -->
+<!-- Copyright (C) 2007,2010,2011 Olly Betts -->
 <!-- Copyright (C) 2009 Lemur Consulting Ltd -->
+<!-- Copyright (C) 2011 Richard Boulton -->
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title first">Table of contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#introduction" id="id1">Introduction</a></li>
-<li><a class="reference internal" href="#how-to-make-use-of-the-categorisation-functionality" id="id2">How to make use of the categorisation functionality</a><ul>
+<li><a class="reference internal" href="#how-to-use-faceting" id="id2">How to use Faceting</a><ul>
 <li><a class="reference internal" href="#indexing" id="id3">Indexing</a></li>
-<li><a class="reference internal" href="#searching" id="id4">Searching</a></li>
-<li><a class="reference internal" href="#restricting-by-category-values" id="id5">Restricting by category values</a></li>
+<li><a class="reference internal" href="#searching" id="id4">Searching</a><ul>
+<li><a class="reference internal" href="#finding-facets" id="id5">Finding Facets</a></li>
+<li><a class="reference internal" href="#restricting-by-facet-values" id="id6">Restricting by Facet Values</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -309,65 +313,75 @@ numerous potential uses this can be put to, but a common one is to offer the
 user the ability to narrow down their search by filtering it to only include
 documents with a particular value of a particular category.  This is often
 referred to as <tt class="docutils literal"><span class="pre">faceted</span> <span class="pre">search</span></tt>.</p>
-<p>In some applications, you may have many different categories (for example
-colour, price, width, height) but not always want to offer all of them
-for every search.  If all the results are red, and none have width, it's
-not useful to offer to narrow the search by colour or width.  Also, the
-user interface may not have room to include every category, so you may
-want to select the &quot;best&quot; few categories to show the user.</p>
+<p>You may have many multiple facets (for example colour, manufacturer, product
+type) so Xapian allows you to handle multiple facets at once.</p>
 </div>
-<div class="section" id="how-to-make-use-of-the-categorisation-functionality">
-<h1><a class="toc-backref" href="#id2">How to make use of the categorisation functionality</a></h1>
+<div class="section" id="how-to-use-faceting">
+<h1><a class="toc-backref" href="#id2">How to use Faceting</a></h1>
 <div class="section" id="indexing">
 <h2><a class="toc-backref" href="#id3">Indexing</a></h2>
-<p>When indexing a document, you need to add each category in a different
-number value slot.</p>
+<p>When indexing a document, you need to add each facet in a different numbered
+value slot.  As described elsewhere in the documentation, each Xapian document
+has a set of &quot;value slots&quot;, each of which is addressed by a number, and can
+contain a value which is an arbitrary string.</p>
+<p>The <tt class="docutils literal"><span class="pre">Xapian::Document::add_value()</span></tt> method can be used to put values into a
+particular slot.  So, if you had a database of books, you might put &quot;price&quot;
+facet values in slot 0, say (serialised to strings using
+<tt class="docutils literal"><span class="pre">Xapian::sortable_serialise</span></tt>, or some similar function), &quot;author&quot; facet
+values in slot 1, &quot;publisher&quot; facet values in slot 2 and &quot;publication type&quot;
+(eg, hardback, softback, etc) values in slot 3.</p>
 </div>
 <div class="section" id="searching">
 <h2><a class="toc-backref" href="#id4">Searching</a></h2>
-<p>At search time, you need to pass a <tt class="docutils literal"><span class="pre">Xapian::ValueCountMatchSpy</span></tt> object for
-each category you want to look at to <tt class="docutils literal"><span class="pre">Xapian::Enquire::add_matchspy()</span></tt>, like
-so:</p>
+<div class="section" id="finding-facets">
+<h3><a class="toc-backref" href="#id5">Finding Facets</a></h3>
+<p>At search time, for each facet you want to consider, you need to get a count of
+the number of times each facet value occurs in each slot; for the example
+above, if you wanted to get facets for &quot;price&quot;, &quot;author&quot; and &quot;publication type&quot;
+you'd want to get the counts from slots 0, 1 and 3.</p>
+<p>This can be done by calling <tt class="docutils literal"><span class="pre">Xapian::Enquire::add_matchspy()</span></tt> with a pointer
+to a <tt class="docutils literal"><span class="pre">Xapian::ValueCountMatchSpy</span></tt> object for each value slot you want to
+get facet counts for, like so:</p>
 <pre class="literal-block">
 Xapian::ValueCountMatchSpy spy0(0);
 Xapian::ValueCountMatchSpy spy1(1);
 Xapian::ValueCountMatchSpy spy3(3);
 
 Xapian::Enquire enq(db);
-enq.add_matchspy(spy0);
-enq.add_matchspy(spy1);
-enq.add_matchspy(spy3);
+enq.add_matchspy(&amp;spy0);
+enq.add_matchspy(&amp;spy1);
+enq.add_matchspy(&amp;spy3);
 
 enq.set_query(query);
 
 Xapian::MSet mset = enq.get_mset(0, 10, 10000);
 </pre>
 <p>The <tt class="docutils literal"><span class="pre">10000</span></tt> in the call to <tt class="docutils literal"><span class="pre">get_mset()</span></tt> tells Xapian to check at least
-10000 documents, so the MatchSpies will be passed at least 10000 documents
-to tally category information from (unless fewer than 10000 documents match the
-query, in which case it will see all of them).  Setting this higher will make
-the counts exact, but Xapian will have to do more work for most queries so
-searches will be slower.</p>
-<p>The <tt class="docutils literal"><span class="pre">spy</span></tt> objects now contain the category information.  You can find out how
+10000 documents, so the MatchSpy objects will be passed at least 10000
+documents to tally facet information from (unless fewer than 10000 documents
+match the query, in which case they will see all of them).  Setting this to
+<tt class="docutils literal"><span class="pre">db.get_doccount()</span></tt> will make the facet counts exact, but Xapian will have to
+do more work for most queries so searches will be slower.</p>
+<p>The <tt class="docutils literal"><span class="pre">spy</span></tt> objects now contain the facet information.  You can find out how
 many documents they looked at by calling <tt class="docutils literal"><span class="pre">spy0.get_total()</span></tt>.  (All the spies
 will have looked at the same number of documents.)  You can read the values
 from, say, <tt class="docutils literal"><span class="pre">spy0</span></tt> like this:</p>
 <pre class="literal-block">
-const map&lt;string, size_t&gt; &amp; cat = spy0.get_values();
-map&lt;string, size_t&gt;::const_iterator i;
-for (i = cat.begin(); i != cat.end(); ++i) {
-    cout &lt;&lt; i-&gt;first &lt;&lt; &quot;: &quot; &lt;&lt; i-&gt;second &lt;&lt; endl;
+Xapian::TermIterator i;
+for (i = spy0.values_begin(); i != spy0.values_end(); ++i) {
+    cout &lt;&lt; *i &lt;&lt; &quot;: &quot; &lt;&lt; i.get_termfreq() &lt;&lt; endl;
 }
 </pre>
 </div>
-<div class="section" id="restricting-by-category-values">
-<h2><a class="toc-backref" href="#id5">Restricting by category values</a></h2>
-<p>If you're using the categorisation to offer the user choices for narrowing down
+<div class="section" id="restricting-by-facet-values">
+<h3><a class="toc-backref" href="#id6">Restricting by Facet Values</a></h3>
+<p>If you're using the facets to offer the user choices for narrowing down
 their search results, you then need to be able to apply a suitable filter.</p>
 <p>For a single value, you could use <tt class="docutils literal"><span class="pre">Xapian::Query::OP_VALUE_RANGE</span></tt> with the
 same start and end, or <tt class="docutils literal"><span class="pre">Xapian::MatchDecider</span></tt>, but it's probably most
 efficient to also index the categories as suitably prefixed boolean terms and
 use those for filtering.</p>
+</div>
 </div>
 </div>
 </div>

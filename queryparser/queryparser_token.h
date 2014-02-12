@@ -19,4 +19,5 @@
 #define QUOTE                          19
 #define BRA                            20
 #define KET                            21
-#define EMPTY_GROUP_OK                 22
+#define CJKTERM                        22
+#define EMPTY_GROUP_OK                 23

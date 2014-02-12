@@ -1,5 +1,5 @@
-/** @file xapian-compact.h
- * @brief Compact a flint or chert database, or merge and compact several.
+/** @file brass_compact.h
+ * @brief Compact a brass database, or merge and compact several.
  */
 /* Copyright (C) 2004,2005,2006,2007,2008,2009,2010 Olly Betts
  *
@@ -19,32 +19,20 @@
  * USA
  */
 
-#ifndef XAPIAN_INCLUDED_XAPIAN_COMPACT_H
-#define XAPIAN_INCLUDED_XAPIAN_COMPACT_H
+#ifndef XAPIAN_INCLUDED_BRASS_COMPACT_H
+#define XAPIAN_INCLUDED_BRASS_COMPACT_H
 
 #include <vector>
 #include <string>
 
+#include "xapian/compactor.h"
 #include "xapian/types.h"
 
-typedef enum { STANDARD, FULL, FULLER } compaction_level;
-
 void
-compact_brass(const char * destdir, const std::vector<std::string> & sources,
+compact_brass(Xapian::Compactor & compactor,
+	      const char * destdir, const std::vector<std::string> & sources,
 	      const std::vector<Xapian::docid> & offset, size_t block_size,
-	      compaction_level compaction, bool multipass,
-	      Xapian::docid last_docid);
-
-void
-compact_chert(const char * destdir, const std::vector<std::string> & sources,
-	      const std::vector<Xapian::docid> & offset, size_t block_size,
-	      compaction_level compaction, bool multipass,
-	      Xapian::docid last_docid);
-
-void
-compact_flint(const char * destdir, const std::vector<std::string> & sources,
-	      const std::vector<Xapian::docid> & offset, size_t block_size,
-	      compaction_level compaction, bool multipass,
+	      Xapian::Compactor::compaction_level compaction, bool multipass,
 	      Xapian::docid last_docid);
 
 #endif

@@ -43,7 +43,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/rjb_find_stlport.m4 \
 	$(top_srcdir)/m4/type_socklen_t.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -54,17 +53,16 @@ CONFIG_CLEAN_FILES = doxygen_api.conf doxygen_source.conf \
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
-am__dist_doc_DATA_DIST = index.html internals.html install.html \
-	intro_ir.html overview.html stemming.html quickstart.html \
-	remote.html remote_protocol.html matcherdesign.html tests.html \
-	scalability.html bm25.html code_structure.html \
-	queryparser.html quickstartexpand.cc.html \
+am__dist_doc_DATA_DIST = code_structure.html quickstartexpand.cc.html \
 	quickstartindex.cc.html quickstartsearch.cc.html \
-	admin_notes.html categorisation.html deprecation.html \
-	glossary.html postingsource.html replication.html \
-	replication_protocol.html sorting.html serialisation.html \
-	spelling.html synonyms.html termgenerator.html \
-	valueranges.html apidoc.pdf
+	admin_notes.html bm25.html collapsing.html deprecation.html \
+	facets.html glossary.html index.html install.html \
+	internals.html intro_ir.html matcherdesign.html overview.html \
+	postingsource.html queryparser.html quickstart.html \
+	remote_protocol.html remote.html replication_protocol.html \
+	replication.html scalability.html serialisation.html \
+	sorting.html spelling.html stemming.html synonyms.html \
+	termgenerator.html tests.html valueranges.html apidoc.pdf
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -112,6 +110,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DOT = @DOT@
 DOXYGEN = @DOXYGEN@
 DOXYGEN_DOT_PATH = @DOXYGEN_DOT_PATH@
@@ -123,6 +122,7 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+FP_EXCESS_PRECISION = @FP_EXCESS_PRECISION@
 GREP = @GREP@
 HELP2MAN = @HELP2MAN@
 INSTALL = @INSTALL@
@@ -143,6 +143,7 @@ LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINDEX = @MAKEINDEX@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -167,9 +168,6 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHLIBEXT = @SHLIBEXT@
-STLPORT_CXXFLAGS = @STLPORT_CXXFLAGS@
-STLPORT_INCLUDE = @STLPORT_INCLUDE@
-STLPORT_LIBS = @STLPORT_LIBS@
 STRIP = @STRIP@
 VALGRIND = @VALGRIND@
 VERSION = @VERSION@
@@ -178,6 +176,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
@@ -234,16 +233,38 @@ top_srcdir = @top_srcdir@
 # this Makefile.am blindly assumes the tools are in place when "make dist" is
 # being run.  For "make all", "make check", etc we carefully skip any docs
 # which we don't have the tools to generate.
-HTMLDOCS = index.html internals.html install.html intro_ir.html overview.html \
- stemming.html quickstart.html remote.html remote_protocol.html \
- matcherdesign.html tests.html scalability.html \
- bm25.html code_structure.html queryparser.html \
+HTMLDOCS = code_structure.html \
  quickstartexpand.cc.html quickstartindex.cc.html quickstartsearch.cc.html
 
-RSTDOCS = admin_notes.rst categorisation.rst deprecation.rst glossary.rst \
- postingsource.rst replication.rst replication_protocol.rst \
- sorting.rst serialisation.rst spelling.rst synonyms.rst \
- termgenerator.rst valueranges.rst
+RSTDOCS = \
+	admin_notes.rst \
+	bm25.rst \
+	collapsing.rst \
+	deprecation.rst \
+	facets.rst \
+	glossary.rst \
+	index.rst \
+	install.rst \
+	internals.rst \
+	intro_ir.rst \
+	matcherdesign.rst \
+	overview.rst \
+	postingsource.rst \
+	queryparser.rst \
+	quickstart.rst \
+	remote_protocol.rst \
+	remote.rst \
+	replication_protocol.rst \
+	replication.rst \
+	scalability.rst \
+	serialisation.rst \
+	sorting.rst \
+	spelling.rst \
+	stemming.rst \
+	synonyms.rst \
+	termgenerator.rst \
+	tests.rst \
+	valueranges.rst
 
 RSTHTML = $(RSTDOCS:.rst=.html)
 
@@ -266,6 +287,7 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@APIDOC_SRC = \
 @DOCUMENTATION_RULES_TRUE@	$T/include/xapian.h\
 @DOCUMENTATION_RULES_TRUE@	$T/include/xapian/base.h\
+@DOCUMENTATION_RULES_TRUE@	$T/include/xapian/compactor.h\
 @DOCUMENTATION_RULES_TRUE@	$T/include/xapian/database.h\
 @DOCUMENTATION_RULES_TRUE@	$T/include/xapian/dbfactory.h\
 @DOCUMENTATION_RULES_TRUE@	$T/include/xapian/deprecated.h\
@@ -295,6 +317,7 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/include/xapian/weight.h
 
 @DOCUMENTATION_RULES_TRUE@SOURCEDOC_SRC = \
+@DOCUMENTATION_RULES_TRUE@	$T/api/compactor.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/api/decvalwtsource.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/api/documentvaluelist.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/api/documentvaluelist.h\
@@ -335,6 +358,8 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_btreebase.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_check.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_check.h\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_compact.cc\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_compact.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_cursor.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_cursor.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_database.cc\
@@ -376,6 +401,7 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_values.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_version.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/brass/brass_version.h\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/byte_length_strings.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_alldocsmodifiedpostlist.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_alldocsmodifiedpostlist.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_alldocspostlist.cc\
@@ -386,6 +412,8 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_btreebase.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_check.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_check.h\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_compact.cc\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_compact.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_cursor.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_cursor.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/chert/chert_database.cc\
@@ -440,6 +468,8 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_btreebase.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_check.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_check.h\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_compact.cc\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_compact.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_cursor.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_cursor.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/flint/flint_database.cc\
@@ -492,6 +522,7 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/backends/multi/multi_termlist.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/multi/multi_termlist.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/multi/multi_valuelist.cc\
+@DOCUMENTATION_RULES_TRUE@	$T/backends/prefix_compressed_strings.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/remote/net_postlist.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/remote/net_postlist.h\
 @DOCUMENTATION_RULES_TRUE@	$T/backends/remote/net_termlist.cc\
@@ -510,11 +541,7 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-check-flint.h\
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-check.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-chert-update.cc\
-@DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-compact-brass.cc\
-@DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-compact-chert.cc\
-@DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-compact-flint.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-compact.cc\
-@DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-compact.h\
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-inspect.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-progsrv.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/bin/xapian-replicate-server.cc\
@@ -717,6 +744,8 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/net/serialise.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/net/tcpclient.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/net/tcpserver.cc\
+@DOCUMENTATION_RULES_TRUE@	$T/queryparser/cjk-tokenizer.cc\
+@DOCUMENTATION_RULES_TRUE@	$T/queryparser/cjk-tokenizer.h\
 @DOCUMENTATION_RULES_TRUE@	$T/queryparser/queryparser.cc\
 @DOCUMENTATION_RULES_TRUE@	$(top_builddir)/queryparser/queryparser_internal.cc\
 @DOCUMENTATION_RULES_TRUE@	$T/queryparser/queryparser_internal.h\
@@ -755,8 +784,9 @@ MAINTAINERCLEANFILES = doxygen_api.conf doxygen_source.conf \
 @DOCUMENTATION_RULES_TRUE@	$T/weight/dir_contents\
 @DOCUMENTATION_RULES_TRUE@	$T/docs/dir_contents\
 @DOCUMENTATION_RULES_TRUE@	$T/tests/dir_contents\
+@DOCUMENTATION_RULES_TRUE@	$T/tests/harness/dir_contents\
 @DOCUMENTATION_RULES_TRUE@	$T/tests/perftest/dir_contents\
-@DOCUMENTATION_RULES_TRUE@	$T/tests/harness/dir_contents
+@DOCUMENTATION_RULES_TRUE@	$T/tests/soaktest/dir_contents
 
 all: all-am
 

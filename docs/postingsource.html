@@ -287,8 +287,8 @@ ul.auto-toc {
 <div class="document" id="xapian-postingsource">
 <h1 class="title">Xapian::PostingSource</h1>
 
-<!-- Copyright (C) 2008,2009 Olly Betts -->
-<!-- Copyright (C) 2009 Lemur Consulting Ltd -->
+<!-- Copyright (C) 2008,2009,2010,2011 Olly Betts -->
+<!-- Copyright (C) 2008,2009 Lemur Consulting Ltd -->
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title first">Table of contents</p>
 <ul class="simple">
@@ -451,7 +451,67 @@ what <tt class="docutils literal"><span class="pre">get_description()</span></tt
 </div>
 <div class="section" id="examples">
 <h1><a class="toc-backref" href="#id3">Examples</a></h1>
-<p>FIXME: Provide some!</p>
+<p>Here is an example of a Python PostingSource which contributes additional
+weight from some external source:</p>
+<pre class="literal-block">
+class ExternalWeightPostingSource(xapian.PostingSource):
+    &quot;&quot;&quot;
+    A Xapian posting source returning weights from an external source.
+    &quot;&quot;&quot;
+    def __init__(self, db, wtsource):
+        xapian.PostingSource.__init__(self)
+        self.db = db
+        self.wtsource = wtsource
+
+    def init(self, db):
+        self.alldocs = db.postlist('')
+
+    def get_termfreq_min(self): return 0
+    def get_termfreq_est(self): return self.db.get_doccount()
+    def get_termfreq_max(self): return self.db.get_doccount()
+
+    def next(self, minweight):
+        try:
+            self.current = self.alldocs.next()
+        except StopIteration:
+            self.current = None
+
+    def skip_to(self, docid, minweight):
+        try:
+            self.current = self.alldocs.skip_to(docid)
+        except StopIteration:
+            self.current = None
+
+    def at_end(self):
+        return self.current is None
+
+    def get_docid(self):
+        return self.current.docid
+
+    def get_maxweight(self):
+        return self.wtsource.get_maxweight()
+
+    def get_weight(self):
+        doc = self.db.get_document(self.current.docid)
+        return self.wtsource.get_weight(doc)
+</pre>
+<p>ExternalWeightPostingSource doesn't restrict which documents match - it's
+intended to be combined with an existing query using <cite>OP_AND_MAYBE</cite> like so:</p>
+<pre class="literal-block">
+extwtps = xapian.ExternalWeightPostingSource(db, wtsource)
+query = xapian.Query(query.OP_AND_MAYBE, query, xapian.Query(extwtps))
+</pre>
+<p>The wtsource would be a class like this one:</p>
+<pre class="literal-block">
+class WeightSource:
+    def get_maxweight(self):
+        return 12.34;
+
+    def get_weight(self, doc):
+        return some_func(doc.get_docid())
+</pre>
+<!-- FIXME: Provide some more examples! -->
+<!-- FIXME "why you might want to do this" (e.g. scenario) too -->
 </div>
 <div class="section" id="multiple-databases-and-remote-databases">
 <h1><a class="toc-backref" href="#id4">Multiple databases, and remote databases</a></h1>

@@ -92,14 +92,14 @@ window.onload = initDynSections;
 &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#943a905545bd862dbc7281e6d66e5ee4">~Document</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#0946a94505eba8b7ec2b97bb64a477de">get_value</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">valueno</a>) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#1d8567908657c0d60a47c7ca30a08ebc">get_value</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get value by number.  <a href="#0946a94505eba8b7ec2b97bb64a477de"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#44a99fe6f69a180f8504327d51b9671c">add_value</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">valueno</a>, const std::string &amp;value)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get value by number.  <a href="#1d8567908657c0d60a47c7ca30a08ebc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#12857fccd3448ec1db91311c16d67f6c">add_value</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot, const std::string &amp;value)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a new value.  <a href="#44a99fe6f69a180f8504327d51b9671c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b919d822838994edb5d99643cb0c2c03"></a><!-- doxytag: member="Xapian::Document::remove_value" ref="b919d822838994edb5d99643cb0c2c03" args="(Xapian::valueno valueno)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#b919d822838994edb5d99643cb0c2c03">remove_value</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">valueno</a>)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a new value.  <a href="#12857fccd3448ec1db91311c16d67f6c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6ffd0e3d1beb8f047b3158a5e5aa41d4"></a><!-- doxytag: member="Xapian::Document::remove_value" ref="6ffd0e3d1beb8f047b3158a5e5aa41d4" args="(Xapian::valueno slot)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#6ffd0e3d1beb8f047b3158a5e5aa41d4">remove_value</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove any value with the given number. <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="99f8cb1deeab46df42fed52ea4f55eb9"></a><!-- doxytag: member="Xapian::Document::clear_values" ref="99f8cb1deeab46df42fed52ea4f55eb9" args="()" -->
@@ -109,10 +109,9 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#767026a91f3a1421f3d23f7a170509d4">get_data</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get data stored in the document.  <a href="#767026a91f3a1421f3d23f7a170509d4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b1b0da2e7c76acd754f29a52e14f89ae"></a><!-- doxytag: member="Xapian::Document::set_data" ref="b1b0da2e7c76acd754f29a52e14f89ae" args="(const std::string &amp;data)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#b1b0da2e7c76acd754f29a52e14f89ae">set_data</a> (const std::string &amp;data)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#b1b0da2e7c76acd754f29a52e14f89ae">set_data</a> (const std::string &amp;data)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set data stored in the document. <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set data stored in the document.  <a href="#b1b0da2e7c76acd754f29a52e14f89ae"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Document.html#161943bb133fea0da4a21fa37621764b">add_posting</a> (const std::string &amp;tname, <a class="el" href="namespaceXapian.html#e5a16f073d0c8ed54085a9de07248d45">Xapian::termpos</a> tpos, <a class="el" href="namespaceXapian.html#72b5a76dd8cfb7b251fe7986e86390cb">Xapian::termcount</a> wdfinc=1)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add an occurrence of a term at a particular position.  <a href="#161943bb133fea0da4a21fa37621764b"></a><br></td></tr>
@@ -197,7 +196,13 @@ doc = <a class="el" href="classXapian_1_1Document.html#3d7618710ea495101e4799fbe
 <p>
 Copying is allowed. 
 <p>
-The internals are reference counted, so copying is cheap. 
+The internals are reference counted, so copying is cheap.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>The object to copy. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -316,7 +321,7 @@ Any existing positional information for the term will be left unmodified.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="44a99fe6f69a180f8504327d51b9671c"></a><!-- doxytag: member="Xapian::Document::add_value" ref="44a99fe6f69a180f8504327d51b9671c" args="(Xapian::valueno valueno, const std::string &amp;value)" -->
+<a class="anchor" name="12857fccd3448ec1db91311c16d67f6c"></a><!-- doxytag: member="Xapian::Document::add_value" ref="12857fccd3448ec1db91311c16d67f6c" args="(Xapian::valueno slot, const std::string &amp;value)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -324,7 +329,7 @@ Any existing positional information for the term will be left unmodified.<p>
           <td class="memname">void Xapian::Document::add_value           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td>
-          <td class="paramname"> <em>valueno</em>, </td>
+          <td class="paramname"> <em>slot</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -344,7 +349,14 @@ Any existing positional information for the term will be left unmodified.<p>
 <p>
 Add a new value. 
 <p>
-The new value will replace any existing value with the same number (or if the new value is empty, it will remove any existing value with the same number). 
+The new value will replace any existing value with the same number (or if the new value is empty, it will remove any existing value with the same number).<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>slot</em>&nbsp;</td><td>The value slot to add the value in. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>The value to set. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="767026a91f3a1421f3d23f7a170509d4"></a><!-- doxytag: member="Xapian::Document::get_data" ref="767026a91f3a1421f3d23f7a170509d4" args="() const " -->
@@ -365,7 +377,7 @@ The new value will replace any existing value with the same number (or if the ne
 <p>
 Get data stored in the document. 
 <p>
-This is a potentially expensive operation, and shouldn't normally be used in a match decider functor. Put data for use by match deciders in a value instead. 
+This is potentially a relatively expensive operation, and shouldn't normally be used during the match (e.g. in a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> or match decider functor. Put data for use by match deciders in a value instead. 
 </div>
 </div><p>
 <a class="anchor" name="03ff36283ac7d14a1a3b1c9fb26eff61"></a><!-- doxytag: member="Xapian::Document::get_docid" ref="03ff36283ac7d14a1a3b1c9fb26eff61" args="() const " -->
@@ -387,11 +399,11 @@ This is a potentially expensive operation, and shouldn't normally be used in a m
 Get the document id which is associated with this document (if any). 
 <p>
 NB If multiple databases are being searched together, then this will be the document id in the individual database, not the merged database!<p>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>If this document came from a database, return the document id in that database. Otherwise, return 0. </dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>If this document came from a database, return the document id in that database. Otherwise, return 0 (in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> 1.0.22/1.2.4 or later; prior to this the returned value was uninitialised). </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="0946a94505eba8b7ec2b97bb64a477de"></a><!-- doxytag: member="Xapian::Document::get_value" ref="0946a94505eba8b7ec2b97bb64a477de" args="(Xapian::valueno valueno) const " -->
+<a class="anchor" name="1d8567908657c0d60a47c7ca30a08ebc"></a><!-- doxytag: member="Xapian::Document::get_value" ref="1d8567908657c0d60a47c7ca30a08ebc" args="(Xapian::valueno slot) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -399,7 +411,7 @@ NB If multiple databases are being searched together, then this will be the docu
           <td class="memname">std::string Xapian::Document::get_value           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td>
-          <td class="paramname"> <em>valueno</em>          </td>
+          <td class="paramname"> <em>slot</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td> const</td>
         </tr>
@@ -413,7 +425,7 @@ Get value by number.
 Returns an empty string if no value with the given number is present in the document.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>valueno</em>&nbsp;</td><td>The number of the value. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>slot</em>&nbsp;</td><td>The number of the value. </td></tr>
   </table>
 </dl>
 
@@ -438,7 +450,13 @@ Returns an empty string if no value with the given number is present in the docu
 <p>
 Assignment is allowed. 
 <p>
-The internals are reference counted, so assignment is cheap. 
+The internals are reference counted, so assignment is cheap.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>The object to copy. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="11eec629737e496a7077b87f763967a5"></a><!-- doxytag: member="Xapian::Document::remove_posting" ref="11eec629737e496a7077b87f763967a5" args="(const std::string &amp;tname, Xapian::termpos tpos, Xapian::termcount wdfdec=1)" -->
@@ -545,6 +563,34 @@ Serialise document into a string.
 The document representation may change between <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> releases: even between minor versions. However, it is guaranteed not to change if the remote database protocol has not changed between releases. 
 </div>
 </div><p>
+<a class="anchor" name="b1b0da2e7c76acd754f29a52e14f89ae"></a><!-- doxytag: member="Xapian::Document::set_data" ref="b1b0da2e7c76acd754f29a52e14f89ae" args="(const std::string &amp;data)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Xapian::Document::set_data           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>data</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set data stored in the document. 
+<p>
+<a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> treats the data as an opaque blob. It may try to compress it, but other than that it will just store it and return it when requested.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>The data to store. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="0249ddf18171ed53d851f9d82290eb62"></a><!-- doxytag: member="Xapian::Document::termlist_count" ref="0249ddf18171ed53d851f9d82290eb62" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -571,8 +617,8 @@ the number of different terms which index this document.
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

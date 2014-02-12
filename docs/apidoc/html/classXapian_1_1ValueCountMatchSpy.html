@@ -136,9 +136,7 @@ Inheritance diagram for Xapian::ValueCountMatchSpy:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a string describing this object.  <a href="#350eb6f93aa5e01845a56f2fd30391f8"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class for counting the frequencies of values in the matching documents. 
-<p>
-Warning: this API is currently experimental, and is liable to change between releases without warning. <hr><h2>Member Function Documentation</h2>
+Class for counting the frequencies of values in the matching documents. <hr><h2>Member Function Documentation</h2>
 <a class="anchor" name="2f3f76f7a269b15b22e5f266a166ed00"></a><!-- doxytag: member="Xapian::ValueCountMatchSpy::clone" ref="2f3f76f7a269b15b22e5f266a166ed00" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +157,7 @@ Clone the match spy.
 <p>
 The clone should inherit the configuration of the parent, but need not inherit the state. ie, the clone does not need to be passed information about the results seen by the parent.<p>
 If you don't want to support the remote backend in your match spy, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>.<p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new". 
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a> 
 <p>Reimplemented from <a class="el" href="classXapian_1_1MatchSpy.html#d172b16efde32cf0dcbb0fb6fb43dc33">Xapian::MatchSpy</a>.</p>
 
 </div>
@@ -228,7 +226,13 @@ Return the total number of documents tallied.
 Unserialise some results, and merge them into this matchspy. 
 <p>
 The order in which results are merged should not be significant, since this order is not specified (and will vary depending on the speed of the search in each sub-database).<p>
-If you don't want to support the remote backend in your match spy, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>. 
+If you don't want to support the remote backend in your match spy, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>A string containing the serialised results. </td></tr>
+  </table>
+</dl>
+
 <p>Reimplemented from <a class="el" href="classXapian_1_1MatchSpy.html#921014b484002f909cd9649477e25c81">Xapian::MatchSpy</a>.</p>
 
 </div>
@@ -286,7 +290,14 @@ If you don't want to support the remote backend in your match spy, you can use t
 <p>
 Implementation of virtual operator(). 
 <p>
-This implementation tallies values for a matching document. 
+This implementation tallies values for a matching document.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>doc</em>&nbsp;</td><td>The document to tally values for. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>wt</em>&nbsp;</td><td>The weight of the document (ignored by this class). </td></tr>
+  </table>
+</dl>
+
 <p>Implements <a class="el" href="classXapian_1_1MatchSpy.html#1d4a22970c8042a0bd697b473625f9bf">Xapian::MatchSpy</a>.</p>
 
 </div>
@@ -396,7 +407,14 @@ Unserialise parameters.
 <p>
 This method unserialises parameters serialised by the <em><a class="el" href="classXapian_1_1ValueCountMatchSpy.html#4b0b12f88a83fa854160d62d3f0b1a66" title="Return this object&#39;s parameters serialised as a single string.">serialise()</a></em> method and allocates and returns a new object initialised with them.<p>
 If you don't want to support the remote backend in your match spy, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>.<p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new". 
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a><p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>A string containing the serialised results. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>context</em>&nbsp;</td><td><a class="el" href="classXapian_1_1Registry.html" title="Registry for user subclasses.">Registry</a> object to use for unserialisation to permit <a class="el" href="classXapian_1_1MatchSpy.html" title="Abstract base class for match spies.">MatchSpy</a> subclasses with sub-MatchSpy objects to be implemented. </td></tr>
+  </table>
+</dl>
+
 <p>Reimplemented from <a class="el" href="classXapian_1_1MatchSpy.html#8ddda381134be9b9d973e746753ad3e2">Xapian::MatchSpy</a>.</p>
 
 </div>
@@ -428,8 +446,8 @@ During the iteration, the frequency of the current value can be obtained with th
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

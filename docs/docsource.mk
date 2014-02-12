@@ -1,6 +1,7 @@
 APIDOC_SRC=\
 	$T/include/xapian.h\
 	$T/include/xapian/base.h\
+	$T/include/xapian/compactor.h\
 	$T/include/xapian/database.h\
 	$T/include/xapian/dbfactory.h\
 	$T/include/xapian/deprecated.h\
@@ -29,6 +30,7 @@ APIDOC_SRC=\
 	$T/include/xapian/visibility.h\
 	$T/include/xapian/weight.h
 SOURCEDOC_SRC=\
+	$T/api/compactor.cc\
 	$T/api/decvalwtsource.cc\
 	$T/api/documentvaluelist.cc\
 	$T/api/documentvaluelist.h\
@@ -69,6 +71,8 @@ SOURCEDOC_SRC=\
 	$T/backends/brass/brass_btreebase.h\
 	$T/backends/brass/brass_check.cc\
 	$T/backends/brass/brass_check.h\
+	$T/backends/brass/brass_compact.cc\
+	$T/backends/brass/brass_compact.h\
 	$T/backends/brass/brass_cursor.cc\
 	$T/backends/brass/brass_cursor.h\
 	$T/backends/brass/brass_database.cc\
@@ -110,6 +114,7 @@ SOURCEDOC_SRC=\
 	$T/backends/brass/brass_values.h\
 	$T/backends/brass/brass_version.cc\
 	$T/backends/brass/brass_version.h\
+	$T/backends/byte_length_strings.h\
 	$T/backends/chert/chert_alldocsmodifiedpostlist.cc\
 	$T/backends/chert/chert_alldocsmodifiedpostlist.h\
 	$T/backends/chert/chert_alldocspostlist.cc\
@@ -120,6 +125,8 @@ SOURCEDOC_SRC=\
 	$T/backends/chert/chert_btreebase.h\
 	$T/backends/chert/chert_check.cc\
 	$T/backends/chert/chert_check.h\
+	$T/backends/chert/chert_compact.cc\
+	$T/backends/chert/chert_compact.h\
 	$T/backends/chert/chert_cursor.cc\
 	$T/backends/chert/chert_cursor.h\
 	$T/backends/chert/chert_database.cc\
@@ -174,6 +181,8 @@ SOURCEDOC_SRC=\
 	$T/backends/flint/flint_btreebase.h\
 	$T/backends/flint/flint_check.cc\
 	$T/backends/flint/flint_check.h\
+	$T/backends/flint/flint_compact.cc\
+	$T/backends/flint/flint_compact.h\
 	$T/backends/flint/flint_cursor.cc\
 	$T/backends/flint/flint_cursor.h\
 	$T/backends/flint/flint_database.cc\
@@ -226,6 +235,7 @@ SOURCEDOC_SRC=\
 	$T/backends/multi/multi_termlist.cc\
 	$T/backends/multi/multi_termlist.h\
 	$T/backends/multi/multi_valuelist.cc\
+	$T/backends/prefix_compressed_strings.h\
 	$T/backends/remote/net_postlist.cc\
 	$T/backends/remote/net_postlist.h\
 	$T/backends/remote/net_termlist.cc\
@@ -244,11 +254,7 @@ SOURCEDOC_SRC=\
 	$T/bin/xapian-check-flint.h\
 	$T/bin/xapian-check.cc\
 	$T/bin/xapian-chert-update.cc\
-	$T/bin/xapian-compact-brass.cc\
-	$T/bin/xapian-compact-chert.cc\
-	$T/bin/xapian-compact-flint.cc\
 	$T/bin/xapian-compact.cc\
-	$T/bin/xapian-compact.h\
 	$T/bin/xapian-inspect.cc\
 	$T/bin/xapian-progsrv.cc\
 	$T/bin/xapian-replicate-server.cc\
@@ -451,6 +457,8 @@ SOURCEDOC_SRC=\
 	$T/net/serialise.cc\
 	$T/net/tcpclient.cc\
 	$T/net/tcpserver.cc\
+	$T/queryparser/cjk-tokenizer.cc\
+	$T/queryparser/cjk-tokenizer.h\
 	$T/queryparser/queryparser.cc\
 	$(top_builddir)/queryparser/queryparser_internal.cc\
 	$T/queryparser/queryparser_internal.h\
@@ -488,5 +496,6 @@ DIR_CONTENTS_FILES=\
 	$T/weight/dir_contents\
 	$T/docs/dir_contents\
 	$T/tests/dir_contents\
+	$T/tests/harness/dir_contents\
 	$T/tests/perftest/dir_contents\
-	$T/tests/harness/dir_contents
+	$T/tests/soaktest/dir_contents

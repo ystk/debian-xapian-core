@@ -174,7 +174,8 @@ This class provides read/write access to a database. <hr><h2>Constructor &amp; D
 <p>
 Destroy this handle on the database. 
 <p>
-If there are no copies of this object remaining, the database will be closed. If there are any transactions in progress these will be aborted as if cancel_transaction had been called. 
+If no other handles to this database remain, the database will be closed.<p>
+If a transaction is active <a class="el" href="classXapian_1_1WritableDatabase.html#537b50dd4aad61020ea8536e93559a72" title="Abort the transaction currently in progress, discarding the pending modifications...">cancel_transaction()</a> will be implicitly called; if no transaction is active <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> will be implicitly called, but any exception will be swallowed (because throwing exceptions in C++ destructors is problematic). If you aren't using transactions and want to know about any failure to commit changes, call <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> explicitly before the destructor gets called. 
 </div>
 </div><p>
 <a class="anchor" name="2084dc5811aedc7de65d77e7979a2ec8"></a><!-- doxytag: member="Xapian::WritableDatabase::WritableDatabase" ref="2084dc5811aedc7de65d77e7979a2ec8" args="(const std::string &amp;path, int action)" -->
@@ -242,7 +243,13 @@ If the database is to be created, <a class="el" href="namespaceXapian.html" titl
 <p>
 Copying is allowed. 
 <p>
-The internals are reference counted, so copying is cheap. 
+The internals are reference counted, so copying is cheap.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>The object to copy. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -350,7 +357,13 @@ If the word is already present, its frequency is increased.<p>
 <p>
 Add a synonym for a term. 
 <p>
-If <em>synonym</em> is already a synonym for <em>term</em>, then no action is taken. 
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>term</em>&nbsp;</td><td>The term to add a synonym for. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>synonym</em>&nbsp;</td><td>The synonym to add. If this is already a synonym for <em>term</em>, then no action is taken. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1436584192e592cead34ea6a4d5af56f"></a><!-- doxytag: member="Xapian::WritableDatabase::begin_transaction" ref="1436584192e592cead34ea6a4d5af56f" args="(bool flushed=true)" -->
@@ -378,6 +391,11 @@ By default, a transaction implicitly calls <a class="el" href="classXapian_1_1Wr
 The downside of these implicit calls to <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> is that small transactions can harm indexing performance in the same way that explicitly calling <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> frequently can.<p>
 If you're applying atomic groups of changes and only wish to ensure that each group is either applied or not applied, then you can prevent the automatic <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> before and after the transaction by starting the transaction with begin_transaction(false). However, if cancel_transaction is called (or if commit_transaction isn't called before the <a class="el" href="classXapian_1_1WritableDatabase.html" title="This class provides read/write access to a database.">WritableDatabase</a> object is destroyed) then any changes which were pending before the transaction began will also be discarded.<p>
 Transactions aren't currently supported by the <a class="el" href="namespaceXapian_1_1InMemory.html" title="Database factory functions for the inmemory backend.">InMemory</a> backend.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>flushed</em>&nbsp;</td><td>Is this a flushed transaction? By default transactions are "flushed", which means that committing a transaction will ensure those changes are permanently written to the database. By contrast, unflushed transactions only ensure that changes within the transaction are either all applied or all aren't.</td></tr>
+  </table>
+</dl>
 <dl compact><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a></em>&nbsp;</td><td>will be thrown if transactions are not available for this database type.</td></tr>
@@ -436,7 +454,12 @@ If an error occurs in this method, an exception will be thrown, but the transact
 <p>
 Remove all synonyms for a term. 
 <p>
-If <em>term</em> has no synonyms, no action is taken. 
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>term</em>&nbsp;</td><td>The term to remove all synonyms for. If the term has no synonyms, no action is taken. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="cbea2163142de795024880a7123bc693"></a><!-- doxytag: member="Xapian::WritableDatabase::commit" ref="cbea2163142de795024880a7123bc693" args="()" -->
@@ -463,6 +486,7 @@ If any of the modifications fail, an exception will be thrown and the database w
 It's not valid to call <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> within a transaction.<p>
 Beware of calling <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> too frequently: this will make indexing take much longer.<p>
 Note that <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> need not be called explicitly: it will be called automatically when the database is closed, or when a sufficient number of modifications have been made. By default, this is every 10000 documents added, deleted, or modified. This value is rather conservative, and if you have a machine with plenty of memory, you can improve indexing throughput dramatically by setting XAPIAN_FLUSH_THRESHOLD in the environment to a larger value.<p>
+This method was new in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> 1.1.0 - in earlier versions it was called <a class="el" href="classXapian_1_1WritableDatabase.html#e767fd6fec96a126763f818fdc0abca7" title="Pre-1.1.0 name for commit().">flush()</a>.<p>
 <dl compact><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classXapian_1_1DatabaseError.html" title="DatabaseError indicates some sort of database related error.">Xapian::DatabaseError</a></em>&nbsp;</td><td>will be thrown if a problem occurs while modifying the database.</td></tr>
@@ -616,7 +640,13 @@ Use <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024
 Assignment is allowed. 
 <p>
 The internals are reference counted, so assignment is cheap.<p>
-Note that only an <a class="el" href="classXapian_1_1WritableDatabase.html" title="This class provides read/write access to a database.">WritableDatabase</a> may be assigned to an <a class="el" href="classXapian_1_1WritableDatabase.html" title="This class provides read/write access to a database.">WritableDatabase</a>: an attempt to assign a <a class="el" href="classXapian_1_1Database.html" title="This class is used to access a database, or a group of databases.">Database</a> is caught at compile-time. 
+Note that only an <a class="el" href="classXapian_1_1WritableDatabase.html" title="This class provides read/write access to a database.">WritableDatabase</a> may be assigned to an <a class="el" href="classXapian_1_1WritableDatabase.html" title="This class provides read/write access to a database.">WritableDatabase</a>: an attempt to assign a <a class="el" href="classXapian_1_1Database.html" title="This class is used to access a database, or a group of databases.">Database</a> is caught at compile-time.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>The object to copy. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1ef895fd7b1ed17bdb7036afc321cb3d"></a><!-- doxytag: member="Xapian::WritableDatabase::remove_spelling" ref="1ef895fd7b1ed17bdb7036afc321cb3d" args="(const std::string &amp;word, Xapian::termcount freqdec=1) const " -->
@@ -685,7 +715,13 @@ The word's frequency is decreased, and if would become zero or less then the wor
 <p>
 Remove a synonym for a term. 
 <p>
-If <em>synonym</em> isn't a synonym for <em>term</em>, then no action is taken. 
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>term</em>&nbsp;</td><td>The term to remove a synonym for. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>synonym</em>&nbsp;</td><td>The synonym to remove. If this isn't currently a synonym for <em>term</em>, then no action is taken. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="43c4630ec482508667e9ca539f19cbf0"></a><!-- doxytag: member="Xapian::WritableDatabase::replace_document" ref="43c4630ec482508667e9ca539f19cbf0" args="(const std::string &amp;unique_term, const Xapian::Document &amp;document)" -->
@@ -718,7 +754,6 @@ Replace any documents matching a term.
 <p>
 This method replaces any documents indexed by the specified term with the specified document. If any documents are indexed by the term, the lowest document ID will be used for the document, otherwise a new document ID will be generated as for add_document.<p>
 One common use is to allow UIDs from another system to easily be mapped to terms in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a>. Note that this method doesn't automatically add unique_term as a term, so you'll need to call document.add_term(unique_term) first when using <a class="el" href="classXapian_1_1WritableDatabase.html#23344c9000ea98b15d491fa875bd5d1e" title="Replace a given document in the database.">replace_document()</a> in this way.<p>
-Another possible use is to allow groups of documents to be marked for later deletion - for example, you could add a "deletion date" term to documents at index time and use this method to easily and efficiently delete all documents due for deletion on a particular date.<p>
 Note that changes to the database won't be immediately committed to disk; see <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> for more details.<p>
 As with all database modification operations, the effect is atomic: the document(s) will either be fully replaced, or the document(s) fail to be replaced and an exception is thrown (possibly at a later time when <a class="el" href="classXapian_1_1WritableDatabase.html#cbea2163142de795024880a7123bc693" title="Commit any pending modifications made to the database.">commit()</a> is called or the database is closed).<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -839,8 +874,8 @@ You can also use the metadata to store arbitrary extra information associated wi
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

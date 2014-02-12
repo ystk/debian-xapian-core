@@ -54,6 +54,9 @@
 /* Define if pwrite is available on this system */
 #undef HAVE_PWRITE
 
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
+
 /* Define to 1 if you have the `sigaction' function. */
 #undef HAVE_SIGACTION
 
@@ -191,6 +194,9 @@
 
 /* Define for large files, on AIX-style hosts. */
 #undef _LARGE_FILES
+
+/* Define on mingw to the minimum msvcrt version to assume */
+#undef __MSVCRT_VERSION__
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef mode_t

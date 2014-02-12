@@ -85,10 +85,9 @@ Inheritance diagram for Xapian::ExpandDecider:</div>
 <a href="classXapian_1_1ExpandDecider-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6ee544877bb51b85da4536eb8abd1cf8"></a><!-- doxytag: member="Xapian::ExpandDecider::operator()" ref="6ee544877bb51b85da4536eb8abd1cf8" args="(const std::string &amp;term) const =0" -->
-virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ExpandDecider.html#6ee544877bb51b85da4536eb8abd1cf8">operator()</a> (const std::string &amp;term) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ExpandDecider.html#6ee544877bb51b85da4536eb8abd1cf8">operator()</a> (const std::string &amp;term) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Do we want this term in the <a class="el" href="classXapian_1_1ESet.html" title="Class representing an ordered set of expand terms (an ESet).">ESet</a>? <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Do we want this term in the <a class="el" href="classXapian_1_1ESet.html" title="Class representing an ordered set of expand terms (an ESet).">ESet</a>?  <a href="#6ee544877bb51b85da4536eb8abd1cf8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ExpandDecider.html#c0a1002daa165553770b71abf23348be">~ExpandDecider</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor, because we have virtual methods.  <a href="#c0a1002daa165553770b71abf23348be"></a><br></td></tr>
@@ -118,13 +117,43 @@ Virtual destructor, because we have virtual methods.
 
 </div>
 </div><p>
+<hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="6ee544877bb51b85da4536eb8abd1cf8"></a><!-- doxytag: member="Xapian::ExpandDecider::operator()" ref="6ee544877bb51b85da4536eb8abd1cf8" args="(const std::string &amp;term) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool Xapian::ExpandDecider::operator()           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>term</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Do we want this term in the <a class="el" href="classXapian_1_1ESet.html" title="Class representing an ordered set of expand terms (an ESet).">ESet</a>? 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>term</em>&nbsp;</td><td>The term to test. </td></tr>
+  </table>
+</dl>
+
+<p>Implemented in <a class="el" href="classXapian_1_1ExpandDeciderAnd.html#c10c6b84ff534553b3b9e520f6c0ea29">Xapian::ExpandDeciderAnd</a>, and <a class="el" href="classXapian_1_1ExpandDeciderFilterTerms.html#afc04e9e1692a3985834ef5b9b37f436">Xapian::ExpandDeciderFilterTerms</a>.</p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>xapian/<a class="el" href="expanddecider_8h.html">expanddecider.h</a></ul>
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

@@ -118,10 +118,17 @@ typedef std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a 
 std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1TermIterator.html#dd766c721040fbca391aa13506be9e31">operator*</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the current term. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="3b0a7bdae1ac63ee187fa2063d7aeb35"></a><!-- doxytag: member="Xapian::TermIterator::skip_to" ref="3b0a7bdae1ac63ee187fa2063d7aeb35" args="(const std::string &amp;tname)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1TermIterator.html#3b0a7bdae1ac63ee187fa2063d7aeb35">skip_to</a> (const std::string &amp;tname)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="04d4db66b44b0e948f8cd925130aacb0"></a><!-- doxytag: member="Xapian::TermIterator::operator++" ref="04d4db66b44b0e948f8cd925130aacb0" args="()" -->
+<a class="el" href="classXapian_1_1TermIterator.html">TermIterator</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1TermIterator.html#04d4db66b44b0e948f8cd925130aacb0">operator++</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Skip the iterator to term tname, or the first term after tname if tname isn't in the list of terms being iterated. <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the iterator to the next position. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2a425243a43291345eef2659fb1d085f"></a><!-- doxytag: member="Xapian::TermIterator::operator++" ref="2a425243a43291345eef2659fb1d085f" args="(int)" -->
+DerefWrapper_&lt; std::string &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1TermIterator.html#2a425243a43291345eef2659fb1d085f">operator++</a> (int)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the iterator to the next position (postfix version). <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1TermIterator.html#3b0a7bdae1ac63ee187fa2063d7aeb35">skip_to</a> (const std::string &amp;tname)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the iterator to the specified term.  <a href="#3b0a7bdae1ac63ee187fa2063d7aeb35"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="namespaceXapian.html#72b5a76dd8cfb7b251fe7986e86390cb">Xapian::termcount</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1TermIterator.html#aad6e6fcfc9ffb513cef923b65adf6e8">get_wdf</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the wdf of the current term (if meaningful).  <a href="#aad6e6fcfc9ffb513cef923b65adf6e8"></a><br></td></tr>
@@ -209,7 +216,7 @@ The term frequency is the number of documents which a term indexes.
 <p>
 Return the wdf of the current term (if meaningful). 
 <p>
-The wdf (within document frequency) is the number of occurences of a term in a particular document. 
+The wdf (within document frequency) is the number of occurrences of a term in a particular document. 
 </div>
 </div><p>
 <a class="anchor" name="feb284448d65b6e86914c552808938df"></a><!-- doxytag: member="Xapian::TermIterator::operator=" ref="feb284448d65b6e86914c552808938df" args="(const TermIterator &amp;other)" -->
@@ -234,13 +241,35 @@ Assignment is allowed.
 The internals are reference counted, so assignment is also cheap. 
 </div>
 </div><p>
+<a class="anchor" name="3b0a7bdae1ac63ee187fa2063d7aeb35"></a><!-- doxytag: member="Xapian::TermIterator::skip_to" ref="3b0a7bdae1ac63ee187fa2063d7aeb35" args="(const std::string &amp;tname)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Xapian::TermIterator::skip_to           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>tname</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Advance the iterator to the specified term. 
+<p>
+If the specified term isn't in the list, position ourselves on the first term after it (or at_end() if no greater terms are present). 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>xapian/<a class="el" href="termiterator_8h.html">termiterator.h</a></ul>
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

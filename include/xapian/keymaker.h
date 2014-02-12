@@ -35,9 +35,11 @@ class Document;
 /** Virtual base class for key making functors. */
 class XAPIAN_VISIBILITY_DEFAULT KeyMaker {
   public:
-    /** This method takes a Document object and builds a key string from it.
+    /** Build a key string for a Document.
      *
-     *  These keys are then used for ordering or collapsing matching documents.
+     *  These keys can be used for sorting or collapsing matching documents.
+     *
+     *  @param doc	Document object to build a key for.
      */
     virtual std::string operator()(const Xapian::Document & doc) const = 0;
 
@@ -61,7 +63,7 @@ class XAPIAN_VISIBILITY_DEFAULT KeyMaker {
  *  Other than this, it isn't useful to set @a reverse for collapsing.
  */
 class XAPIAN_VISIBILITY_DEFAULT MultiValueKeyMaker : public KeyMaker {
-    std::vector<std::pair<Xapian::valueno, bool> > valnos;
+    std::vector<std::pair<Xapian::valueno, bool> > slots;
 
   public:
     MultiValueKeyMaker() { }
@@ -73,13 +75,13 @@ class XAPIAN_VISIBILITY_DEFAULT MultiValueKeyMaker : public KeyMaker {
 
     virtual std::string operator()(const Xapian::Document & doc) const;
 
-    void add_value(Xapian::valueno valno, bool reverse = false) {
-	valnos.push_back(std::make_pair(valno, reverse));
+    void add_value(Xapian::valueno slot, bool reverse = false) {
+	slots.push_back(std::make_pair(slot, reverse));
     }
 };
 
 /** Virtual base class for sorter functor. */
-class XAPIAN_VISIBILITY_DEFAULT XAPIAN_DEPRECATED() Sorter : public KeyMaker { };
+class XAPIAN_VISIBILITY_DEFAULT XAPIAN_DEPRECATED_CLASS Sorter : public KeyMaker { };
 
 /** Sorter subclass which sorts by a several values.
  *
@@ -106,8 +108,8 @@ class XAPIAN_VISIBILITY_DEFAULT XAPIAN_DEPRECATED() Sorter : public KeyMaker { }
  *    // Secondary ordering is reverse on value 5.
  *    sorter.add_value(5, true);
  */
-class XAPIAN_VISIBILITY_DEFAULT XAPIAN_DEPRECATED() MultiValueSorter : public Sorter {
-    std::vector<std::pair<Xapian::valueno, bool> > valnos;
+class XAPIAN_VISIBILITY_DEFAULT XAPIAN_DEPRECATED_CLASS MultiValueSorter : public Sorter {
+    std::vector<std::pair<Xapian::valueno, bool> > slots;
 
   public:
     MultiValueSorter() { }
@@ -119,8 +121,8 @@ class XAPIAN_VISIBILITY_DEFAULT XAPIAN_DEPRECATED() MultiValueSorter : public So
 
     virtual std::string operator()(const Xapian::Document & doc) const;
 
-    void add(Xapian::valueno valno, bool forward = true) {
-	valnos.push_back(std::make_pair(valno, forward));
+    void add(Xapian::valueno slot, bool forward = true) {
+	slots.push_back(std::make_pair(slot, forward));
     }
 };
 

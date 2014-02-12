@@ -88,9 +88,9 @@ Inheritance diagram for Xapian::ValueMapPostingSource:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ValueMapPostingSource.html#ef9518eab055c5f1d3bea3fb8df4368f">ValueMapPostingSource</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot_)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a <a class="el" href="classXapian_1_1ValueWeightPostingSource.html" title="A posting source which reads weights from a value slot.">ValueWeightPostingSource</a>.  <a href="#ef9518eab055c5f1d3bea3fb8df4368f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ValueMapPostingSource.html#bbfb5bc91d383c171e5116c3ac1019d8">add_mapping</a> (const std::string &amp;key, double <a class="el" href="namespaceXapian.html#cac12803afc9e24ee5141c119acb8884">weight</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ValueMapPostingSource.html#126c88575ad8f06c850826ac7cd2a591">add_mapping</a> (const std::string &amp;key, double wt)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a mapping.  <a href="#bbfb5bc91d383c171e5116c3ac1019d8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a mapping.  <a href="#126c88575ad8f06c850826ac7cd2a591"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ValueMapPostingSource.html#4f41218d580d29681e748a7d25aad8aa">clear_mappings</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clear all mappings.  <a href="#4f41218d580d29681e748a7d25aad8aa"></a><br></td></tr>
@@ -151,7 +151,7 @@ Construct a <a class="el" href="classXapian_1_1ValueWeightPostingSource.html" ti
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="bbfb5bc91d383c171e5116c3ac1019d8"></a><!-- doxytag: member="Xapian::ValueMapPostingSource::add_mapping" ref="bbfb5bc91d383c171e5116c3ac1019d8" args="(const std::string &amp;key, double weight)" -->
+<a class="anchor" name="126c88575ad8f06c850826ac7cd2a591"></a><!-- doxytag: member="Xapian::ValueMapPostingSource::add_mapping" ref="126c88575ad8f06c850826ac7cd2a591" args="(const std::string &amp;key, double wt)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -165,7 +165,7 @@ Construct a <a class="el" href="classXapian_1_1ValueWeightPostingSource.html" ti
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>weight</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>wt</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -182,7 +182,7 @@ Add a mapping.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>The key looked up from the value slot. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>weight</em>&nbsp;</td><td>The weight to give this key. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>wt</em>&nbsp;</td><td>The weight to give this key. </td></tr>
   </table>
 </dl>
 
@@ -230,7 +230,7 @@ Clone the posting source.
 The clone should inherit the configuration of the parent, but need not inherit the state. ie, the clone does not need to be in the same iteration position as the original: the matcher will always call <a class="el" href="classXapian_1_1ValueMapPostingSource.html#e76de9cb534e96b7a0cc827d89eea8fc" title="Set this PostingSource to the start of the list of postings.">init()</a> on the clone before attempting to move the iterator, or read the information about the current position of the iterator.<p>
 This may return NULL to indicate that cloning is not supported. In this case, the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> may only be used with a single-database search.<p>
 The default implementation returns NULL.<p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new". 
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a> 
 <p>Reimplemented from <a class="el" href="classXapian_1_1PostingSource.html#ecd88a39155ec5e04c752360b657f315">Xapian::PostingSource</a>.</p>
 
 </div>
@@ -277,7 +277,7 @@ This default implementation returns a generic answer. This default it provided t
 Return the weight contribution for the current document. 
 <p>
 This default implementation always returns 0, for convenience when implementing "weight-less" <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> subclasses.<p>
-This method may assume that it will only be called when there is a "current document". In detail: <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1ValueMapPostingSource.html#e76de9cb534e96b7a0cc827d89eea8fc" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time. It will also only call this if the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> reports that it is pointing to a valid document (ie, it will not call it before calling at least one of <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a>, and will ensure that the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> is not at the end by calling <a class="el" href="classXapian_1_1ValuePostingSource.html#4bb7ea314dbd569f90f89731204cdc40" title="Return true if the current position is past the last entry in this list.">at_end()</a>). 
+This method may assume that it will only be called when there is a "current document". In detail: <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1ValueMapPostingSource.html#e76de9cb534e96b7a0cc827d89eea8fc" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time. It will also only call this if the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> reports that it is pointing to a valid document (ie, it will not call it before calling at least one of <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a>, and will ensure that the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> is not at the end by calling <a class="el" href="classXapian_1_1ValuePostingSource.html#4bb7ea314dbd569f90f89731204cdc40" title="Return true if the current position is past the last entry in this list.">at_end()</a>). 
 <p>Reimplemented from <a class="el" href="classXapian_1_1PostingSource.html#2e7637a323a90bea45f2dc68c916ea00">Xapian::PostingSource</a>.</p>
 
 </div>
@@ -383,6 +383,11 @@ If you don't want to support the remote backend, you can use the default impleme
 <p>
 Set a default weight for document values not in the map. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>wt</em>&nbsp;</td><td>The weight to set as the default. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -405,7 +410,7 @@ Set a default weight for document values not in the map.
 <p>
 Create object given string serialisation returned by <a class="el" href="classXapian_1_1ValueMapPostingSource.html#534c78ecea04a7a649d8ba27447edee3" title="Serialise object parameters into a string.">serialise()</a>. 
 <p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new".<p>
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a><p>
 If you don't want to support the remote backend, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -422,8 +427,8 @@ If you don't want to support the remote backend, you can use the default impleme
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

@@ -37,16 +37,20 @@ host_triplet = @host@
 check_PROGRAMS = apitest$(EXEEXT) internaltest$(EXEEXT) \
 	stemtest$(EXEEXT) queryparsertest$(EXEEXT) \
 	termgentest$(EXEEXT) unittest$(EXEEXT) \
-	perftest/perftest$(EXEEXT)
+	perftest/perftest$(EXEEXT) soaktest/soaktest$(EXEEXT)
 @MAINTAINER_MODE_TRUE@am__append_1 = api_all.h api_collated.h \
 @MAINTAINER_MODE_TRUE@	$(collated_apitest_sources:.cc=.h) \
 @MAINTAINER_MODE_TRUE@	api_generated.cc perftest/perftest_all.h \
 @MAINTAINER_MODE_TRUE@	perftest/perftest_collated.h \
-@MAINTAINER_MODE_TRUE@	$(collated_perftest_sources:.cc=.h)
+@MAINTAINER_MODE_TRUE@	$(collated_perftest_sources:.cc=.h) \
+@MAINTAINER_MODE_TRUE@	soaktest/soaktest_all.h \
+@MAINTAINER_MODE_TRUE@	soaktest/soaktest_collated.h \
+@MAINTAINER_MODE_TRUE@	$(collated_soaktest_sources:.cc=.h)
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/harness/Makefile.mk \
 	$(srcdir)/perftest/Makefile.mk $(srcdir)/runsrv.in \
-	$(srcdir)/runtest.in $(srcdir)/submitperftest.in
+	$(srcdir)/runtest.in $(srcdir)/soaktest/Makefile.mk \
+	$(srcdir)/submitperftest.in
 @BUILD_BACKEND_BRASS_TRUE@am__append_2 = harness/backendmanager_brass.cc
 @BUILD_BACKEND_CHERT_TRUE@am__append_3 = harness/backendmanager_chert.cc
 @BUILD_BACKEND_FLINT_TRUE@am__append_4 = harness/backendmanager_flint.cc
@@ -63,7 +67,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/rjb_find_stlport.m4 \
 	$(top_srcdir)/m4/type_socklen_t.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -80,12 +83,12 @@ am__apitest_SOURCES_DIST = apitest.cc dbcheck.cc api_anydb.cc \
 	api_replicate.cc api_scalability.cc api_serialise.cc \
 	api_sorting.cc api_sortingold.cc api_spelling.cc api_stem.cc \
 	api_transdb.cc api_unicode.cc api_valuestats.cc \
-	api_valuestream.cc api_wrdb.cc api_all.h api_collated.h \
-	harness/backendmanager.cc harness/backendmanager_multi.cc \
-	harness/cputimer.cc harness/fdtracker.cc \
-	harness/index_utils.cc harness/scalability.cc \
-	harness/testrunner.cc harness/testsuite.cc \
-	harness/testutils.cc harness/unixcmds.cc \
+	api_valuestream.cc api_weight.cc api_wrdb.cc api_all.h \
+	api_collated.h harness/backendmanager.cc \
+	harness/backendmanager_multi.cc harness/cputimer.cc \
+	harness/fdtracker.cc harness/index_utils.cc \
+	harness/scalability.cc harness/testrunner.cc \
+	harness/testsuite.cc harness/testutils.cc harness/unixcmds.cc \
 	harness/backendmanager_brass.cc \
 	harness/backendmanager_chert.cc \
 	harness/backendmanager_flint.cc \
@@ -107,7 +110,7 @@ am__objects_1 = api_anydb.$(OBJEXT) api_backend.$(OBJEXT) \
 	api_spelling.$(OBJEXT) api_stem.$(OBJEXT) \
 	api_transdb.$(OBJEXT) api_unicode.$(OBJEXT) \
 	api_valuestats.$(OBJEXT) api_valuestream.$(OBJEXT) \
-	api_wrdb.$(OBJEXT)
+	api_weight.$(OBJEXT) api_wrdb.$(OBJEXT)
 am__dirstamp = $(am__leading_dot)dirstamp
 @BUILD_BACKEND_BRASS_TRUE@am__objects_2 = harness/backendmanager_brass.$(OBJEXT)
 @BUILD_BACKEND_CHERT_TRUE@am__objects_3 = harness/backendmanager_chert.$(OBJEXT)
@@ -197,6 +200,28 @@ queryparsertest_DEPENDENCIES = ../libgetopt.la ../$(libxapian_la)
 queryparsertest_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(queryparsertest_LDFLAGS) $(LDFLAGS) -o $@
+am__soaktest_soaktest_SOURCES_DIST = soaktest/soaktest.cc \
+	soaktest/soaktest_queries.cc soaktest/soaktest_all.h \
+	soaktest/soaktest_collated.h harness/backendmanager.cc \
+	harness/backendmanager_multi.cc harness/cputimer.cc \
+	harness/fdtracker.cc harness/index_utils.cc \
+	harness/scalability.cc harness/testrunner.cc \
+	harness/testsuite.cc harness/testutils.cc harness/unixcmds.cc \
+	harness/backendmanager_brass.cc \
+	harness/backendmanager_chert.cc \
+	harness/backendmanager_flint.cc \
+	harness/backendmanager_inmemory.cc \
+	harness/backendmanager_remote.cc \
+	harness/backendmanager_remoteprog.cc \
+	harness/backendmanager_remotetcp.cc
+am__objects_9 = soaktest/soaktest_queries.$(OBJEXT)
+am_soaktest_soaktest_OBJECTS = soaktest/soaktest.$(OBJEXT) \
+	$(am__objects_9) $(am__objects_7)
+soaktest_soaktest_OBJECTS = $(am_soaktest_soaktest_OBJECTS)
+soaktest_soaktest_DEPENDENCIES = ../libgetopt.la ../$(libxapian_la)
+soaktest_soaktest_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(soaktest_soaktest_LDFLAGS) $(LDFLAGS) -o $@
 am__stemtest_SOURCES_DIST = stemtest.cc harness/backendmanager.cc \
 	harness/backendmanager_multi.cc harness/cputimer.cc \
 	harness/fdtracker.cc harness/index_utils.cc \
@@ -264,11 +289,13 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(apitest_SOURCES) $(internaltest_SOURCES) \
 	$(perftest_perftest_SOURCES) $(queryparsertest_SOURCES) \
-	$(stemtest_SOURCES) $(termgentest_SOURCES) $(unittest_SOURCES)
+	$(soaktest_soaktest_SOURCES) $(stemtest_SOURCES) \
+	$(termgentest_SOURCES) $(unittest_SOURCES)
 DIST_SOURCES = $(am__apitest_SOURCES_DIST) \
 	$(am__internaltest_SOURCES_DIST) \
 	$(am__perftest_perftest_SOURCES_DIST) \
 	$(am__queryparsertest_SOURCES_DIST) \
+	$(am__soaktest_soaktest_SOURCES_DIST) \
 	$(am__stemtest_SOURCES_DIST) $(am__termgentest_SOURCES_DIST) \
 	$(unittest_SOURCES)
 HEADERS = $(noinst_HEADERS)
@@ -300,6 +327,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DOT = @DOT@
 DOXYGEN = @DOXYGEN@
 DOXYGEN_DOT_PATH = @DOXYGEN_DOT_PATH@
@@ -311,6 +339,7 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+FP_EXCESS_PRECISION = @FP_EXCESS_PRECISION@
 GREP = @GREP@
 HELP2MAN = @HELP2MAN@
 INSTALL = @INSTALL@
@@ -334,6 +363,7 @@ LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINDEX = @MAKEINDEX@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -358,9 +388,6 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHLIBEXT = @SHLIBEXT@
-STLPORT_CXXFLAGS = @STLPORT_CXXFLAGS@
-STLPORT_INCLUDE = @STLPORT_INCLUDE@
-STLPORT_LIBS = @STLPORT_LIBS@
 STRIP = @STRIP@
 VALGRIND = @VALGRIND@
 VERSION = @VERSION@
@@ -369,6 +396,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
@@ -424,7 +452,7 @@ AUTOMAKE_OPTIONS = 1.5 subdir-objects
 INCLUDES = -I$(top_srcdir)/common -I$(top_srcdir)/include \
  -I$(top_builddir)/include -I$(srcdir)/harness
 
-CLEAN_FILES = $(am__append_8)
+CLEANFILES = $(am__append_8)
 libxapian_la = libxapian@LIBRARY_VERSION_SUFFIX@.la
 TESTS_ENVIRONMENT = ./runtest
 TESTS = apitest$(EXEEXT) internaltest$(EXEEXT) stemtest$(EXEEXT) \
@@ -435,9 +463,9 @@ TESTS = apitest$(EXEEXT) internaltest$(EXEEXT) stemtest$(EXEEXT) \
 
 # Ensure the get_machine_info script is up to date before running tests.
 check_SCRIPTS = runtest perftest/get_machine_info $(am__append_7)
-noinst_HEADERS = apitest.h dbcheck.h perftest/perftest.h \
-	harness/backendmanager.h harness/backendmanager_brass.h \
-	harness/backendmanager_chert.h harness/backendmanager_flint.h \
+noinst_HEADERS = apitest.h dbcheck.h harness/backendmanager.h \
+	harness/backendmanager_brass.h harness/backendmanager_chert.h \
+	harness/backendmanager_flint.h \
 	harness/backendmanager_inmemory.h \
 	harness/backendmanager_local.h harness/backendmanager_multi.h \
 	harness/backendmanager_remote.h \
@@ -445,7 +473,8 @@ noinst_HEADERS = apitest.h dbcheck.h perftest/perftest.h \
 	harness/backendmanager_remotetcp.h harness/cputimer.h \
 	harness/fdtracker.h harness/index_utils.h harness/unixcmds.h \
 	harness/scalability.h harness/testmacros.h \
-	harness/testrunner.h harness/testsuite.h harness/testutils.h
+	harness/testrunner.h harness/testsuite.h harness/testutils.h \
+	perftest/perftest.h soaktest/soaktest.h
 collated_apitest_sources = \
  api_anydb.cc \
  api_backend.cc \
@@ -477,6 +506,7 @@ collated_apitest_sources = \
  api_unicode.cc \
  api_valuestats.cc \
  api_valuestream.cc \
+ api_weight.cc \
  api_wrdb.cc
 
 apitest_SOURCES = apitest.cc dbcheck.cc $(collated_apitest_sources) \
@@ -537,10 +567,19 @@ EXTRA_DIST = collate-test generate-api_generated api_all.h \
 	testdata/flint-1.0.2/record.baseA \
 	testdata/flint-1.0.2/record.DB \
 	testdata/flint-1.0.2/termlist.baseA \
-	testdata/flint-1.0.2/termlist.DB perftest/dir_contents \
-	perftest/perftest_all.h perftest/perftest_collated.h \
-	$(collated_perftest_sources:.cc=.h) harness/dir_contents \
-	harness/Makefile
+	testdata/flint-1.0.2/termlist.DB harness/dir_contents \
+	harness/Makefile perftest/dir_contents perftest/perftest_all.h \
+	perftest/perftest_collated.h \
+	$(collated_perftest_sources:.cc=.h) soaktest/dir_contents \
+	soaktest/soaktest_all.h soaktest/soaktest_collated.h \
+	$(collated_soaktest_sources:.cc=.h) zlib-vg.c
+testharness_sources = harness/backendmanager.cc \
+	harness/backendmanager_multi.cc harness/cputimer.cc \
+	harness/fdtracker.cc harness/index_utils.cc \
+	harness/scalability.cc harness/testrunner.cc \
+	harness/testsuite.cc harness/testutils.cc harness/unixcmds.cc \
+	$(am__append_2) $(am__append_3) $(am__append_4) \
+	$(am__append_5) $(am__append_6)
 collated_perftest_sources = \
  perftest/perftest_matchdecider.cc \
  perftest/perftest_randomidx.cc
@@ -553,19 +592,24 @@ perftest_perftest_SOURCES = perftest/perftest.cc $(collated_perftest_sources) \
 
 perftest_perftest_LDFLAGS = -no-install $(ldflags)
 perftest_perftest_LDADD = ../libgetopt.la ../$(libxapian_la)
-testharness_sources = harness/backendmanager.cc \
-	harness/backendmanager_multi.cc harness/cputimer.cc \
-	harness/fdtracker.cc harness/index_utils.cc \
-	harness/scalability.cc harness/testrunner.cc \
-	harness/testsuite.cc harness/testutils.cc harness/unixcmds.cc \
-	$(am__append_2) $(am__append_3) $(am__append_4) \
-	$(am__append_5) $(am__append_6)
+collated_soaktest_sources = \
+ soaktest/soaktest_queries.cc
+
+soaktest_soaktest_SOURCES = \
+ soaktest/soaktest.cc \
+ $(collated_soaktest_sources) \
+ soaktest/soaktest_all.h \
+ soaktest/soaktest_collated.h \
+ $(testharness_sources)
+
+soaktest_soaktest_LDFLAGS = -no-install $(ldflags)
+soaktest_soaktest_LDADD = ../libgetopt.la ../$(libxapian_la)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .cc .lo .o .obj
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/perftest/Makefile.mk $(srcdir)/harness/Makefile.mk $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/harness/Makefile.mk $(srcdir)/perftest/Makefile.mk $(srcdir)/soaktest/Makefile.mk $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -678,6 +722,19 @@ perftest/perftest$(EXEEXT): $(perftest_perftest_OBJECTS) $(perftest_perftest_DEP
 queryparsertest$(EXEEXT): $(queryparsertest_OBJECTS) $(queryparsertest_DEPENDENCIES) 
 	@rm -f queryparsertest$(EXEEXT)
 	$(queryparsertest_LINK) $(queryparsertest_OBJECTS) $(queryparsertest_LDADD) $(LIBS)
+soaktest/$(am__dirstamp):
+	@$(MKDIR_P) soaktest
+	@: > soaktest/$(am__dirstamp)
+soaktest/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) soaktest/$(DEPDIR)
+	@: > soaktest/$(DEPDIR)/$(am__dirstamp)
+soaktest/soaktest.$(OBJEXT): soaktest/$(am__dirstamp) \
+	soaktest/$(DEPDIR)/$(am__dirstamp)
+soaktest/soaktest_queries.$(OBJEXT): soaktest/$(am__dirstamp) \
+	soaktest/$(DEPDIR)/$(am__dirstamp)
+soaktest/soaktest$(EXEEXT): $(soaktest_soaktest_OBJECTS) $(soaktest_soaktest_DEPENDENCIES) soaktest/$(am__dirstamp)
+	@rm -f soaktest/soaktest$(EXEEXT)
+	$(soaktest_soaktest_LINK) $(soaktest_soaktest_OBJECTS) $(soaktest_soaktest_LDADD) $(LIBS)
 stemtest$(EXEEXT): $(stemtest_OBJECTS) $(stemtest_DEPENDENCIES) 
 	@rm -f stemtest$(EXEEXT)
 	$(stemtest_LINK) $(stemtest_OBJECTS) $(stemtest_LDADD) $(LIBS)
@@ -712,6 +769,8 @@ mostlyclean-compile:
 	-rm -f perftest/perftest_matchdecider.$(OBJEXT)
 	-rm -f perftest/perftest_randomidx.$(OBJEXT)
 	-rm -f perftest/runprocess.$(OBJEXT)
+	-rm -f soaktest/soaktest.$(OBJEXT)
+	-rm -f soaktest/soaktest_queries.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -746,6 +805,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/api_unicode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/api_valuestats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/api_valuestream.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/api_weight.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/api_wrdb.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apitest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dbcheck.Po@am__quote@
@@ -776,6 +836,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@perftest/$(DEPDIR)/perftest_matchdecider.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@perftest/$(DEPDIR)/perftest_randomidx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@perftest/$(DEPDIR)/runprocess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@soaktest/$(DEPDIR)/soaktest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@soaktest/$(DEPDIR)/soaktest_queries.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -807,6 +869,7 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf perftest/.libs perftest/_libs
+	-rm -rf soaktest/.libs soaktest/_libs
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -1007,6 +1070,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -1015,6 +1079,8 @@ distclean-generic:
 	-rm -f harness/$(am__dirstamp)
 	-rm -f perftest/$(DEPDIR)/$(am__dirstamp)
 	-rm -f perftest/$(am__dirstamp)
+	-rm -f soaktest/$(DEPDIR)/$(am__dirstamp)
+	-rm -f soaktest/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1026,7 +1092,7 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool clean-local \
 	mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) harness/$(DEPDIR) perftest/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) harness/$(DEPDIR) perftest/$(DEPDIR) soaktest/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1072,7 +1138,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) harness/$(DEPDIR) perftest/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) harness/$(DEPDIR) perftest/$(DEPDIR) soaktest/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1194,7 +1260,7 @@ check-multi: apitest$(EXEEXT)
 @MAINTAINER_MODE_TRUE@	    test -f api_collated.stamp; exit $$?; \
 @MAINTAINER_MODE_TRUE@	  fi; \
 @MAINTAINER_MODE_TRUE@	fi
-@MAINTAINER_MODE_TRUE@api_collated.stamp: $(collated_apitest_sources) collate-test
+@MAINTAINER_MODE_TRUE@api_collated.stamp: $(collated_apitest_sources) collate-test Makefile.am
 @MAINTAINER_MODE_TRUE@	$(PERL) "$(srcdir)/collate-test" "$(srcdir)" api_collated.h api_all.h $(collated_apitest_sources)
 @MAINTAINER_MODE_TRUE@	touch $@
 
@@ -1214,7 +1280,7 @@ check-local: remove-cached-databases
 .PHONY: check-perf
 
 check-perf: perftest/perftest$(EXEEXT) perftest/get_machine_info
-	VALGRIND= $(TESTS_ENVIRONMENT) ./perftest/perftest$(EXEEXT)
+	VALGRIND= XAPIAN_TESTSUITE_LD_PRELOAD= $(TESTS_ENVIRONMENT) ./perftest/perftest$(EXEEXT)
 perftest/get_machine_info: perftest/get_machine_info.in
 	cd .. && $(MAKE) tests/perftest/get_machine_info
 
@@ -1230,12 +1296,33 @@ perftest/get_machine_info: perftest/get_machine_info.in
 @MAINTAINER_MODE_TRUE@	    test -f perftest/perftest_collated.stamp; exit $$?; \
 @MAINTAINER_MODE_TRUE@	  fi; \
 @MAINTAINER_MODE_TRUE@	fi
-@MAINTAINER_MODE_TRUE@perftest/perftest_collated.stamp: $(collated_perftest_sources) collate-test
+@MAINTAINER_MODE_TRUE@perftest/perftest_collated.stamp: $(collated_perftest_sources) collate-test perftest/Makefile.mk
 @MAINTAINER_MODE_TRUE@	$(PERL) "$(srcdir)/collate-test" "$(srcdir)" perftest/perftest_collated.h perftest/perftest_all.h $(collated_perftest_sources)
 @MAINTAINER_MODE_TRUE@	touch $@
 
+.PHONY: check-soak
+
+check-soak: soaktest/soaktest$(EXEEXT)
+	$(TESTS_ENVIRONMENT) ./soaktest/soaktest$(EXEEXT)
+
+@MAINTAINER_MODE_TRUE@soaktest/soaktest_all.h soaktest/soaktest_collated.h $(collated_soaktest_sources:.cc=.h): soaktest/soaktest_collated.stamp
+@MAINTAINER_MODE_TRUE@	@if test -f $@; then :; else \
+@MAINTAINER_MODE_TRUE@	  trap 'rm -rf soaktest/soaktest_collated.lock soaktest/soaktest_collated.stamp' 1 2 13 15; \
+@MAINTAINER_MODE_TRUE@	  if mkdir soaktest/soaktest_collated.lock 2>/dev/null; then \
+@MAINTAINER_MODE_TRUE@	    rm -f soaktest/soaktest_collated.stamp; \
+@MAINTAINER_MODE_TRUE@	    $(MAKE) $(AM_MAKEFLAGS) soaktest/soaktest_collated.stamp; \
+@MAINTAINER_MODE_TRUE@	    rmdir soaktest/soaktest_collated.lock; \
+@MAINTAINER_MODE_TRUE@	  else \
+@MAINTAINER_MODE_TRUE@	    while test -d soaktest/soaktest_collated.lock; do sleep 1; done; \
+@MAINTAINER_MODE_TRUE@	    test -f soaktest/soaktest_collated.stamp; exit $$?; \
+@MAINTAINER_MODE_TRUE@	  fi; \
+@MAINTAINER_MODE_TRUE@	fi
+@MAINTAINER_MODE_TRUE@soaktest/soaktest_collated.stamp: $(collated_soaktest_sources) collate-test soaktest/Makefile.mk
+@MAINTAINER_MODE_TRUE@	$(PERL) "$(srcdir)/collate-test" "$(srcdir)" soaktest/soaktest_collated.h soaktest/soaktest_all.h $(collated_soaktest_sources)
+@MAINTAINER_MODE_TRUE@	touch $@
+
 @USE_ZLIB_VG_TRUE@zlib-vg.so: zlib-vg.c
-@USE_ZLIB_VG_TRUE@	$(CC_FOR_BUILD) -fPIC -shared -ldl -o zlib-vg.so $(srcdir)/zlib-vg.c
+@USE_ZLIB_VG_TRUE@	$(CC_FOR_BUILD) -fPIC -shared -o zlib-vg.so $(srcdir)/zlib-vg.c -ldl
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

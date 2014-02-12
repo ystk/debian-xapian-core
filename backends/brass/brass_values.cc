@@ -1,7 +1,7 @@
 /** @file brass_values.cc
  * @brief BrassValueManager class
  */
-/* Copyright (C) 2008,2009,2010 Olly Betts
+/* Copyright (C) 2008,2009,2010,2012 Olly Betts
  * Copyright (C) 2008,2009 Lemur Consulting Ltd
  *
  * This program is free software; you can redistribute it and/or modify
@@ -491,8 +491,13 @@ BrassValueManager::get_all_values(map<Xapian::valueno, string> & values,
 				  Xapian::docid did) const
 {
     Assert(values.empty());
-    if (!termlist_table->is_open())
+    if (!termlist_table->is_open()) {
+	// Either the database has been closed, or else there's no termlist table.
+	// Check if the postlist table is open to determine which is the case.
+	if (!postlist_table->is_open())
+	    BrassTable::throw_database_closed();
 	throw Xapian::FeatureUnavailableError("Database has no termlist");
+    }
     map<Xapian::docid, string>::const_iterator i = slots.find(did);
     string s;
     if (i != slots.end()) {
@@ -520,9 +525,9 @@ BrassValueManager::get_value_stats(Xapian::valueno slot) const
 {
     LOGCALL_VOID(DB, "BrassValueManager::get_value_stats", slot);
     // Invalidate the cache first in case an exception is thrown.
-    mru_valno = Xapian::BAD_VALUENO;
+    mru_slot = Xapian::BAD_VALUENO;
     get_value_stats(slot, mru_valstats);
-    mru_valno = slot;
+    mru_slot = slot;
 }
 
 void
@@ -530,7 +535,7 @@ BrassValueManager::get_value_stats(Xapian::valueno slot, ValueStats & stats) con
 {
     LOGCALL_VOID(DB, "BrassValueManager::get_value_stats", slot | Literal("[stats]"));
     // Invalidate the cache first in case an exception is thrown.
-    mru_valno = Xapian::BAD_VALUENO;
+    mru_slot = Xapian::BAD_VALUENO;
 
     string tag;
     if (postlist_table->get_exact_entry(make_valuestats_key(slot), tag)) {
@@ -555,7 +560,7 @@ BrassValueManager::get_value_stats(Xapian::valueno slot, ValueStats & stats) con
 	stats.clear();
     }
 
-    mru_valno = slot;
+    mru_slot = slot;
 }
 
 void
@@ -581,5 +586,5 @@ BrassValueManager::set_value_stats(map<Xapian::valueno, ValueStats> & value_stat
 	}
     }
     value_stats.clear();
-    mru_valno = Xapian::BAD_VALUENO;
+    mru_slot = Xapian::BAD_VALUENO;
 }

@@ -97,6 +97,9 @@ window.onload = initDynSections;
  }</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enum of feature flags.  <a href="classXapian_1_1QueryParser.html#e96a58a8de9d219ca3214a5a66e0407e">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#e2959f7a1c5680f3fd1421d92445e220">stem_strategy</a> </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stemming strategies, for use with <a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd" title="Set the stemming strategy.">set_stemming_strategy()</a>. <br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="00d9afcf20b20cd9c8b3d22dd1bc82b7"></a><!-- doxytag: member="Xapian::QueryParser::QueryParser" ref="00d9afcf20b20cd9c8b3d22dd1bc82b7" args="(const QueryParser &amp;o)" -->
 &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#00d9afcf20b20cd9c8b3d22dd1bc82b7">QueryParser</a> (const <a class="el" href="classXapian_1_1QueryParser.html">QueryParser</a> &amp;o)</td></tr>
@@ -117,13 +120,12 @@ window.onload = initDynSections;
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#2312c9865a58cc1149fe7cda9f0c2585">set_stemmer</a> (const <a class="el" href="classXapian_1_1Stem.html">Xapian::Stem</a> &amp;stemmer)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the stemmer.  <a href="#2312c9865a58cc1149fe7cda9f0c2585"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd">set_stemming_strategy</a> (stem_strategy strategy)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd">set_stemming_strategy</a> (<a class="el" href="classXapian_1_1QueryParser.html#e2959f7a1c5680f3fd1421d92445e220">stem_strategy</a> strategy)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the stemming strategy.  <a href="#c7dc3b55b6083bd3ff98fc8b2726c8fd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b1046610676f72ba564108f0df5d77ab"></a><!-- doxytag: member="Xapian::QueryParser::set_stopper" ref="b1046610676f72ba564108f0df5d77ab" args="(const Stopper *stop=NULL)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#b1046610676f72ba564108f0df5d77ab">set_stopper</a> (const <a class="el" href="classXapian_1_1Stopper.html">Stopper</a> *stop=NULL)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#b1046610676f72ba564108f0df5d77ab">set_stopper</a> (const <a class="el" href="classXapian_1_1Stopper.html">Stopper</a> *stop=NULL)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the stopper. <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the stopper.  <a href="#b1046610676f72ba564108f0df5d77ab"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#2efe48be88c4872afec4bc963f417ea5">set_default_op</a> (<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b">Query::op</a> default_op)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the default operator.  <a href="#2efe48be88c4872afec4bc963f417ea5"></a><br></td></tr>
@@ -133,6 +135,9 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#576d221ba746506e51d9ea596ecb2cf6">set_database</a> (const <a class="el" href="classXapian_1_1Database.html">Database</a> &amp;db)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify the database being searched.  <a href="#576d221ba746506e51d9ea596ecb2cf6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#7651d48cdc661c0605c475925170cc71">set_max_wildcard_expansion</a> (<a class="el" href="namespaceXapian.html#72b5a76dd8cfb7b251fe7986e86390cb">Xapian::termcount</a> limit)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify the maximum expansion of a wildcard term.  <a href="#7651d48cdc661c0605c475925170cc71"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classXapian_1_1Query.html">Query</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1QueryParser.html#73d32cc7f862ab2e3fdd7da61f352fb2">parse_query</a> (const std::string &amp;query_string, unsigned flags=FLAG_DEFAULT, const std::string &amp;default_prefix=std::string())</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parse a query.  <a href="#73d32cc7f862ab2e3fdd7da61f352fb2"></a><br></td></tr>
@@ -192,6 +197,7 @@ Support AND, OR, etc even if they aren't in ALLCAPS. </td></tr>
 Support right truncation (e.g. 
 <p>
 Xap*).<p>
+Currently you can't use wildcards with boolean filter prefixes, or in a phrase (either an explicitly quoted one, or one implicitly generated by hyphens or other punctuation).<p>
 NB: You need to tell the <a class="el" href="classXapian_1_1QueryParser.html" title="Build a Xapian::Query object from a user query string.">QueryParser</a> object which database to expand wildcards from by calling set_database. </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="e96a58a8de9d219ca3214a5a66e0407ecafc7c8cf7c90adac0fc07d02125aed0"></a><!-- doxytag: member="FLAG_PURE_NOT" ref="e96a58a8de9d219ca3214a5a66e0407ecafc7c8cf7c90adac0fc07d02125aed0" args="" -->FLAG_PURE_NOT</em>&nbsp;</td><td>
 Allow queries such as 'NOT apples'. 
@@ -201,6 +207,7 @@ These require the use of a list of all documents in the database which is potent
 Enable partial matching. 
 <p>
 Partial matching causes the parser to treat the query as a "partially entered" search. This will automatically treat the final word as a wildcarded match, unless it is followed by whitespace, to produce more stable results from interactive searches.<p>
+Currently FLAG_PARTIAL doesn't do anything if the final word in the query has a boolean filter prefix, or if it is in a phrase (either an explicitly quoted one, or one implicitly generated by hyphens or other punctuation). It also doesn't do anything if if the final word is part of a value range.<p>
 NB: You need to tell the <a class="el" href="classXapian_1_1QueryParser.html" title="Build a Xapian::Query object from a user query string.">QueryParser</a> object which database to expand wildcards from by calling set_database. </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="e96a58a8de9d219ca3214a5a66e0407eacef09c368bdafe64debabe112f1024c"></a><!-- doxytag: member="FLAG_SPELLING_CORRECTION" ref="e96a58a8de9d219ca3214a5a66e0407eacef09c368bdafe64debabe112f1024c" args="" -->FLAG_SPELLING_CORRECTION</em>&nbsp;</td><td>
 Enable spelling correction. 
@@ -222,7 +229,7 @@ NB: You must also call <a class="el" href="classXapian_1_1QueryParser.html#576d2
 <tr><td valign="top"><em><a class="anchor" name="e96a58a8de9d219ca3214a5a66e0407e4e4a5c38e629300d01219456add0ea4a"></a><!-- doxytag: member="FLAG_DEFAULT" ref="e96a58a8de9d219ca3214a5a66e0407e4e4a5c38e629300d01219456add0ea4a" args="" -->FLAG_DEFAULT</em>&nbsp;</td><td>
 The default flags. 
 <p>
-Used if you don't explicitly pass any to <em><a class="el" href="classXapian_1_1QueryParser.html#73d32cc7f862ab2e3fdd7da61f352fb2" title="Parse a query.">parse_query()</a></em>.<p>
+Used if you don't explicitly pass any to <em><a class="el" href="classXapian_1_1QueryParser.html#73d32cc7f862ab2e3fdd7da61f352fb2" title="Parse a query.">parse_query()</a></em>. The default flags are FLAG_PHRASE|FLAG_BOOLEAN|FLAG_LOVEHATE.<p>
 Added in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> 1.0.11. </td></tr>
 </table>
 </dl>
@@ -279,7 +286,7 @@ In 1.0.3 and earlier, subsequent calls to this method with the same value of <em
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>field</em>&nbsp;</td><td>The user visible field name </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>prefix</em>&nbsp;</td><td>The term prefix to map this to </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>exclusive</em>&nbsp;</td><td>If true, each document can have at most one value of the field, so <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> should combine multiple values with OP_OR. If false, each document can have multiple values of the field, so <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> combine them with OP_AND, as we would with filters with different prefixes. [default: true] </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>exclusive</em>&nbsp;</td><td>If true, each document can have at most one term with this prefix, so multiple filters with this prefix should be combined with OP_OR. If false, each document can have multiple terms with this prefix, so multiple filters should be combined with OP_AND, like happens with filters with different prefixes. [default: true] </td></tr>
   </table>
 </dl>
 
@@ -452,7 +459,12 @@ Parse a query.
 <p>
 Specify the database being searched. 
 <p>
-The database is used for wildcard expansion (FLAG_WILDCARD and FLAG_PARTIAL), spelling correction (FLAG_SPELLING_CORRECTION), and synonyms (FLAG_SYNONYM, FLAG_AUTO_SYNONYMS, and FLAG_AUTO_MULTIWORD_SYNONYMS). 
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>db</em>&nbsp;</td><td>The database to use for wildcard expansion (FLAG_WILDCARD and FLAG_PARTIAL), spelling correction (FLAG_SPELLING_CORRECTION), and synonyms (FLAG_SYNONYM, FLAG_AUTO_SYNONYMS, and FLAG_AUTO_MULTIWORD_SYNONYMS). </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2efe48be88c4872afec4bc963f417ea5"></a><!-- doxytag: member="Xapian::QueryParser::set_default_op" ref="2efe48be88c4872afec4bc963f417ea5" args="(Query::op default_op)" -->
@@ -474,9 +486,41 @@ The database is used for wildcard expansion (FLAG_WILDCARD and FLAG_PARTIAL), sp
 <p>
 Set the default operator. 
 <p>
-This operator is used to combine non-filter query items when no explicit operator is used.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>default_op</em>&nbsp;</td><td>The operator to use to combine non-filter query items when no explicit operator is used.</td></tr>
+  </table>
+</dl>
 The most useful values for this are OP_OR (the default) and OP_AND. OP_NEAR and OP_PHRASE can also be useful.<p>
 So for example, 'weather forecast' is parsed as if it were 'weather OR forecast' by default. 
+</div>
+</div><p>
+<a class="anchor" name="7651d48cdc661c0605c475925170cc71"></a><!-- doxytag: member="Xapian::QueryParser::set_max_wildcard_expansion" ref="7651d48cdc661c0605c475925170cc71" args="(Xapian::termcount limit)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Xapian::QueryParser::set_max_wildcard_expansion           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceXapian.html#72b5a76dd8cfb7b251fe7986e86390cb">Xapian::termcount</a>&nbsp;</td>
+          <td class="paramname"> <em>limit</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Specify the maximum expansion of a wildcard term. 
+<p>
+Note: you must also set FLAG_WILDCARD for wildcard expansion to happen.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>limit</em>&nbsp;</td><td>The maximum number of terms each wildcard in the query can expand to, or 0 for no limit (which is the default). </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2312c9865a58cc1149fe7cda9f0c2585"></a><!-- doxytag: member="Xapian::QueryParser::set_stemmer" ref="2312c9865a58cc1149fe7cda9f0c2585" args="(const Xapian::Stem &amp;stemmer)" -->
@@ -498,7 +542,13 @@ So for example, 'weather forecast' is parsed as if it were 'weather OR forecast'
 <p>
 Set the stemmer. 
 <p>
-This sets the stemming algorithm which will be used by the query parser. Note that the stemming algorithm will only be used according to the stemming strategy set by <a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd" title="Set the stemming strategy.">set_stemming_strategy()</a>, which defaults to STEM_NONE. Therefore, to use a stemming algorithm, you will also need to call <a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd" title="Set the stemming strategy.">set_stemming_strategy()</a> with a value other than STEM_NONE. 
+This sets the stemming algorithm which will be used by the query parser. Note that the stemming algorithm will only be used according to the stemming strategy set by <a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd" title="Set the stemming strategy.">set_stemming_strategy()</a>, which defaults to STEM_NONE. Therefore, to use a stemming algorithm, you will also need to call <a class="el" href="classXapian_1_1QueryParser.html#c7dc3b55b6083bd3ff98fc8b2726c8fd" title="Set the stemming strategy.">set_stemming_strategy()</a> with a value other than STEM_NONE.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stemmer</em>&nbsp;</td><td>The <a class="el" href="classXapian_1_1Stem.html" title="Class representing a stemming algorithm.">Xapian::Stem</a> object to set. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c7dc3b55b6083bd3ff98fc8b2726c8fd"></a><!-- doxytag: member="Xapian::QueryParser::set_stemming_strategy" ref="c7dc3b55b6083bd3ff98fc8b2726c8fd" args="(stem_strategy strategy)" -->
@@ -508,7 +558,7 @@ This sets the stemming algorithm which will be used by the query parser. Note th
         <tr>
           <td class="memname">void Xapian::QueryParser::set_stemming_strategy           </td>
           <td>(</td>
-          <td class="paramtype">stem_strategy&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classXapian_1_1QueryParser.html#e2959f7a1c5680f3fd1421d92445e220">stem_strategy</a>&nbsp;</td>
           <td class="paramname"> <em>strategy</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -520,11 +570,42 @@ This sets the stemming algorithm which will be used by the query parser. Note th
 <p>
 Set the stemming strategy. 
 <p>
-This controls how the query parser will apply the stemming algorithm. The default value is STEM_NONE. The possible values are:<p>
-<ul>
-<li>STEM_NONE: Don't perform any stemming.</li><li>STEM_SOME: Search for stemmed forms of terms except for those which start with a capital letter, or are followed by certain characters (currently: (/@&lt;&gt;=*[{" ), or are used with operators which need positional information. Stemmed terms are prefixed with 'Z'.</li><li>STEM_ALL: Search for stemmed forms of all words (note: no 'Z' prefix is added).</li></ul>
+This controls how the query parser will apply the stemming algorithm. Note that the stemming algorithm is only applied to words in probabilistic fields - boolean filter terms are never stemmed.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>strategy</em>&nbsp;</td><td>The strategy to use - possible values are:<ul>
+<li>STEM_NONE: Don't perform any stemming. (default in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> &lt;= 1.3.0)</li><li>STEM_SOME: Search for stemmed forms of terms except for those which start with a capital letter, or are followed by certain characters (currently: (/@&lt;&gt;=*[{" ), or are used with operators which need positional information. Stemmed terms are prefixed with 'Z'. (default in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> &gt;= 1.3.1)</li><li>STEM_ALL: Search for stemmed forms of all words (note: no 'Z' prefix is added).</li><li>STEM_ALL_Z: Search for stemmed forms of all words (note: 'Z' prefix is added). (new in <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> 1.2.11 and 1.3.1) </li></ul>
+</td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="b1046610676f72ba564108f0df5d77ab"></a><!-- doxytag: member="Xapian::QueryParser::set_stopper" ref="b1046610676f72ba564108f0df5d77ab" args="(const Stopper *stop=NULL)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Xapian::QueryParser::set_stopper           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classXapian_1_1Stopper.html">Stopper</a> *&nbsp;</td>
+          <td class="paramname"> <em>stop</em> = <code>NULL</code>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
 <p>
-Note that the stemming algorithm is only applied to words in probabilistic fields - boolean filter terms are never stemmed. 
+Set the stopper. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stop</em>&nbsp;</td><td>The <a class="el" href="classXapian_1_1Stopper.html" title="Base class for stop-word decision functor.">Stopper</a> object to set (default NULL, which means no stopwords). </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
@@ -532,8 +613,8 @@ Note that the stemming algorithm is only applied to words in probabilistic field
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

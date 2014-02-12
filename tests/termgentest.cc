@@ -31,6 +31,8 @@
 #include "testutils.h"
 #include "utils.h"
 
+#include <stdlib.h> // For setenv() or putenv()
+
 using namespace std;
 
 #define TESTCASE(S) {#S, test_##S}
@@ -43,6 +45,14 @@ struct test {
     //  - nopos: Don't store positions.
     //  - weight=N: where N is a number - set the weight to N.
     //  - stem=FOO: Change stemming algorithm to foo ("none" to turn off).
+    //    (this persists for subsequent tests until it's turned off).
+    //  - all: Set stemming strategy to STEM_ALL.
+    //    (this persists for subsequent tests until it's turned off).
+    //  - all_z: Set stemming strategy to STEM_ALL_Z.
+    //    (this persists for subsequent tests until it's turned off).
+    //  - none: Set stemming strategy to STEM_NONE.
+    //    (this persists for subsequent tests until it's turned off).
+    //  - some: Set stemming strategy to STEM_SOME.
     //    (this persists for subsequent tests until it's turned off).
     //  - prefix=FOO: Use the specified prefix.
     //    (this persists for subsequent tests until it's turned off).
@@ -100,18 +110,48 @@ static const test test_simple[] = {
     { "", "c++ -d--", "Zc++:1 Zd:1 c++[1] d[2]" },
     { "", "cd'r toebehoren", "Zcd'r:1 Ztoebehoren:1 cd'r[1] toebehoren[2]" },
 
+    // Test discarding of terms > 64 bytes.
+    { "", "a REALLYREALLYREALLYREALLYREALLYREALLYREALLYREALLYREALLYREALLYLONG term",
+      "Za:1 Zreallyreallyreallyreallyreallyreallyreallyreallyreallyreallylong:1 Zterm:1 a[1] reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylong[2] term[3]" },
+    { "", "a REALLYREALLYREALLYREALLYREALLYREALLYREALLYREALLYREALLYREALLYLONGX term", "Za:1 Zterm:1 a[1] term[2]" },
+
     // In 1.1.4, ENCLOSING_MARK and COMBINING_SPACING_MARK were added, and
     // code to ignore several zero-width space characters was added.
     { "", "\xe1\x80\x9d\xe1\x80\xae\xe2\x80\x8b\xe1\x80\x80\xe1\x80\xae\xe2\x80\x8b\xe1\x80\x95\xe1\x80\xad\xe2\x80\x8b\xe1\x80\x9e\xe1\x80\xaf\xe1\x80\xb6\xe1\x80\xb8\xe2\x80\x8b\xe1\x80\x85\xe1\x80\xbd\xe1\x80\xb2\xe2\x80\x8b\xe1\x80\x9e\xe1\x80\xb0\xe2\x80\x8b\xe1\x80\x99\xe1\x80\xbb\xe1\x80\xac\xe1\x80\xb8\xe1\x80\x80",
       "Z\xe1\x80\x9d\xe1\x80\xae\xe1\x80\x80\xe1\x80\xae\xe1\x80\x95\xe1\x80\xad\xe1\x80\x9e\xe1\x80\xaf\xe1\x80\xb6\xe1\x80\xb8\xe1\x80\x85\xe1\x80\xbd\xe1\x80\xb2\xe1\x80\x9e\xe1\x80\xb0\xe1\x80\x99\xe1\x80\xbb\xe1\x80\xac\xe1\x80\xb8\xe1\x80\x80:1 \xe1\x80\x9d\xe1\x80\xae\xe1\x80\x80\xe1\x80\xae\xe1\x80\x95\xe1\x80\xad\xe1\x80\x9e\xe1\x80\xaf\xe1\x80\xb6\xe1\x80\xb8\xe1\x80\x85\xe1\x80\xbd\xe1\x80\xb2\xe1\x80\x9e\xe1\x80\xb0\xe1\x80\x99\xe1\x80\xbb\xe1\x80\xac\xe1\x80\xb8\xe1\x80\x80[1]" },
 
     { "", "fish+chips", "Zchip:1 Zfish:1 chips[2] fish[1]" },
+
+    // Basic CJK tests:
+    { "stem=", "久有归天", "久[1] 久有:1 天[4] 归[3] 归天:1 有[2] 有归:1" },
+    { "", "극지라", "극[1] 극지:1 라[3] 지[2] 지라:1" },
+    { "", "ウルス アップ", "ア[4] ウ[1] ウル:1 ス[3] ッ[5] ップ:1 プ[6] ル[2] ルス:1" },
+
+    // CJK with prefix:
+    { "prefix=XA", "发送从", "XA从[3] XA发[1] XA发送:1 XA送[2] XA送从:1" },
+    { "prefix=XA", "点卡思考", "XA卡[2] XA卡思:1 XA思[3] XA思考:1 XA点[1] XA点卡:1 XA考[4]" },
+
+    // CJK mixed with non-CJK:
+    { "prefix=", "インtestタ", "test[3] イ[1] イン:1 タ[4] ン[2]" },
+    { "", "配this is合a个 test!", "a[5] is[3] test[7] this[2] 个[6] 合[4] 配[1]" },
+
+    // Test set_stemming_strategy():
+    { "stem=en,none",
+	  "Unstemmed words!", "unstemmed[1] words[2]" },
+
+    { "all",
+	  "Only stemmed words!", "onli[1] stem[2] word[3]" },
+
+    { "all_z",
+	  "Only stemmed words!", "Zonli[1] Zstem[2] Zword[3]" },
+
     // All following tests are for things which we probably don't really want to
     // behave as they currently do, but we haven't found a sufficiently general
     // way to implement them yet.
 
     // Test number like things
-    { "", "11:59", "11[1] 59[2]" },
+    { "stem=en,some",
+	  "11:59", "11[1] 59[2]" },
     { "", "11:59am", "11[1] 59am[2]" },
 
     { NULL, NULL, NULL }
@@ -676,6 +716,18 @@ static bool test_termgen1()
 		}
 		termgen.set_stemmer(Xapian::Stem(stemmer));
 		tout << "Setting stemmer to: " << stemmer << '\n';
+	    } else if (strncmp(o, "all_z", 5) == 0) {
+		o += 5;
+		termgen.set_stemming_strategy(termgen.STEM_ALL_Z);
+	    } else if (strncmp(o, "all", 3) == 0) {
+		o += 3;
+		termgen.set_stemming_strategy(termgen.STEM_ALL);
+	    } else if (strncmp(o, "none", 4) == 0) {
+		o += 4;
+		termgen.set_stemming_strategy(termgen.STEM_NONE);
+	    } else if (strncmp(o, "some", 4) == 0) {
+		o += 4;
+		termgen.set_stemming_strategy(termgen.STEM_SOME);
 	    } else if (strncmp(o, "prefix=", 7) == 0) {
 		o += 7;
 		prefix.resize(0);
@@ -770,6 +822,14 @@ static const test_desc tests[] = {
 
 int main(int argc, char **argv)
 try {
+    // FIXME: It would be better to test with and without XAPIAN_CJK_NGRAM set.
+#ifdef __WIN32__
+    _putenv_s("XAPIAN_CJK_NGRAM", "1");
+#elif defined HAVE_SETENV
+    setenv("XAPIAN_CJK_NGRAM", "1", 1);
+#else
+    putenv(const_cast<char*>("XAPIAN_CJK_NGRAM=1"));
+#endif
     test_driver::parse_command_line(argc, argv);
     return test_driver::run(tests);
 } catch (const char * e) {

@@ -168,19 +168,26 @@ BM25Weight::get_sumpart(Xapian::termcount wdf, Xapian::termcount len) const
     double wdf_double(wdf);
     double denom = param_k1 * (normlen * param_b + (1 - param_b)) + wdf_double;
     AssertRel(denom,>,0);
-    RETURN(termweight * wdf_double * (param_k1 + 1) / denom);
+    RETURN(termweight * (param_k1 + 1) * (wdf_double / denom));
 }
 
 Xapian::weight
 BM25Weight::get_maxpart() const
 {
     LOGCALL(WTCALC, Xapian::weight, "BM25Weight::get_maxpart", NO_ARGS);
-    Xapian::doclength normlen_lb = max(get_doclength_lower_bound() * len_factor,
-				       param_min_normlen);
     double wdf_max(get_wdf_upper_bound());
-    double denom = param_k1 * (normlen_lb * param_b + (1 - param_b)) + wdf_max;
+    double denom = wdf_max;
+    if (param_k1 != 0.0) {
+	if (param_b != 0.0) {
+	    Xapian::doclength normlen_lb =
+		 max(get_doclength_lower_bound() * len_factor, param_min_normlen);
+	    denom += param_k1 * (normlen_lb * param_b + (1 - param_b));
+	} else {
+	    denom += param_k1;
+	}
+    }
     AssertRel(denom,>,0);
-    RETURN(termweight * wdf_max * (param_k1 + 1) / denom);
+    RETURN(termweight * (param_k1 + 1) * (wdf_max / denom));
 }
 
 /* The BM25 formula gives:
@@ -204,6 +211,8 @@ Xapian::weight
 BM25Weight::get_maxextra() const
 {
     LOGCALL(WTCALC, Xapian::weight, "BM25Weight::get_maxextra", NO_ARGS);
+    if (param_k2 == 0.0)
+	RETURN(0.0);
     Xapian::weight num = (2.0 * param_k2 * get_query_length());
     RETURN(num / (1.0 + max(double(get_doclength_lower_bound()),
 			    param_min_normlen)));
