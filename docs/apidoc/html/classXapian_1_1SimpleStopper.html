@@ -98,23 +98,52 @@ template&lt;class Iterator &gt; </td></tr>
 void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1SimpleStopper.html#48b8ce2de81a61460911adc065ba8afb">add</a> (const std::string &amp;word)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a single stop word. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="56543c160db0b45ab73b5789864a3cda"></a><!-- doxytag: member="Xapian::SimpleStopper::operator()" ref="56543c160db0b45ab73b5789864a3cda" args="(const std::string &amp;term) const " -->
-virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1SimpleStopper.html#56543c160db0b45ab73b5789864a3cda">operator()</a> (const std::string &amp;term) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1SimpleStopper.html#56543c160db0b45ab73b5789864a3cda">operator()</a> (const std::string &amp;term) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Is term a stop-word? <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Is term a stop-word?  <a href="#56543c160db0b45ab73b5789864a3cda"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="eb0bddbf6805b12f760e707032f4cbb3"></a><!-- doxytag: member="Xapian::SimpleStopper::get_description" ref="eb0bddbf6805b12f760e707032f4cbb3" args="() const " -->
 virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1SimpleStopper.html#eb0bddbf6805b12f760e707032f4cbb3">get_description</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a string describing this object. <br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Simple implementation of <a class="el" href="classXapian_1_1Stopper.html" title="Base class for stop-word decision functor.">Stopper</a> class - this will suit most users. <hr>The documentation for this class was generated from the following file:<ul>
+Simple implementation of <a class="el" href="classXapian_1_1Stopper.html" title="Base class for stop-word decision functor.">Stopper</a> class - this will suit most users. <hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="56543c160db0b45ab73b5789864a3cda"></a><!-- doxytag: member="Xapian::SimpleStopper::operator()" ref="56543c160db0b45ab73b5789864a3cda" args="(const std::string &amp;term) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool Xapian::SimpleStopper::operator()           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>term</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Is term a stop-word? 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>term</em>&nbsp;</td><td>The term to test. </td></tr>
+  </table>
+</dl>
+
+<p>Implements <a class="el" href="classXapian_1_1Stopper.html#28c9649a93987abb97d06998a146d6fe">Xapian::Stopper</a>.</p>
+
+</div>
+</div><p>
+<hr>The documentation for this class was generated from the following file:<ul>
 <li>xapian/<a class="el" href="queryparser_8h.html">queryparser.h</a></ul>
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

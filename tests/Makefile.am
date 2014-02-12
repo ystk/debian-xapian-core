@@ -15,7 +15,7 @@ endif
 INCLUDES = -I$(top_srcdir)/common -I$(top_srcdir)/include \
  -I$(top_builddir)/include -I$(srcdir)/harness
 
-CLEAN_FILES =
+CLEANFILES =
 
 libxapian_la = libxapian@LIBRARY_VERSION_SUFFIX@.la
 
@@ -161,6 +161,7 @@ collated_apitest_sources = \
  api_unicode.cc \
  api_valuestats.cc \
  api_valuestream.cc \
+ api_weight.cc \
  api_wrdb.cc
 
 apitest_SOURCES = apitest.cc dbcheck.cc $(collated_apitest_sources) \
@@ -208,7 +209,7 @@ api_all.h api_collated.h $(collated_apitest_sources:.cc=.h): api_collated.stamp
 	    test -f api_collated.stamp; exit $$?; \
 	  fi; \
 	fi
-api_collated.stamp: $(collated_apitest_sources) collate-test
+api_collated.stamp: $(collated_apitest_sources) collate-test Makefile.am
 	$(PERL) "$(srcdir)/collate-test" "$(srcdir)" api_collated.h api_all.h $(collated_apitest_sources)
 	touch $@
 
@@ -283,13 +284,15 @@ clean-local: remove-cached-databases
 # bugs in database creation when we reuse databases from a previous test run.
 check-local: remove-cached-databases
 
-include perftest/Makefile.mk
 include harness/Makefile.mk
+include perftest/Makefile.mk
+include soaktest/Makefile.mk
 
+EXTRA_DIST += zlib-vg.c
 if USE_ZLIB_VG
 check_SCRIPTS += zlib-vg.so
-CLEAN_FILES += zlib-vg.so
+CLEANFILES += zlib-vg.so
 
 zlib-vg.so: zlib-vg.c
-	$(CC_FOR_BUILD) -fPIC -shared -ldl -o zlib-vg.so $(srcdir)/zlib-vg.c
+	$(CC_FOR_BUILD) -fPIC -shared -o zlib-vg.so $(srcdir)/zlib-vg.c -ldl
 endif

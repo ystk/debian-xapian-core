@@ -130,12 +130,12 @@ window.onload = initDynSections;
 &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Query.html#4004922547fec06087dc8a63ac484f9b">Query</a> (<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b">Query::op</a> op_, <a class="el" href="classXapian_1_1Query.html">Xapian::Query</a> q, double parameter)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Apply the specified operator to a single <a class="el" href="classXapian_1_1Query.html" title="Class representing a query.">Xapian::Query</a> object, with a double parameter. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Query.html#9ce755435d556874aed3b3ec7b8b8c4b">Query</a> (<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b">Query::op</a> op_, <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> valno, const std::string &amp;begin, const std::string &amp;end)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Query.html#27acaeb8ab8a0c111805a0139e3dc35b">Query</a> (<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b">Query::op</a> op_, <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot, const std::string &amp;begin, const std::string &amp;end)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a value range query on a document value.  <a href="#9ce755435d556874aed3b3ec7b8b8c4b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Query.html#e56d6ddd15d26789e52f71de4df82305">Query</a> (<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b">Query::op</a> op_, <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> valno, const std::string &amp;value)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a value range query on a document value.  <a href="#27acaeb8ab8a0c111805a0139e3dc35b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Query.html#15e26a7bf7de2699377cad9e9448a482">Query</a> (<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b">Query::op</a> op_, <a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot, const std::string &amp;value)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a value comparison query on a document value.  <a href="#e56d6ddd15d26789e52f71de4df82305"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a value comparison query on a document value.  <a href="#15e26a7bf7de2699377cad9e9448a482"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Query.html#670caefccf000a24078c05c39959e5e1">Query</a> (<a class="el" href="classXapian_1_1PostingSource.html">Xapian::PostingSource</a> *external_source)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct an external source query.  <a href="#670caefccf000a24078c05c39959e5e1"></a><br></td></tr>
@@ -226,7 +226,17 @@ Scale the weight of a subquery by the specified factor.
 A factor of 0 means this subquery will contribute no weight to the query - it will act as a purely boolean subquery.<p>
 If the factor is negative, <a class="el" href="classXapian_1_1InvalidArgumentError.html" title="InvalidArgumentError indicates an invalid parameter value was passed to the API.">Xapian::InvalidArgumentError</a> will be thrown. </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="7e7b6b8ad0c915c2364578dfaaf6100b9a010fd66a56d9242d6dfae2bae0850b"></a><!-- doxytag: member="OP_ELITE_SET" ref="7e7b6b8ad0c915c2364578dfaaf6100b9a010fd66a56d9242d6dfae2bae0850b" args="" -->OP_ELITE_SET</em>&nbsp;</td><td>
-Select an elite set from the subqueries, and perform a query with these combined as an OR query. </td></tr>
+Pick the best N subqueries and combine with OP_OR. 
+<p>
+If you want to implement a feature which finds documents similar to a piece of text, an obvious approach is to build an "OR" query from all the terms in the text, and run this query against a database containing the documents. However such a query can contain a lots of terms and be quite slow to perform, yet many of these terms don't contribute usefully to the results.<p>
+The OP_ELITE_SET operator can be used instead of OP_OR in this situation. OP_ELITE_SET selects the most important ''N'' terms and then acts as an OP_OR query with just these, ignoring any other terms. This will usually return results just as good as the full OP_OR query, but much faster.<p>
+In general, the OP_ELITE_SET operator can be used when you have a large OR query, but it doesn't matter if the search completely ignores some of the less important terms in the query.<p>
+The subqueries don't have to be terms, but if they aren't then OP_ELITE_SET will look at the estimated frequencies of the subqueries and so could pick a subset which don't actually match any documents even if the full OR would match some.<p>
+You can specify a parameter to the query constructor which control the number of terms which OP_ELITE_SET will pick. If not specified, this defaults to 10 (or <code>ceil(sqrt(number_of_subqueries))</code> if there are more than 100 subqueries, but this rather arbitrary special case will be dropped in 1.3.0). For example, this will pick the best 7 terms:<p>
+<pre>
+  <a class="el" href="classXapian_1_1Query.html" title="Class representing a query.">Xapian::Query</a> query(<a class="el" href="classXapian_1_1Query.html#7e7b6b8ad0c915c2364578dfaaf6100b9a010fd66a56d9242d6dfae2bae0850b" title="Pick the best N subqueries and combine with OP_OR.">Xapian::Query::OP_ELITE_SET</a>, subqs.begin(), subqs.end(), 7);
+  </pre><p>
+If the number of subqueries is less than this threshold, OP_ELITE_SET behaves identically to OP_OR. </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="7e7b6b8ad0c915c2364578dfaaf6100bf914b109cfe787be77e7c92c99626f01"></a><!-- doxytag: member="OP_VALUE_GE" ref="7e7b6b8ad0c915c2364578dfaaf6100bf914b109cfe787be77e7c92c99626f01" args="" -->OP_VALUE_GE</em>&nbsp;</td><td>
 Filter by a greater-than-or-equal test on a document value. 
 <p>
@@ -466,13 +476,13 @@ template&lt;class Iterator &gt; </div>
 Combine a number of <a class="el" href="classXapian_1_1Query.html" title="Class representing a query.">Xapian::Query</a>-s with the specified operator. 
 <p>
 The <a class="el" href="classXapian_1_1Query.html" title="Class representing a query.">Xapian::Query</a> objects are specified with begin and end iterators.<p>
-AND, OR, SYNONYM, NEAR and PHRASE can take any number of subqueries. Other operators take exactly two subqueries.<p>
+AND, OR, XOR, ELITE_SET, SYNONYM, NEAR and PHRASE can take any number of subqueries. Other operators take exactly two subqueries.<p>
 The iterators may be to <a class="el" href="classXapian_1_1Query.html" title="Class representing a query.">Xapian::Query</a> objects, pointers to <a class="el" href="classXapian_1_1Query.html" title="Class representing a query.">Xapian::Query</a> objects, or termnames (std::string-s).<p>
 For NEAR and PHRASE, a window size can be specified in parameter.<p>
 For ELITE_SET, the elite set size can be specified in parameter. 
 </div>
 </div><p>
-<a class="anchor" name="9ce755435d556874aed3b3ec7b8b8c4b"></a><!-- doxytag: member="Xapian::Query::Query" ref="9ce755435d556874aed3b3ec7b8b8c4b" args="(Query::op op_, Xapian::valueno valno, const std::string &amp;begin, const std::string &amp;end)" -->
+<a class="anchor" name="27acaeb8ab8a0c111805a0139e3dc35b"></a><!-- doxytag: member="Xapian::Query::Query" ref="27acaeb8ab8a0c111805a0139e3dc35b" args="(Query::op op_, Xapian::valueno slot, const std::string &amp;begin, const std::string &amp;end)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -486,7 +496,7 @@ For ELITE_SET, the elite set size can be specified in parameter.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td>
-          <td class="paramname"> <em>valno</em>, </td>
+          <td class="paramname"> <em>slot</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -512,11 +522,11 @@ For ELITE_SET, the elite set size can be specified in parameter.
 <p>
 Construct a value range query on a document value. 
 <p>
-A value range query matches those documents which have a value stored in the slot given by <em>valno</em> which is in the range specified by <em>begin</em> and <em>end</em> (in lexicographical order), including the endpoints.<p>
+A value range query matches those documents which have a value stored in the slot given by <em>slot</em> which is in the range specified by <em>begin</em> and <em>end</em> (in lexicographical order), including the endpoints.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>op_</em>&nbsp;</td><td>The operator to use for the query. Currently, must be OP_VALUE_RANGE. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>valno</em>&nbsp;</td><td>The slot number to get the value from. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>slot</em>&nbsp;</td><td>The slot number to get the value from. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>begin</em>&nbsp;</td><td>The start of the range. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>end</em>&nbsp;</td><td>The end of the range. </td></tr>
   </table>
@@ -524,7 +534,7 @@ A value range query matches those documents which have a value stored in the slo
 
 </div>
 </div><p>
-<a class="anchor" name="e56d6ddd15d26789e52f71de4df82305"></a><!-- doxytag: member="Xapian::Query::Query" ref="e56d6ddd15d26789e52f71de4df82305" args="(Query::op op_, Xapian::valueno valno, const std::string &amp;value)" -->
+<a class="anchor" name="15e26a7bf7de2699377cad9e9448a482"></a><!-- doxytag: member="Xapian::Query::Query" ref="15e26a7bf7de2699377cad9e9448a482" args="(Query::op op_, Xapian::valueno slot, const std::string &amp;value)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -538,7 +548,7 @@ A value range query matches those documents which have a value stored in the slo
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td>
-          <td class="paramname"> <em>valno</em>, </td>
+          <td class="paramname"> <em>slot</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -558,11 +568,11 @@ A value range query matches those documents which have a value stored in the slo
 <p>
 Construct a value comparison query on a document value. 
 <p>
-This query matches those documents which have a value stored in the slot given by <em>valno</em> which compares, as specified by the operator, to <em>value</em>.<p>
+This query matches those documents which have a value stored in the slot given by <em>slot</em> which compares, as specified by the operator, to <em>value</em>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>op_</em>&nbsp;</td><td>The operator to use for the query. Currently, must be OP_VALUE_GE or OP_VALUE_LE. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>valno</em>&nbsp;</td><td>The slot number to get the value from. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>slot</em>&nbsp;</td><td>The slot number to get the value from. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>The value to compare. </td></tr>
   </table>
 </dl>
@@ -810,8 +820,8 @@ A query which matches no documents.
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

@@ -102,7 +102,7 @@ Inheritance diagram for Xapian::ValuePostingSource:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the current position to the next matching document.  <a href="#87b22aac8422f80124b50a456d1d85b0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93">skip_to</a> (<a class="el" href="namespaceXapian.html#8fa9094bebe1256a7be935a5ede87a64">Xapian::docid</a> min_docid, <a class="el" href="namespaceXapian.html#cac12803afc9e24ee5141c119acb8884">Xapian::weight</a> min_wt)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Skip forward to the specified docid.  <a href="#f11095a4355f96d7bc12074a5a91cd93"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance to the specified docid.  <a href="#f11095a4355f96d7bc12074a5a91cd93"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197">check</a> (<a class="el" href="namespaceXapian.html#8fa9094bebe1256a7be935a5ede87a64">Xapian::docid</a> min_docid, <a class="el" href="namespaceXapian.html#cac12803afc9e24ee5141c119acb8884">Xapian::weight</a> min_wt)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check if the specified docid occurs.  <a href="#71868e54627098425820f7a76e259197"></a><br></td></tr>
@@ -193,7 +193,7 @@ Construct a <a class="el" href="classXapian_1_1ValuePostingSource.html" title="A
 <p>
 Return true if the current position is past the last entry in this list. 
 <p>
-At least one of <em><a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a></em>, <em><a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a></em> or <em><a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a></em> will be called before this method is first called. 
+At least one of <em><a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a></em>, <em><a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a></em> or <em><a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a></em> will be called before this method is first called. 
 <p>Implements <a class="el" href="classXapian_1_1PostingSource.html#98831c9fdea1599f588cd9fef51bbeb5">Xapian::PostingSource</a>.</p>
 
 </div>
@@ -228,17 +228,24 @@ Check if the specified docid occurs.
 <p>
 The caller is required to ensure that the specified document id <em>did</em> actually exists in the database. If it does, it must move to that document id, and return true. If it does not, it may either:<p>
 <ul>
-<li>return true, having moved to a definite position (including "at_end"), which must be the same position as <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> would have moved to.</li></ul>
+<li>return true, having moved to a definite position (including "at_end"), which must be the same position as <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> would have moved to.</li></ul>
 <p>
 or<p>
 <ul>
-<li>return false, having moved to an "indeterminate" position, such that a subsequent call to <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> will move to the next matching position after <em>did</em>.</li></ul>
+<li>return false, having moved to an "indeterminate" position, such that a subsequent call to <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> will move to the next matching position after <em>did</em>.</li></ul>
 <p>
-Generally, this method should act like <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> and return true if that can be done at little extra cost.<p>
+Generally, this method should act like <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> and return true if that can be done at little extra cost.<p>
 Otherwise it should simply check if a particular docid is present, returning true if it is, and false if it isn't.<p>
-The default implementation calls <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> and always returns true.<p>
+The default implementation calls <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> and always returns true.<p>
 <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1ValuePostingSource.html#764328b2a7085e24393a94eb1d2b91e0" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time.<p>
-Note: in the case of a multi-database search, the docid specified is the docid in the single subdatabase relevant to this posting source. See the <em><a class="el" href="classXapian_1_1ValuePostingSource.html#764328b2a7085e24393a94eb1d2b91e0" title="Set this PostingSource to the start of the list of postings.">init()</a></em> method for details. 
+Note: in the case of a multi-database search, the docid specified is the docid in the single subdatabase relevant to this posting source. See the <em><a class="el" href="classXapian_1_1ValuePostingSource.html#764328b2a7085e24393a94eb1d2b91e0" title="Set this PostingSource to the start of the list of postings.">init()</a></em> method for details.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>did</em>&nbsp;</td><td>The document id to check. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>min_wt</em>&nbsp;</td><td>The minimum weight contribution that is needed (this is just a hint which subclasses may ignore). </td></tr>
+  </table>
+</dl>
+
 <p>Reimplemented from <a class="el" href="classXapian_1_1PostingSource.html#92098dee93d09781bb5ad48e86434873">Xapian::PostingSource</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#3ae07f1c25d3b71f437a7cb63a342d5c">Xapian::DecreasingValueWeightPostingSource</a>.</p>
@@ -433,16 +440,17 @@ The <a class="el" href="classXapian_1_1PostingSource.html" title="Base class whi
 <div class="memdoc">
 
 <p>
-Skip forward to the specified docid. 
+Advance to the specified docid. 
 <p>
 If the specified docid isn't in the list, position ourselves on the first document after it (or <a class="el" href="classXapian_1_1ValuePostingSource.html#4bb7ea314dbd569f90f89731204cdc40" title="Return true if the current position is past the last entry in this list.">at_end()</a> if no greater docids are present).<p>
 If the current position is already the specified docid, this method will leave the position unmodified.<p>
 If the specified docid is earlier than the current position, the behaviour is unspecified. A sensible behaviour would be to leave the current position unmodified, but it is also reasonable to move to the specified docid.<p>
-The default implementation calls <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a> repeatedly, which works but <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> can often be implemented much more efficiently.<p>
+The default implementation calls <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a> repeatedly, which works but <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> can often be implemented much more efficiently.<p>
 <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1ValuePostingSource.html#764328b2a7085e24393a94eb1d2b91e0" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time.<p>
 Note: in the case of a multi-database search, the docid specified is the docid in the single subdatabase relevant to this posting source. See the <em><a class="el" href="classXapian_1_1ValuePostingSource.html#764328b2a7085e24393a94eb1d2b91e0" title="Set this PostingSource to the start of the list of postings.">init()</a></em> method for details.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>did</em>&nbsp;</td><td>The document id to advance to. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>min_wt</em>&nbsp;</td><td>The minimum weight contribution that is needed (this is just a hint which subclasses may ignore). </td></tr>
   </table>
 </dl>
@@ -468,7 +476,7 @@ Note: in the case of a multi-database search, the docid specified is the docid i
 <p>
 An estimate of the term frequency. 
 <p>
-Subclasses should set this if they are overriding the <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a> methods. 
+Subclasses should set this if they are overriding the <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a> methods. 
 </div>
 </div><p>
 <a class="anchor" name="3a7be278e6615876d57a254a60826c2f"></a><!-- doxytag: member="Xapian::ValuePostingSource::termfreq_max" ref="3a7be278e6615876d57a254a60826c2f" args="" -->
@@ -485,7 +493,7 @@ Subclasses should set this if they are overriding the <a class="el" href="classX
 <p>
 An upper bound on the term frequency. 
 <p>
-Subclasses should set this if they are overriding the <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a> methods. 
+Subclasses should set this if they are overriding the <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a> methods. 
 </div>
 </div><p>
 <a class="anchor" name="30f64f26a6faddc3f24b8c00e2ba5d0b"></a><!-- doxytag: member="Xapian::ValuePostingSource::termfreq_min" ref="30f64f26a6faddc3f24b8c00e2ba5d0b" args="" -->
@@ -502,7 +510,7 @@ Subclasses should set this if they are overriding the <a class="el" href="classX
 <p>
 A lower bound on the term frequency. 
 <p>
-Subclasses should set this if they are overriding the <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Skip forward to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a> methods to return fewer documents. 
+Subclasses should set this if they are overriding the <a class="el" href="classXapian_1_1ValuePostingSource.html#87b22aac8422f80124b50a456d1d85b0" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1ValuePostingSource.html#f11095a4355f96d7bc12074a5a91cd93" title="Advance to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197" title="Check if the specified docid occurs.">check()</a> methods to return fewer documents. 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
@@ -510,8 +518,8 @@ Subclasses should set this if they are overriding the <a class="el" href="classX
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

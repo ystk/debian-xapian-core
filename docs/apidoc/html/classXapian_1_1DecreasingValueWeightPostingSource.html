@@ -108,7 +108,7 @@ Inheritance diagram for Xapian::DecreasingValueWeightPostingSource:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the current position to the next matching document.  <a href="#ef2944c8ef7812185907af383a3747f2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c">skip_to</a> (<a class="el" href="namespaceXapian.html#8fa9094bebe1256a7be935a5ede87a64">Xapian::docid</a> min_docid, <a class="el" href="namespaceXapian.html#cac12803afc9e24ee5141c119acb8884">Xapian::weight</a> min_wt)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Skip forward to the specified docid.  <a href="#e32da549e3042739f2954233c7a9bb3c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance to the specified docid.  <a href="#e32da549e3042739f2954233c7a9bb3c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#3ae07f1c25d3b71f437a7cb63a342d5c">check</a> (<a class="el" href="namespaceXapian.html#8fa9094bebe1256a7be935a5ede87a64">Xapian::docid</a> min_docid, <a class="el" href="namespaceXapian.html#cac12803afc9e24ee5141c119acb8884">Xapian::weight</a> min_wt)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check if the specified docid occurs.  <a href="#3ae07f1c25d3b71f437a7cb63a342d5c"></a><br></td></tr>
@@ -163,17 +163,24 @@ Check if the specified docid occurs.
 <p>
 The caller is required to ensure that the specified document id <em>did</em> actually exists in the database. If it does, it must move to that document id, and return true. If it does not, it may either:<p>
 <ul>
-<li>return true, having moved to a definite position (including "at_end"), which must be the same position as <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Skip forward to the specified docid.">skip_to()</a> would have moved to.</li></ul>
+<li>return true, having moved to a definite position (including "at_end"), which must be the same position as <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Advance to the specified docid.">skip_to()</a> would have moved to.</li></ul>
 <p>
 or<p>
 <ul>
-<li>return false, having moved to an "indeterminate" position, such that a subsequent call to <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#ef2944c8ef7812185907af383a3747f2" title="Advance the current position to the next matching document.">next()</a> or <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Skip forward to the specified docid.">skip_to()</a> will move to the next matching position after <em>did</em>.</li></ul>
+<li>return false, having moved to an "indeterminate" position, such that a subsequent call to <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#ef2944c8ef7812185907af383a3747f2" title="Advance the current position to the next matching document.">next()</a> or <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Advance to the specified docid.">skip_to()</a> will move to the next matching position after <em>did</em>.</li></ul>
 <p>
-Generally, this method should act like <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Skip forward to the specified docid.">skip_to()</a> and return true if that can be done at little extra cost.<p>
+Generally, this method should act like <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Advance to the specified docid.">skip_to()</a> and return true if that can be done at little extra cost.<p>
 Otherwise it should simply check if a particular docid is present, returning true if it is, and false if it isn't.<p>
-The default implementation calls <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Skip forward to the specified docid.">skip_to()</a> and always returns true.<p>
+The default implementation calls <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Advance to the specified docid.">skip_to()</a> and always returns true.<p>
 <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time.<p>
-Note: in the case of a multi-database search, the docid specified is the docid in the single subdatabase relevant to this posting source. See the <em><a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a></em> method for details. 
+Note: in the case of a multi-database search, the docid specified is the docid in the single subdatabase relevant to this posting source. See the <em><a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a></em> method for details.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>did</em>&nbsp;</td><td>The document id to check. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>min_wt</em>&nbsp;</td><td>The minimum weight contribution that is needed (this is just a hint which subclasses may ignore). </td></tr>
+  </table>
+</dl>
+
 <p>Reimplemented from <a class="el" href="classXapian_1_1ValuePostingSource.html#71868e54627098425820f7a76e259197">Xapian::ValuePostingSource</a>.</p>
 
 </div>
@@ -199,7 +206,7 @@ Clone the posting source.
 The clone should inherit the configuration of the parent, but need not inherit the state. ie, the clone does not need to be in the same iteration position as the original: the matcher will always call <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a> on the clone before attempting to move the iterator, or read the information about the current position of the iterator.<p>
 This may return NULL to indicate that cloning is not supported. In this case, the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> may only be used with a single-database search.<p>
 The default implementation returns NULL.<p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new". 
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a> 
 <p>Reimplemented from <a class="el" href="classXapian_1_1ValueWeightPostingSource.html#a157a293a1b54a3d70d1d55f5de26895">Xapian::ValueWeightPostingSource</a>.</p>
 
 </div>
@@ -246,7 +253,7 @@ This default implementation returns a generic answer. This default it provided t
 Return the weight contribution for the current document. 
 <p>
 This default implementation always returns 0, for convenience when implementing "weight-less" <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> subclasses.<p>
-This method may assume that it will only be called when there is a "current document". In detail: <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time. It will also only call this if the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> reports that it is pointing to a valid document (ie, it will not call it before calling at least one of <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#ef2944c8ef7812185907af383a3747f2" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Skip forward to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#3ae07f1c25d3b71f437a7cb63a342d5c" title="Check if the specified docid occurs.">check()</a>, and will ensure that the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> is not at the end by calling <a class="el" href="classXapian_1_1ValuePostingSource.html#4bb7ea314dbd569f90f89731204cdc40" title="Return true if the current position is past the last entry in this list.">at_end()</a>). 
+This method may assume that it will only be called when there is a "current document". In detail: <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time. It will also only call this if the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> reports that it is pointing to a valid document (ie, it will not call it before calling at least one of <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#ef2944c8ef7812185907af383a3747f2" title="Advance the current position to the next matching document.">next()</a>, <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Advance to the specified docid.">skip_to()</a> or <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#3ae07f1c25d3b71f437a7cb63a342d5c" title="Check if the specified docid occurs.">check()</a>, and will ensure that the <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> is not at the end by calling <a class="el" href="classXapian_1_1ValuePostingSource.html#4bb7ea314dbd569f90f89731204cdc40" title="Return true if the current position is past the last entry in this list.">at_end()</a>). 
 <p>Reimplemented from <a class="el" href="classXapian_1_1ValueWeightPostingSource.html#b9159e5e12e909272fa2b776bb95cdaa">Xapian::ValueWeightPostingSource</a>.</p>
 
 </div>
@@ -390,16 +397,17 @@ If you don't want to support the remote backend, you can use the default impleme
 <div class="memdoc">
 
 <p>
-Skip forward to the specified docid. 
+Advance to the specified docid. 
 <p>
 If the specified docid isn't in the list, position ourselves on the first document after it (or <a class="el" href="classXapian_1_1ValuePostingSource.html#4bb7ea314dbd569f90f89731204cdc40" title="Return true if the current position is past the last entry in this list.">at_end()</a> if no greater docids are present).<p>
 If the current position is already the specified docid, this method will leave the position unmodified.<p>
 If the specified docid is earlier than the current position, the behaviour is unspecified. A sensible behaviour would be to leave the current position unmodified, but it is also reasonable to move to the specified docid.<p>
-The default implementation calls <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#ef2944c8ef7812185907af383a3747f2" title="Advance the current position to the next matching document.">next()</a> repeatedly, which works but <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Skip forward to the specified docid.">skip_to()</a> can often be implemented much more efficiently.<p>
+The default implementation calls <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#ef2944c8ef7812185907af383a3747f2" title="Advance the current position to the next matching document.">next()</a> repeatedly, which works but <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#e32da549e3042739f2954233c7a9bb3c" title="Advance to the specified docid.">skip_to()</a> can often be implemented much more efficiently.<p>
 <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> will always call <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a> on a <a class="el" href="classXapian_1_1PostingSource.html" title="Base class which provides an &quot;external&quot; source of postings.">PostingSource</a> before calling this for the first time.<p>
 Note: in the case of a multi-database search, the docid specified is the docid in the single subdatabase relevant to this posting source. See the <em><a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#abbd9d95d77e2aa947377c44d1bb733c" title="Set this PostingSource to the start of the list of postings.">init()</a></em> method for details.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>did</em>&nbsp;</td><td>The document id to advance to. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>min_wt</em>&nbsp;</td><td>The minimum weight contribution that is needed (this is just a hint which subclasses may ignore). </td></tr>
   </table>
 </dl>
@@ -427,7 +435,7 @@ Note: in the case of a multi-database search, the docid specified is the docid i
 <p>
 Create object given string serialisation returned by <a class="el" href="classXapian_1_1DecreasingValueWeightPostingSource.html#2d3b48128b61bfd904163706c87065a8" title="Serialise object parameters into a string.">serialise()</a>. 
 <p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new".<p>
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a><p>
 If you don't want to support the remote backend, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -444,8 +452,8 @@ If you don't want to support the remote backend, you can use the default impleme
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

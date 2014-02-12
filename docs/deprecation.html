@@ -289,7 +289,7 @@ ul.auto-toc {
 
 <!-- This document was originally written by Richard Boulton. -->
 <!-- Copyright (C) 2007 Lemur Consulting Ltd -->
-<!-- Copyright (C) 2007,2008,2009,2010 Olly Betts -->
+<!-- Copyright (C) 2007,2008,2009,2010,2011 Olly Betts -->
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title first">Table of contents</p>
 <ul class="simple">
@@ -301,17 +301,18 @@ ul.auto-toc {
 <li><a class="reference internal" href="#deprecation-in-the-bindings" id="id27">Deprecation in the bindings</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#how-to-avoid-using-deprecated-features" id="id28">How to avoid using deprecated features</a></li>
-<li><a class="reference internal" href="#features-currently-marked-for-deprecation" id="id29">Features currently marked for deprecation</a><ul>
-<li><a class="reference internal" href="#native-c-api" id="id30">Native C++ API</a></li>
-<li><a class="reference internal" href="#bindings" id="id31">Bindings</a></li>
-<li><a class="reference internal" href="#omega" id="id32">Omega</a></li>
+<li><a class="reference internal" href="#support-for-other-software" id="id28">Support for Other Software</a></li>
+<li><a class="reference internal" href="#how-to-avoid-using-deprecated-features" id="id29">How to avoid using deprecated features</a></li>
+<li><a class="reference internal" href="#features-currently-marked-for-deprecation" id="id30">Features currently marked for deprecation</a><ul>
+<li><a class="reference internal" href="#native-c-api" id="id31">Native C++ API</a></li>
+<li><a class="reference internal" href="#bindings" id="id32">Bindings</a></li>
+<li><a class="reference internal" href="#omega" id="id33">Omega</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#features-removed-from-xapian" id="id33">Features removed from Xapian</a><ul>
-<li><a class="reference internal" href="#id1" id="id34">Native C++ API</a></li>
-<li><a class="reference internal" href="#id2" id="id35">Bindings</a></li>
-<li><a class="reference internal" href="#id21" id="id36">Omega</a></li>
+<li><a class="reference internal" href="#features-removed-from-xapian" id="id34">Features removed from Xapian</a><ul>
+<li><a class="reference internal" href="#id1" id="id35">Native C++ API</a></li>
+<li><a class="reference internal" href="#id2" id="id36">Bindings</a></li>
+<li><a class="reference internal" href="#id21" id="id37">Omega</a></li>
 </ul>
 </li>
 </ul>
@@ -339,10 +340,10 @@ to be deprecated, but to save words this document will often use the term
 <div class="section" id="deprecation-markers">
 <h2><a class="toc-backref" href="#id24">Deprecation markers</a></h2>
 <p>At any particular point, some parts of the C++ API will be marked as
-&quot;deprecated&quot;.  This is indicated with the <tt class="docutils literal"><span class="pre">XAPIAN_DEPRECATED</span></tt> macro, which
-will cause compilers with appropriate support (such as GCC 3.1 or later, and
-MSVC 7.0 or later) to emit warning messages about the use of deprecated
-features at compile time.</p>
+&quot;deprecated&quot;.  This is indicated with the <tt class="docutils literal"><span class="pre">XAPIAN_DEPRECATED()</span></tt> or
+<tt class="docutils literal"><span class="pre">XAPIAN_DEPRECATED_CLASS</span></tt> macros, which will cause compilers with appropriate
+support (such as GCC 3.1 or later, and MSVC 7.0 or later) to emit warning
+messages about the use of deprecated features at compile time.</p>
 <p>If a feature is marked with one of these markers, you should avoid using it in
 new code, and should migrate your code to use a replacement when possible.  The
 documentation comments for the feature, or the list at the end
@@ -419,8 +420,34 @@ an entire release series to pass.</p>
 removed features at the end of this file.</p>
 </div>
 </div>
+<div class="section" id="support-for-other-software">
+<h1><a class="toc-backref" href="#id28">Support for Other Software</a></h1>
+<p>Support for other software doesn't follow the same deprecation rules as
+for API features.</p>
+<p>Our guiding principle for supporting version of other software is that
+we don't aim to actively support versions which are no longer supported
+&quot;upstream&quot;.</p>
+<p>So Xapian 1.1.0 doesn't support PHP4 because the PHP team no longer did
+when it was released.  By the API deprecation rules we should have announced
+this when Xapian 1.0.0 was released, but we don't have control over when and
+to what timescales other software providers discontinue support for older
+versions.</p>
+<p>Sometimes we can support such versions without extra effort (e.g. Tcl's
+stubs mechanism means Tcl 8.1 probably still works, even though the last
+8.1.x release was over a decade ago), and in some cases Linux distros
+continue to support software after upstream stops.</p>
+<p>But in most cases keeping support around is a maintenance overhead and
+we'd rather spend our time on more useful things.</p>
+<p>Note that there's no guarantee that we will support and continue to
+support versions just because upstream still does.  For example, we ceased
+providing backported packages for Ubuntu dapper with Xapian 1.1.0 - in this
+case, it's because we felt that if you're conservative enough to run dapper,
+you'd probably prefer to stick with 1.0.x until you upgrade to hardy (the next
+Ubuntu LTS release).  But we may decide not to support versions for other
+reasons too.</p>
+</div>
 <div class="section" id="how-to-avoid-using-deprecated-features">
-<h1><a class="toc-backref" href="#id28">How to avoid using deprecated features</a></h1>
+<h1><a class="toc-backref" href="#id29">How to avoid using deprecated features</a></h1>
 <p>We recommend taking the following steps to avoid depending on deprecated
 features when writing your applications:</p>
 <blockquote>
@@ -447,9 +474,9 @@ they are using in the list at the end of this file.</li>
 </blockquote>
 </div>
 <div class="section" id="features-currently-marked-for-deprecation">
-<h1><a class="toc-backref" href="#id29">Features currently marked for deprecation</a></h1>
+<h1><a class="toc-backref" href="#id30">Features currently marked for deprecation</a></h1>
 <div class="section" id="native-c-api">
-<h2><a class="toc-backref" href="#id30">Native C++ API</a></h2>
+<h2><a class="toc-backref" href="#id31">Native C++ API</a></h2>
 <!-- Keep table width to <= 126 columns. -->
 <table border="1" class="docutils">
 <colgroup>
@@ -466,6 +493,11 @@ they are using in the list at the end of this file.</li>
 </tr>
 </thead>
 <tbody valign="top">
+<tr><td>1.1.0</td>
+<td>?</td>
+<td>Xapian::WritableDatabase::flush()</td>
+<td>Xapian::WritableDatabase::commit() should be used instead.</td>
+</tr>
 <tr><td>1.1.0</td>
 <td>1.3.0</td>
 <td>Default second parameter to
@@ -526,9 +558,13 @@ instead.</td>
 </tr>
 </tbody>
 </table>
+<!-- flush() is just a simple inlined alias, so perhaps not worth causing pain by -->
+<!-- removing it in a hurry, though it would be nice to be able to reuse the -->
+<!-- method name to actually implement a flush() which writes out data but -->
+<!-- doesn't commit. -->
 </div>
 <div class="section" id="bindings">
-<h2><a class="toc-backref" href="#id31">Bindings</a></h2>
+<h2><a class="toc-backref" href="#id32">Bindings</a></h2>
 <!-- Keep table width to <= 126 columns. -->
 <table border="1" class="docutils">
 <colgroup>
@@ -560,11 +596,23 @@ instead.</td>
 <td>Use Stem.get_available_languages instead (static method instead of
 function)</td>
 </tr>
+<tr><td>1.2.5</td>
+<td>1.5.0</td>
+<td>Python</td>
+<td>MSet.items</td>
+<td>Iterate the MSet object itself instead.</td>
+</tr>
+<tr><td>1.2.5</td>
+<td>1.5.0</td>
+<td>Python</td>
+<td>ESet.items</td>
+<td>Iterate the ESet object itself instead.</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="omega">
-<h2><a class="toc-backref" href="#id32">Omega</a></h2>
+<h2><a class="toc-backref" href="#id33">Omega</a></h2>
 <!-- Keep table width to <= 126 columns. -->
 <table border="1" class="docutils">
 <colgroup>
@@ -581,10 +629,10 @@ function)</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<tr><td>1.2.5</td>
+<td>1.5.0</td>
+<td>$set{spelling,true}</td>
+<td>Use $set{flag_spelling_suggestion,true} instead.</td>
 </tr>
 </tbody>
 </table>
@@ -600,9 +648,9 @@ function)</td>
 </div>
 </div>
 <div class="section" id="features-removed-from-xapian">
-<h1><a class="toc-backref" href="#id33">Features removed from Xapian</a></h1>
+<h1><a class="toc-backref" href="#id34">Features removed from Xapian</a></h1>
 <div class="section" id="id1">
-<h2><a class="toc-backref" href="#id34">Native C++ API</a></h2>
+<h2><a class="toc-backref" href="#id35">Native C++ API</a></h2>
 <!-- Keep table width to <= 126 columns. -->
 <table border="1" class="docutils">
 <colgroup>
@@ -689,7 +737,7 @@ parameters as above.</p>
 </tr>
 <tr><td>1.0.0</td>
 <td>Enquire::set_bias()</td>
-<td>No replacement yet implemented.</td>
+<td>Use <tt class="docutils literal"><span class="pre">PostingSource</span></tt> instead (new in 1.2).</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>ExpandDecider::operator()</td>
@@ -828,7 +876,7 @@ and earlier.  Just use -V instead.</td>
 </table>
 </div>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id35">Bindings</a></h2>
+<h2><a class="toc-backref" href="#id36">Bindings</a></h2>
 <!-- Keep table width to <= 126 columns. -->
 <table border="1" class="docutils">
 <colgroup>
@@ -983,7 +1031,11 @@ To convert, just change <tt class="docutils literal"><span class="pre">msetitem.
 <td>Python</td>
 <td>Enquire.get_matching_terms</td>
 <td>Replaced by <tt class="docutils literal"><span class="pre">Enquire.matching_terms</span></tt>, for consistency with
-rest of Python API.</td>
+rest of Python API.  Note: an <tt class="docutils literal"><span class="pre">Enquire.get_matching_terms</span></tt> method existed in
+releases up-to and including 1.2.4, but this was actually an old implementation
+which only accepted a MSetIterator as a parameter, and would have failed with
+code written expecting the version in 1.0.0.  It was fully removed after
+release 1.2.4.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>SWIG
@@ -996,6 +1048,21 @@ rest of Python API.</td>
 <a class="footnote-reference" href="#rsw2" id="id20">[2]</a></td>
 <td>MSet::get_document_id()</td>
 <td>Use <tt class="docutils literal"><span class="pre">MSet::get_docid()</span></tt> instead.</td>
+</tr>
+<tr><td>1.2.0</td>
+<td>Python</td>
+<td>mset[i][xapian.MSET_DID] etc</td>
+<td>This was inadvertently removed in 1.2.0, but not noticed until 1.2.5, by which
+point it no longer seemed worthwhile to reinstate it.  Please use the property
+API instead, e.g. <tt class="docutils literal"><span class="pre">mset[i].docid</span></tt>, <tt class="docutils literal"><span class="pre">mset[i].weight</span></tt>, etc.</td>
+</tr>
+<tr><td>1.2.5</td>
+<td>Python</td>
+<td>if idx in mset</td>
+<td>This was nominally implemented, but never actually worked.  Since nobody seems
+to have noticed in 3.5 years, we just removed it.  If you have uses (which were
+presumably never called), you can replace them with:
+<tt class="docutils literal"><span class="pre">if</span> <span class="pre">idx</span> <span class="pre">&gt;=</span> <span class="pre">0</span> <span class="pre">and</span> <span class="pre">idx</span> <span class="pre">&lt;</span> <span class="pre">len(mset)</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -1025,7 +1092,7 @@ rest of Python API.</td>
 </table>
 </div>
 <div class="section" id="id21">
-<h2><a class="toc-backref" href="#id36">Omega</a></h2>
+<h2><a class="toc-backref" href="#id37">Omega</a></h2>
 <!-- Keep table width to <= 126 columns. -->
 <table border="1" class="docutils">
 <colgroup>

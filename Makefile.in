@@ -113,29 +113,27 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_CHERT_TRUE@am__append_11 = libchertcheck.la
 @BUILD_BACKEND_FLINT_TRUE@am__append_12 = bin/xapian-check-flint.cc bin/xapian-check-flint.h
 @BUILD_BACKEND_FLINT_TRUE@am__append_13 = libflintcheck.la
-@BUILD_BACKEND_BRASS_TRUE@am__append_14 = bin/xapian-compact-brass.cc
-@BUILD_BACKEND_CHERT_TRUE@am__append_15 = bin/xapian-compact-chert.cc
-@BUILD_BACKEND_FLINT_TRUE@am__append_16 = bin/xapian-compact-flint.cc
-@BUILD_BACKEND_REMOTE_TRUE@am__append_17 = \
+@BUILD_BACKEND_REMOTE_TRUE@am__append_14 = \
 @BUILD_BACKEND_REMOTE_TRUE@	backends/dbfactory_remote.cc
 
-@BUILD_BACKEND_FLINT_TRUE@am__append_18 = \
+@BUILD_BACKEND_FLINT_TRUE@am__append_15 = \
 @BUILD_BACKEND_FLINT_TRUE@	backends/contiguousalldocspostlist.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint_lock.cc
 
-@BUILD_BACKEND_CHERT_TRUE@@BUILD_BACKEND_FLINT_FALSE@am__append_19 = \
+@BUILD_BACKEND_CHERT_TRUE@@BUILD_BACKEND_FLINT_FALSE@am__append_16 = \
 @BUILD_BACKEND_CHERT_TRUE@@BUILD_BACKEND_FLINT_FALSE@        backends/contiguousalldocspostlist.cc\
 @BUILD_BACKEND_CHERT_TRUE@@BUILD_BACKEND_FLINT_FALSE@	backends/flint_lock.cc
 
-@BUILD_BACKEND_BRASS_TRUE@@BUILD_BACKEND_CHERT_FALSE@@BUILD_BACKEND_FLINT_FALSE@am__append_20 = \
+@BUILD_BACKEND_BRASS_TRUE@@BUILD_BACKEND_CHERT_FALSE@@BUILD_BACKEND_FLINT_FALSE@am__append_17 = \
 @BUILD_BACKEND_BRASS_TRUE@@BUILD_BACKEND_CHERT_FALSE@@BUILD_BACKEND_FLINT_FALSE@        backends/contiguousalldocspostlist.cc\
 @BUILD_BACKEND_BRASS_TRUE@@BUILD_BACKEND_CHERT_FALSE@@BUILD_BACKEND_FLINT_FALSE@	backends/flint_lock.cc
 
-@BUILD_BACKEND_BRASS_TRUE@am__append_21 = \
+@BUILD_BACKEND_BRASS_TRUE@am__append_18 = \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_alldocspostlist.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_alltermslist.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_btreebase.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_check.h\
+@BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_compact.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_cursor.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_database.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_databasereplicator.h\
@@ -159,10 +157,11 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_values.h\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_version.h
 
-@BUILD_BACKEND_BRASS_TRUE@am__append_22 = \
+@BUILD_BACKEND_BRASS_TRUE@am__append_19 = \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_alldocspostlist.cc\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_alltermslist.cc\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_btreebase.cc\
+@BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_compact.cc\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_cursor.cc\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_database.cc\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_databasereplicator.cc\
@@ -183,13 +182,14 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_values.cc\
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_version.cc
 
-@BUILD_BACKEND_BRASS_TRUE@am__append_23 = libbrasscheck.la
-@BUILD_BACKEND_CHERT_TRUE@am__append_24 = \
+@BUILD_BACKEND_BRASS_TRUE@am__append_20 = libbrasscheck.la
+@BUILD_BACKEND_CHERT_TRUE@am__append_21 = \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alldocsmodifiedpostlist.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alldocspostlist.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alltermslist.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_btreebase.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_check.h\
+@BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_compact.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_cursor.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_database.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_databasereplicator.h\
@@ -213,11 +213,12 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_values.h\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_version.h
 
-@BUILD_BACKEND_CHERT_TRUE@am__append_25 = \
+@BUILD_BACKEND_CHERT_TRUE@am__append_22 = \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alldocsmodifiedpostlist.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alldocspostlist.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alltermslist.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_btreebase.cc\
+@BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_compact.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_cursor.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_database.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_databasereplicator.cc\
@@ -238,12 +239,13 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_values.cc\
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_version.cc
 
-@BUILD_BACKEND_CHERT_TRUE@am__append_26 = libchertcheck.la
-@BUILD_BACKEND_FLINT_TRUE@am__append_27 = \
+@BUILD_BACKEND_CHERT_TRUE@am__append_23 = libchertcheck.la
+@BUILD_BACKEND_FLINT_TRUE@am__append_24 = \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_alldocspostlist.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_alltermslist.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_btreebase.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_check.h\
+@BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_compact.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_cursor.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_database.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_databasereplicator.h\
@@ -265,10 +267,11 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_values.h\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_version.h
 
-@BUILD_BACKEND_FLINT_TRUE@am__append_28 = \
+@BUILD_BACKEND_FLINT_TRUE@am__append_25 = \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_alldocspostlist.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_alltermslist.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_btreebase.cc\
+@BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_compact.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_cursor.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_database.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_databasereplicator.cc\
@@ -287,13 +290,13 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_values.cc\
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_version.cc
 
-@BUILD_BACKEND_FLINT_TRUE@am__append_29 = libflintcheck.la
-@BUILD_BACKEND_INMEMORY_TRUE@am__append_30 = \
+@BUILD_BACKEND_FLINT_TRUE@am__append_26 = libflintcheck.la
+@BUILD_BACKEND_INMEMORY_TRUE@am__append_27 = \
 @BUILD_BACKEND_INMEMORY_TRUE@	backends/inmemory/inmemory_alltermslist.h\
 @BUILD_BACKEND_INMEMORY_TRUE@	backends/inmemory/inmemory_database.h\
 @BUILD_BACKEND_INMEMORY_TRUE@	backends/inmemory/inmemory_document.h
 
-@BUILD_BACKEND_INMEMORY_TRUE@am__append_31 = \
+@BUILD_BACKEND_INMEMORY_TRUE@am__append_28 = \
 @BUILD_BACKEND_INMEMORY_TRUE@	backends/inmemory/inmemory_alltermslist.cc\
 @BUILD_BACKEND_INMEMORY_TRUE@	backends/inmemory/inmemory_database.cc\
 @BUILD_BACKEND_INMEMORY_TRUE@	backends/inmemory/inmemory_document.cc\
@@ -301,35 +304,35 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 
 # Xapian::Document uses MapTermList which uses InMemoryPositionList so we
 # always need "inmemory_positionlist.cc".
-@BUILD_BACKEND_INMEMORY_FALSE@am__append_32 = \
+@BUILD_BACKEND_INMEMORY_FALSE@am__append_29 = \
 @BUILD_BACKEND_INMEMORY_FALSE@	backends/inmemory/inmemory_positionlist.cc
 
-@BUILD_BACKEND_REMOTE_TRUE@am__append_33 = \
+@BUILD_BACKEND_REMOTE_TRUE@am__append_30 = \
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/remote-document.h\
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/net_postlist.h\
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/net_termlist.h
 
-@BUILD_BACKEND_REMOTE_TRUE@am__append_34 = \
+@BUILD_BACKEND_REMOTE_TRUE@am__append_31 = \
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/remote-document.cc\
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/net_postlist.cc\
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/net_termlist.cc\
 @BUILD_BACKEND_REMOTE_TRUE@	backends/remote/remote-database.cc
 
-@USE_WIN32_UUID_API_TRUE@am__append_35 = \
+@USE_WIN32_UUID_API_TRUE@am__append_32 = \
 @USE_WIN32_UUID_API_TRUE@	common/win32_uuid.cc
 
-@USE_WIN32_UUID_API_TRUE@am__append_36 = -lrpcrt4
-@MAINTAINER_MODE_TRUE@am__append_37 = $(snowball_built_sources) \
+@USE_WIN32_UUID_API_TRUE@am__append_33 = -lrpcrt4
+@MAINTAINER_MODE_TRUE@am__append_34 = $(snowball_built_sources) \
 @MAINTAINER_MODE_TRUE@	languages/allsnowballheaders.h \
 @MAINTAINER_MODE_TRUE@	$(lemon_built_sources) \
 @MAINTAINER_MODE_TRUE@	include/xapian/error.h \
 @MAINTAINER_MODE_TRUE@	include/xapian/errordispatch.h
-@MAINTAINER_MODE_TRUE@am__append_38 = languages/snowball \
+@MAINTAINER_MODE_TRUE@am__append_35 = languages/snowball \
 @MAINTAINER_MODE_TRUE@	queryparser/lemon
-@BUILD_BACKEND_REMOTE_TRUE@am__append_39 = \
+@BUILD_BACKEND_REMOTE_TRUE@am__append_36 = \
 @BUILD_BACKEND_REMOTE_TRUE@	matcher/remotesubmatch.cc
 
-@BUILD_BACKEND_REMOTE_TRUE@am__append_40 = \
+@BUILD_BACKEND_REMOTE_TRUE@am__append_37 = \
 @BUILD_BACKEND_REMOTE_TRUE@	net/progclient.cc\
 @BUILD_BACKEND_REMOTE_TRUE@	net/remoteconnection.cc\
 @BUILD_BACKEND_REMOTE_TRUE@	net/remoteserver.cc\
@@ -341,14 +344,12 @@ DIST_COMMON = README $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
 @BUILD_BACKEND_REMOTE_TRUE@	net/tcpclient.cc\
 @BUILD_BACKEND_REMOTE_TRUE@	net/tcpserver.cc
 
-@MAINTAINER_NO_DOCS_FALSE@am__append_41 = $(dist_man_MANS)
-@DOCUMENTATION_RULES_TRUE@am__append_42 = $(dist_man_MANS)
+@MAINTAINER_NO_DOCS_FALSE@am__append_38 = $(dist_man_MANS)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/rjb_find_stlport.m4 \
 	$(top_srcdir)/m4/type_socklen_t.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -411,7 +412,7 @@ libgetopt_la_LIBADD =
 am_libgetopt_la_OBJECTS = common/getopt.lo
 libgetopt_la_OBJECTS = $(am_libgetopt_la_OBJECTS)
 libxapian_la_LIBADD =
-am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
+am__libxapian_la_SOURCES_DIST = api/compactor.cc api/decvalwtsource.cc \
 	api/documentvaluelist.cc api/editdistance.cc \
 	api/emptypostlist.cc api/error.cc api/errorhandler.cc \
 	api/expanddecider.cc api/keymaker.cc api/leafpostlist.cc \
@@ -431,7 +432,7 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 	backends/brass/brass_alldocspostlist.cc \
 	backends/brass/brass_alltermslist.cc \
 	backends/brass/brass_btreebase.cc \
-	backends/brass/brass_cursor.cc \
+	backends/brass/brass_compact.cc backends/brass/brass_cursor.cc \
 	backends/brass/brass_database.cc \
 	backends/brass/brass_databasereplicator.cc \
 	backends/brass/brass_dbstats.cc \
@@ -452,7 +453,7 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 	backends/chert/chert_alldocspostlist.cc \
 	backends/chert/chert_alltermslist.cc \
 	backends/chert/chert_btreebase.cc \
-	backends/chert/chert_cursor.cc \
+	backends/chert/chert_compact.cc backends/chert/chert_cursor.cc \
 	backends/chert/chert_database.cc \
 	backends/chert/chert_databasereplicator.cc \
 	backends/chert/chert_dbstats.cc \
@@ -472,7 +473,7 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 	backends/flint/flint_alldocspostlist.cc \
 	backends/flint/flint_alltermslist.cc \
 	backends/flint/flint_btreebase.cc \
-	backends/flint/flint_cursor.cc \
+	backends/flint/flint_compact.cc backends/flint/flint_cursor.cc \
 	backends/flint/flint_database.cc \
 	backends/flint/flint_databasereplicator.cc \
 	backends/flint/flint_document.cc \
@@ -538,7 +539,8 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 	net/remotetcpclient.cc net/remotetcpserver.cc \
 	net/replicatetcpclient.cc net/replicatetcpserver.cc \
 	net/serialise.cc net/tcpclient.cc net/tcpserver.cc \
-	queryparser/queryparser.cc queryparser/queryparser_internal.cc \
+	queryparser/cjk-tokenizer.cc queryparser/queryparser.cc \
+	queryparser/queryparser_internal.cc \
 	queryparser/termgenerator.cc \
 	queryparser/termgenerator_internal.cc unicode/tclUniData.cc \
 	unicode/utf8itor.cc weight/bm25weight.cc weight/boolweight.cc \
@@ -554,6 +556,7 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 @BUILD_BACKEND_BRASS_TRUE@am__objects_5 = backends/brass/brass_alldocspostlist.lo \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_alltermslist.lo \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_btreebase.lo \
+@BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_compact.lo \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_cursor.lo \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_database.lo \
 @BUILD_BACKEND_BRASS_TRUE@	backends/brass/brass_databasereplicator.lo \
@@ -577,6 +580,7 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alldocspostlist.lo \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_alltermslist.lo \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_btreebase.lo \
+@BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_compact.lo \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_cursor.lo \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_database.lo \
 @BUILD_BACKEND_CHERT_TRUE@	backends/chert/chert_databasereplicator.lo \
@@ -599,6 +603,7 @@ am__libxapian_la_SOURCES_DIST = api/decvalwtsource.cc \
 @BUILD_BACKEND_FLINT_TRUE@am__objects_7 = backends/flint/flint_alldocspostlist.lo \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_alltermslist.lo \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_btreebase.lo \
+@BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_compact.lo \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_cursor.lo \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_database.lo \
 @BUILD_BACKEND_FLINT_TRUE@	backends/flint/flint_databasereplicator.lo \
@@ -648,16 +653,17 @@ am__objects_14 = $(am__objects_12) $(am__objects_13)
 @BUILD_BACKEND_REMOTE_TRUE@	net/replicatetcpserver.lo \
 @BUILD_BACKEND_REMOTE_TRUE@	net/serialise.lo net/tcpclient.lo \
 @BUILD_BACKEND_REMOTE_TRUE@	net/tcpserver.lo
-am__objects_17 = api/decvalwtsource.lo api/documentvaluelist.lo \
-	api/editdistance.lo api/emptypostlist.lo api/error.lo \
-	api/errorhandler.lo api/expanddecider.lo api/keymaker.lo \
-	api/leafpostlist.lo api/matchspy.lo api/omdatabase.lo \
-	api/omdocument.lo api/omenquire.lo \
-	api/ompositionlistiterator.lo api/ompostlistiterator.lo \
-	api/omquery.lo api/omqueryinternal.lo \
-	api/omtermlistiterator.lo api/postingsource.lo api/postlist.lo \
-	api/registry.lo api/replication.lo api/sortable-serialise.lo \
-	api/termlist.lo api/valueiterator.lo api/valuerangeproc.lo \
+am__objects_17 = api/compactor.lo api/decvalwtsource.lo \
+	api/documentvaluelist.lo api/editdistance.lo \
+	api/emptypostlist.lo api/error.lo api/errorhandler.lo \
+	api/expanddecider.lo api/keymaker.lo api/leafpostlist.lo \
+	api/matchspy.lo api/omdatabase.lo api/omdocument.lo \
+	api/omenquire.lo api/ompositionlistiterator.lo \
+	api/ompostlistiterator.lo api/omquery.lo \
+	api/omqueryinternal.lo api/omtermlistiterator.lo \
+	api/postingsource.lo api/postlist.lo api/registry.lo \
+	api/replication.lo api/sortable-serialise.lo api/termlist.lo \
+	api/valueiterator.lo api/valuerangeproc.lo \
 	api/valuesetmatchdecider.lo api/version.lo \
 	backends/alltermslist.lo backends/database.lo \
 	backends/databasereplicator.lo backends/dbfactory.lo \
@@ -689,7 +695,8 @@ am__objects_17 = api/decvalwtsource.lo api/documentvaluelist.lo \
 	matcher/selectpostlist.lo matcher/synonympostlist.lo \
 	matcher/valuegepostlist.lo matcher/valuerangepostlist.lo \
 	matcher/valuestreamdocument.lo $(am__objects_16) \
-	queryparser/queryparser.lo queryparser/queryparser_internal.lo \
+	queryparser/cjk-tokenizer.lo queryparser/queryparser.lo \
+	queryparser/queryparser_internal.lo \
 	queryparser/termgenerator.lo \
 	queryparser/termgenerator_internal.lo unicode/tclUniData.lo \
 	unicode/utf8itor.lo weight/bm25weight.lo weight/boolweight.lo \
@@ -720,23 +727,15 @@ am_bin_xapian_check_OBJECTS =  \
 	$(am__objects_19) $(am__objects_20)
 bin_xapian_check_OBJECTS = $(am_bin_xapian_check_OBJECTS)
 am__DEPENDENCIES_1 =
-bin_xapian_check_DEPENDENCIES = $(am__DEPENDENCIES_1) $(libxapian_la) \
-	$(am__append_9) $(am__append_11) $(am__append_13)
+bin_xapian_check_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__append_9) \
+	$(am__append_11) $(am__append_13) $(libxapian_la)
 am_bin_xapian_chert_update_OBJECTS =  \
 	bin/bin_xapian_chert_update-xapian-chert-update.$(OBJEXT)
 bin_xapian_chert_update_OBJECTS =  \
 	$(am_bin_xapian_chert_update_OBJECTS)
 bin_xapian_chert_update_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	libgetopt.la $(libxapian_la)
-am__bin_xapian_compact_SOURCES_DIST = bin/xapian-compact.cc \
-	bin/xapian-compact.h bin/xapian-compact-brass.cc \
-	bin/xapian-compact-chert.cc bin/xapian-compact-flint.cc
-@BUILD_BACKEND_BRASS_TRUE@am__objects_21 = bin/bin_xapian_compact-xapian-compact-brass.$(OBJEXT)
-@BUILD_BACKEND_CHERT_TRUE@am__objects_22 = bin/bin_xapian_compact-xapian-compact-chert.$(OBJEXT)
-@BUILD_BACKEND_FLINT_TRUE@am__objects_23 = bin/bin_xapian_compact-xapian-compact-flint.$(OBJEXT)
-am_bin_xapian_compact_OBJECTS =  \
-	bin/bin_xapian_compact-xapian-compact.$(OBJEXT) \
-	$(am__objects_21) $(am__objects_22) $(am__objects_23)
+am_bin_xapian_compact_OBJECTS = bin/xapian-compact.$(OBJEXT)
 bin_xapian_compact_OBJECTS = $(am_bin_xapian_compact_OBJECTS)
 bin_xapian_compact_DEPENDENCIES = $(am__DEPENDENCIES_1) libgetopt.la \
 	$(libxapian_la)
@@ -835,9 +834,8 @@ DIST_SOURCES = $(am__libbrasscheck_la_SOURCES_DIST) \
 	$(am__libxapian_la_SOURCES_DIST) \
 	$(am__bin_xapian_check_SOURCES_DIST) \
 	$(bin_xapian_chert_update_SOURCES) \
-	$(am__bin_xapian_compact_SOURCES_DIST) \
-	$(bin_xapian_inspect_SOURCES) $(bin_xapian_progsrv_SOURCES) \
-	$(bin_xapian_replicate_SOURCES) \
+	$(bin_xapian_compact_SOURCES) $(bin_xapian_inspect_SOURCES) \
+	$(bin_xapian_progsrv_SOURCES) $(bin_xapian_replicate_SOURCES) \
 	$(bin_xapian_replicate_server_SOURCES) \
 	$(bin_xapian_tcpsrv_SOURCES) $(examples_copydatabase_SOURCES) \
 	$(examples_delve_SOURCES) $(examples_quest_SOURCES) \
@@ -858,11 +856,13 @@ MANS = $(dist_man_MANS)
 DATA = $(cmake_DATA) $(dist_m4data_DATA)
 am__noinst_HEADERS_DIST = api/documentvaluelist.h api/editdistance.h \
 	api/maptermlist.h backends/flint_lock.h \
-	backends/slowvaluelist.h \
+	backends/byte_length_strings.h \
+	backends/prefix_compressed_strings.h backends/slowvaluelist.h \
 	backends/brass/brass_alldocspostlist.h \
 	backends/brass/brass_alltermslist.h \
 	backends/brass/brass_btreebase.h backends/brass/brass_check.h \
-	backends/brass/brass_cursor.h backends/brass/brass_database.h \
+	backends/brass/brass_compact.h backends/brass/brass_cursor.h \
+	backends/brass/brass_database.h \
 	backends/brass/brass_databasereplicator.h \
 	backends/brass/brass_dbstats.h backends/brass/brass_document.h \
 	backends/brass/brass_inverter.h \
@@ -882,7 +882,8 @@ am__noinst_HEADERS_DIST = api/documentvaluelist.h api/editdistance.h \
 	backends/chert/chert_alldocspostlist.h \
 	backends/chert/chert_alltermslist.h \
 	backends/chert/chert_btreebase.h backends/chert/chert_check.h \
-	backends/chert/chert_cursor.h backends/chert/chert_database.h \
+	backends/chert/chert_compact.h backends/chert/chert_cursor.h \
+	backends/chert/chert_database.h \
 	backends/chert/chert_databasereplicator.h \
 	backends/chert/chert_dbstats.h backends/chert/chert_document.h \
 	backends/chert/chert_lazytable.h \
@@ -901,7 +902,8 @@ am__noinst_HEADERS_DIST = api/documentvaluelist.h api/editdistance.h \
 	backends/flint/flint_alldocspostlist.h \
 	backends/flint/flint_alltermslist.h \
 	backends/flint/flint_btreebase.h backends/flint/flint_check.h \
-	backends/flint/flint_cursor.h backends/flint/flint_database.h \
+	backends/flint/flint_compact.h backends/flint/flint_cursor.h \
+	backends/flint/flint_database.h \
 	backends/flint/flint_databasereplicator.h \
 	backends/flint/flint_document.h \
 	backends/flint/flint_metadata.h \
@@ -965,7 +967,7 @@ am__noinst_HEADERS_DIST = api/documentvaluelist.h api/editdistance.h \
 	matcher/remotesubmatch.h matcher/selectpostlist.h \
 	matcher/synonympostlist.h matcher/valuegepostlist.h \
 	matcher/valuerangepostlist.h matcher/valuestreamdocument.h \
-	queryparser/queryparser_internal.h \
+	queryparser/cjk-tokenizer.h queryparser/queryparser_internal.h \
 	queryparser/queryparser_token.h \
 	queryparser/termgenerator_internal.h
 HEADERS = $(inc_HEADERS) $(nodist_xapianinclude_HEADERS) \
@@ -1037,6 +1039,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DOT = @DOT@
 DOXYGEN = @DOXYGEN@
 DOXYGEN_DOT_PATH = @DOXYGEN_DOT_PATH@
@@ -1048,6 +1051,7 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+FP_EXCESS_PRECISION = @FP_EXCESS_PRECISION@
 GREP = @GREP@
 HELP2MAN = @HELP2MAN@
 INSTALL = @INSTALL@
@@ -1071,6 +1075,7 @@ LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINDEX = @MAKEINDEX@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -1095,9 +1100,6 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHLIBEXT = @SHLIBEXT@
-STLPORT_CXXFLAGS = @STLPORT_CXXFLAGS@
-STLPORT_INCLUDE = @STLPORT_INCLUDE@
-STLPORT_LIBS = @STLPORT_LIBS@
 STRIP = @STRIP@
 VALGRIND = @VALGRIND@
 VERSION = @VERSION@
@@ -1106,6 +1108,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
@@ -1166,10 +1169,11 @@ INCLUDES = -I$(top_srcdir)/common -I$(top_srcdir)/include \
 SUBDIRS = . docs tests
 noinst_HEADERS = api/documentvaluelist.h api/editdistance.h \
 	api/maptermlist.h backends/flint_lock.h \
-	backends/slowvaluelist.h $(am__append_21) $(am__append_24) \
-	$(am__append_27) $(am__append_30) \
-	backends/multi/multi_postlist.h \
-	backends/multi/multi_termlist.h $(am__append_33) \
+	backends/byte_length_strings.h \
+	backends/prefix_compressed_strings.h backends/slowvaluelist.h \
+	$(am__append_18) $(am__append_21) $(am__append_24) \
+	$(am__append_27) backends/multi/multi_postlist.h \
+	backends/multi/multi_termlist.h $(am__append_30) \
 	common/alltermslist.h common/autoptr.h common/bitstream.h \
 	common/closefrom.h common/const_database_wrapper.h \
 	common/contiguousalldocspostlist.h common/database.h \
@@ -1212,20 +1216,24 @@ noinst_HEADERS = api/documentvaluelist.h api/editdistance.h \
 	matcher/remotesubmatch.h matcher/selectpostlist.h \
 	matcher/synonympostlist.h matcher/valuegepostlist.h \
 	matcher/valuerangepostlist.h matcher/valuestreamdocument.h \
-	queryparser/queryparser_internal.h \
+	queryparser/cjk-tokenizer.h queryparser/queryparser_internal.h \
 	queryparser/queryparser_token.h \
 	queryparser/termgenerator_internal.h
-BUILT_SOURCES = $(am__append_37)
-noinst_LTLIBRARIES = $(am__append_23) $(am__append_26) \
-	$(am__append_29) libgetopt.la
-DISTCLEANFILES = include/xapian/version.h \
+BUILT_SOURCES = $(am__append_34)
+noinst_LTLIBRARIES = $(am__append_20) $(am__append_23) \
+	$(am__append_26) libgetopt.la
+CLEANFILES = $(am__append_35)
+DISTCLEANFILES = xapian-config include/xapian/version.h \
 	include/xapian/version.h.timestamp
-MAINTAINERCLEANFILES = $(am__append_41) $(BUILT_SOURCES)
+MAINTAINERCLEANFILES = $(am__append_38) $(BUILT_SOURCES)
+COVERAGE_CONFIGURE = \
+    $(srcdir)/configure CXXFLAGS='-O0 --coverage' \
+    --enable-quiet --disable-shared CCACHE_DISABLE=1 VALGRIND=
+
 bin_SCRIPTS = xapian-config
-CLEANFILES = xapian-config $(am__append_38) $(am__append_42)
 # Make sure we always distribute this source.
-EXTRA_DIST = ChangeLog ChangeLog.examples HACKING PLATFORMS \
-	xapian-core.spec include/xapian/error.h \
+EXTRA_DIST = ChangeLog ChangeLog.0 ChangeLog.examples HACKING \
+	PLATFORMS xapian-core.spec include/xapian/error.h \
 	include/xapian/errordispatch.h generate-exceptions \
 	exception_data.pm preautoreconf dir_contents api/dir_contents \
 	api/Makefile bin/dir_contents bin/Makefile \
@@ -1263,38 +1271,39 @@ libxapian_la = libxapian.la
 lib_LTLIBRARIES = libxapian.la
 libxapian_la_SOURCES = $(lib_src)
 libxapian_la_LDFLAGS = $(XAPIAN_LDFLAGS) -no-undefined -version-info \
-	$(LIBRARY_VERSION_INFO) $(am__append_36)
-lib_src = api/decvalwtsource.cc api/documentvaluelist.cc \
-	api/editdistance.cc api/emptypostlist.cc api/error.cc \
-	api/errorhandler.cc api/expanddecider.cc api/keymaker.cc \
-	api/leafpostlist.cc api/matchspy.cc api/omdatabase.cc \
-	api/omdocument.cc api/omenquire.cc \
-	api/ompositionlistiterator.cc api/ompostlistiterator.cc \
-	api/omquery.cc api/omqueryinternal.cc \
-	api/omtermlistiterator.cc api/postingsource.cc api/postlist.cc \
-	api/registry.cc api/replication.cc api/sortable-serialise.cc \
-	api/termlist.cc api/valueiterator.cc api/valuerangeproc.cc \
+	$(LIBRARY_VERSION_INFO) $(am__append_33)
+lib_src = api/compactor.cc api/decvalwtsource.cc \
+	api/documentvaluelist.cc api/editdistance.cc \
+	api/emptypostlist.cc api/error.cc api/errorhandler.cc \
+	api/expanddecider.cc api/keymaker.cc api/leafpostlist.cc \
+	api/matchspy.cc api/omdatabase.cc api/omdocument.cc \
+	api/omenquire.cc api/ompositionlistiterator.cc \
+	api/ompostlistiterator.cc api/omquery.cc \
+	api/omqueryinternal.cc api/omtermlistiterator.cc \
+	api/postingsource.cc api/postlist.cc api/registry.cc \
+	api/replication.cc api/sortable-serialise.cc api/termlist.cc \
+	api/valueiterator.cc api/valuerangeproc.cc \
 	api/valuesetmatchdecider.cc api/version.cc \
 	backends/alltermslist.cc backends/database.cc \
 	backends/databasereplicator.cc backends/dbfactory.cc \
 	backends/slowvaluelist.cc backends/valuelist.cc \
-	$(am__append_17) $(am__append_18) $(am__append_19) \
-	$(am__append_20) $(am__append_22) $(am__append_25) \
-	$(am__append_28) $(am__append_31) $(am__append_32) \
+	$(am__append_14) $(am__append_15) $(am__append_16) \
+	$(am__append_17) $(am__append_19) $(am__append_22) \
+	$(am__append_25) $(am__append_28) $(am__append_29) \
 	backends/multi/multi_alltermslist.cc \
 	backends/multi/multi_postlist.cc \
 	backends/multi/multi_termlist.cc \
-	backends/multi/multi_valuelist.cc $(am__append_34) \
+	backends/multi/multi_valuelist.cc $(am__append_31) \
 	common/bitstream.cc common/closefrom.cc \
 	common/const_database_wrapper.cc common/debuglog.cc \
 	common/fileutils.cc common/io_utils.cc common/msvc_dirent.cc \
 	common/msvc_posix_wrapper.cc common/replicate_utils.cc \
 	common/safe.cc common/serialise-double.cc \
 	common/socket_utils.cc common/str.cc common/stringutils.cc \
-	common/utils.cc $(am__append_35) expand/esetinternal.cc \
+	common/utils.cc $(am__append_32) expand/esetinternal.cc \
 	expand/expandweight.cc expand/ortermlist.cc \
 	$(snowball_built_sources) languages/stem.cc \
-	languages/steminternal.cc $(am__append_39) \
+	languages/steminternal.cc $(am__append_36) \
 	matcher/andmaybepostlist.cc matcher/andnotpostlist.cc \
 	matcher/branchpostlist.cc matcher/collapser.cc \
 	matcher/exactphrasepostlist.cc matcher/externalpostlist.cc \
@@ -1305,8 +1314,9 @@ lib_src = api/decvalwtsource.cc api/documentvaluelist.cc \
 	matcher/phrasepostlist.cc matcher/queryoptimiser.cc \
 	matcher/selectpostlist.cc matcher/synonympostlist.cc \
 	matcher/valuegepostlist.cc matcher/valuerangepostlist.cc \
-	matcher/valuestreamdocument.cc $(am__append_40) \
-	queryparser/queryparser.cc queryparser/queryparser_internal.cc \
+	matcher/valuestreamdocument.cc $(am__append_37) \
+	queryparser/cjk-tokenizer.cc queryparser/queryparser.cc \
+	queryparser/queryparser_internal.cc \
 	queryparser/termgenerator.cc \
 	queryparser/termgenerator_internal.cc unicode/tclUniData.cc \
 	unicode/utf8itor.cc weight/bm25weight.cc weight/boolweight.cc \
@@ -1324,19 +1334,12 @@ bin_xapian_check_CPPFLAGS = \
 
 bin_xapian_check_SOURCES = bin/xapian-check.cc $(am__append_8) \
 	$(am__append_10) $(am__append_12)
-bin_xapian_check_LDADD = $(ldflags) $(libxapian_la) $(am__append_9) \
-	$(am__append_11) $(am__append_13)
+bin_xapian_check_LDADD = $(ldflags) $(am__append_9) $(am__append_11) \
+	$(am__append_13) $(libxapian_la)
 bin_xapian_chert_update_CPPFLAGS = -I$(top_srcdir)/backends/flint -I$(top_srcdir)/backends/chert
 bin_xapian_chert_update_SOURCES = bin/xapian-chert-update.cc
 bin_xapian_chert_update_LDADD = $(ldflags) libgetopt.la $(libxapian_la)
-bin_xapian_compact_CPPFLAGS = \
-	-I$(top_srcdir)/backends/brass\
-	-I$(top_srcdir)/backends/chert\
-	-I$(top_srcdir)/backends/flint
-
-bin_xapian_compact_SOURCES = bin/xapian-compact.cc \
-	bin/xapian-compact.h $(am__append_14) $(am__append_15) \
-	$(am__append_16)
+bin_xapian_compact_SOURCES = bin/xapian-compact.cc
 bin_xapian_compact_LDADD = $(ldflags) libgetopt.la $(libxapian_la)
 bin_xapian_inspect_CPPFLAGS = -I$(top_srcdir)/backends/flint
 bin_xapian_inspect_SOURCES = bin/xapian-inspect.cc
@@ -1380,12 +1383,12 @@ inc_HEADERS = \
 	include/xapian.h
 
 xapianinclude_HEADERS = include/xapian/base.h \
-	include/xapian/database.h include/xapian/dbfactory.h \
-	include/xapian/deprecated.h include/xapian/derefwrapper.h \
-	include/xapian/document.h include/xapian/enquire.h \
-	include/xapian/errorhandler.h include/xapian/expanddecider.h \
-	include/xapian/keymaker.h include/xapian/matchspy.h \
-	include/xapian/positioniterator.h \
+	include/xapian/compactor.h include/xapian/database.h \
+	include/xapian/dbfactory.h include/xapian/deprecated.h \
+	include/xapian/derefwrapper.h include/xapian/document.h \
+	include/xapian/enquire.h include/xapian/errorhandler.h \
+	include/xapian/expanddecider.h include/xapian/keymaker.h \
+	include/xapian/matchspy.h include/xapian/positioniterator.h \
 	include/xapian/postingiterator.h \
 	include/xapian/postingsource.h include/xapian/query.h \
 	include/xapian/queryparser.h include/xapian/registry.h \
@@ -1595,6 +1598,7 @@ api/$(am__dirstamp):
 api/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) api/$(DEPDIR)
 	@: > api/$(DEPDIR)/$(am__dirstamp)
+api/compactor.lo: api/$(am__dirstamp) api/$(DEPDIR)/$(am__dirstamp)
 api/decvalwtsource.lo: api/$(am__dirstamp) \
 	api/$(DEPDIR)/$(am__dirstamp)
 api/documentvaluelist.lo: api/$(am__dirstamp) \
@@ -1667,6 +1671,8 @@ backends/brass/brass_alltermslist.lo: backends/brass/$(am__dirstamp) \
 	backends/brass/$(DEPDIR)/$(am__dirstamp)
 backends/brass/brass_btreebase.lo: backends/brass/$(am__dirstamp) \
 	backends/brass/$(DEPDIR)/$(am__dirstamp)
+backends/brass/brass_compact.lo: backends/brass/$(am__dirstamp) \
+	backends/brass/$(DEPDIR)/$(am__dirstamp)
 backends/brass/brass_cursor.lo: backends/brass/$(am__dirstamp) \
 	backends/brass/$(DEPDIR)/$(am__dirstamp)
 backends/brass/brass_database.lo: backends/brass/$(am__dirstamp) \
@@ -1717,6 +1723,8 @@ backends/chert/chert_alltermslist.lo: backends/chert/$(am__dirstamp) \
 	backends/chert/$(DEPDIR)/$(am__dirstamp)
 backends/chert/chert_btreebase.lo: backends/chert/$(am__dirstamp) \
 	backends/chert/$(DEPDIR)/$(am__dirstamp)
+backends/chert/chert_compact.lo: backends/chert/$(am__dirstamp) \
+	backends/chert/$(DEPDIR)/$(am__dirstamp)
 backends/chert/chert_cursor.lo: backends/chert/$(am__dirstamp) \
 	backends/chert/$(DEPDIR)/$(am__dirstamp)
 backends/chert/chert_database.lo: backends/chert/$(am__dirstamp) \
@@ -1764,6 +1772,8 @@ backends/flint/flint_alldocspostlist.lo:  \
 backends/flint/flint_alltermslist.lo: backends/flint/$(am__dirstamp) \
 	backends/flint/$(DEPDIR)/$(am__dirstamp)
 backends/flint/flint_btreebase.lo: backends/flint/$(am__dirstamp) \
+	backends/flint/$(DEPDIR)/$(am__dirstamp)
+backends/flint/flint_compact.lo: backends/flint/$(am__dirstamp) \
 	backends/flint/$(DEPDIR)/$(am__dirstamp)
 backends/flint/flint_cursor.lo: backends/flint/$(am__dirstamp) \
 	backends/flint/$(DEPDIR)/$(am__dirstamp)
@@ -2016,6 +2026,8 @@ queryparser/$(am__dirstamp):
 queryparser/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) queryparser/$(DEPDIR)
 	@: > queryparser/$(DEPDIR)/$(am__dirstamp)
+queryparser/cjk-tokenizer.lo: queryparser/$(am__dirstamp) \
+	queryparser/$(DEPDIR)/$(am__dirstamp)
 queryparser/queryparser.lo: queryparser/$(am__dirstamp) \
 	queryparser/$(DEPDIR)/$(am__dirstamp)
 queryparser/queryparser_internal.lo: queryparser/$(am__dirstamp) \
@@ -2133,14 +2145,8 @@ bin/bin_xapian_chert_update-xapian-chert-update.$(OBJEXT):  \
 bin/xapian-chert-update$(EXEEXT): $(bin_xapian_chert_update_OBJECTS) $(bin_xapian_chert_update_DEPENDENCIES) bin/$(am__dirstamp)
 	@rm -f bin/xapian-chert-update$(EXEEXT)
 	$(CXXLINK) $(bin_xapian_chert_update_OBJECTS) $(bin_xapian_chert_update_LDADD) $(LIBS)
-bin/bin_xapian_compact-xapian-compact.$(OBJEXT): bin/$(am__dirstamp) \
+bin/xapian-compact.$(OBJEXT): bin/$(am__dirstamp) \
 	bin/$(DEPDIR)/$(am__dirstamp)
-bin/bin_xapian_compact-xapian-compact-brass.$(OBJEXT):  \
-	bin/$(am__dirstamp) bin/$(DEPDIR)/$(am__dirstamp)
-bin/bin_xapian_compact-xapian-compact-chert.$(OBJEXT):  \
-	bin/$(am__dirstamp) bin/$(DEPDIR)/$(am__dirstamp)
-bin/bin_xapian_compact-xapian-compact-flint.$(OBJEXT):  \
-	bin/$(am__dirstamp) bin/$(DEPDIR)/$(am__dirstamp)
 bin/xapian-compact$(EXEEXT): $(bin_xapian_compact_OBJECTS) $(bin_xapian_compact_DEPENDENCIES) bin/$(am__dirstamp)
 	@rm -f bin/xapian-compact$(EXEEXT)
 	$(CXXLINK) $(bin_xapian_compact_OBJECTS) $(bin_xapian_compact_LDADD) $(LIBS)
@@ -2262,6 +2268,8 @@ installcheck-binSCRIPTS: $(bin_SCRIPTS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f api/compactor.$(OBJEXT)
+	-rm -f api/compactor.lo
 	-rm -f api/decvalwtsource.$(OBJEXT)
 	-rm -f api/decvalwtsource.lo
 	-rm -f api/documentvaluelist.$(OBJEXT)
@@ -2328,6 +2336,8 @@ mostlyclean-compile:
 	-rm -f backends/brass/brass_btreebase.lo
 	-rm -f backends/brass/brass_check.$(OBJEXT)
 	-rm -f backends/brass/brass_check.lo
+	-rm -f backends/brass/brass_compact.$(OBJEXT)
+	-rm -f backends/brass/brass_compact.lo
 	-rm -f backends/brass/brass_cursor.$(OBJEXT)
 	-rm -f backends/brass/brass_cursor.lo
 	-rm -f backends/brass/brass_database.$(OBJEXT)
@@ -2376,6 +2386,8 @@ mostlyclean-compile:
 	-rm -f backends/chert/chert_btreebase.lo
 	-rm -f backends/chert/chert_check.$(OBJEXT)
 	-rm -f backends/chert/chert_check.lo
+	-rm -f backends/chert/chert_compact.$(OBJEXT)
+	-rm -f backends/chert/chert_compact.lo
 	-rm -f backends/chert/chert_cursor.$(OBJEXT)
 	-rm -f backends/chert/chert_cursor.lo
 	-rm -f backends/chert/chert_database.$(OBJEXT)
@@ -2432,6 +2444,8 @@ mostlyclean-compile:
 	-rm -f backends/flint/flint_btreebase.lo
 	-rm -f backends/flint/flint_check.$(OBJEXT)
 	-rm -f backends/flint/flint_check.lo
+	-rm -f backends/flint/flint_compact.$(OBJEXT)
+	-rm -f backends/flint/flint_compact.lo
 	-rm -f backends/flint/flint_cursor.$(OBJEXT)
 	-rm -f backends/flint/flint_cursor.lo
 	-rm -f backends/flint/flint_database.$(OBJEXT)
@@ -2501,11 +2515,8 @@ mostlyclean-compile:
 	-rm -f bin/bin_xapian_check-xapian-check-flint.$(OBJEXT)
 	-rm -f bin/bin_xapian_check-xapian-check.$(OBJEXT)
 	-rm -f bin/bin_xapian_chert_update-xapian-chert-update.$(OBJEXT)
-	-rm -f bin/bin_xapian_compact-xapian-compact-brass.$(OBJEXT)
-	-rm -f bin/bin_xapian_compact-xapian-compact-chert.$(OBJEXT)
-	-rm -f bin/bin_xapian_compact-xapian-compact-flint.$(OBJEXT)
-	-rm -f bin/bin_xapian_compact-xapian-compact.$(OBJEXT)
 	-rm -f bin/bin_xapian_inspect-xapian-inspect.$(OBJEXT)
+	-rm -f bin/xapian-compact.$(OBJEXT)
 	-rm -f bin/xapian-progsrv.$(OBJEXT)
 	-rm -f bin/xapian-replicate-server.$(OBJEXT)
 	-rm -f bin/xapian-replicate.$(OBJEXT)
@@ -2663,6 +2674,8 @@ mostlyclean-compile:
 	-rm -f net/tcpclient.lo
 	-rm -f net/tcpserver.$(OBJEXT)
 	-rm -f net/tcpserver.lo
+	-rm -f queryparser/cjk-tokenizer.$(OBJEXT)
+	-rm -f queryparser/cjk-tokenizer.lo
 	-rm -f queryparser/queryparser.$(OBJEXT)
 	-rm -f queryparser/queryparser.lo
 	-rm -f queryparser/queryparser_internal.$(OBJEXT)
@@ -2689,6 +2702,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@api/$(DEPDIR)/compactor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@api/$(DEPDIR)/decvalwtsource.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@api/$(DEPDIR)/documentvaluelist.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@api/$(DEPDIR)/editdistance.Plo@am__quote@
@@ -2730,6 +2744,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_alltermslist.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_btreebase.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_check.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_compact.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_database.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/brass/$(DEPDIR)/brass_databasereplicator.Plo@am__quote@
@@ -2754,6 +2769,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_alltermslist.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_btreebase.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_check.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_compact.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_database.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/chert/$(DEPDIR)/chert_databasereplicator.Plo@am__quote@
@@ -2777,6 +2793,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_alltermslist.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_btreebase.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_check.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_compact.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_database.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@backends/flint/$(DEPDIR)/flint_databasereplicator.Plo@am__quote@
@@ -2811,11 +2828,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_check-xapian-check-flint.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_check-xapian-check.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_chert_update-xapian-chert-update.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/bin_xapian_inspect-xapian-inspect.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/xapian-compact.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/xapian-progsrv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/xapian-replicate-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin/$(DEPDIR)/xapian-replicate.Po@am__quote@
@@ -2900,6 +2914,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@net/$(DEPDIR)/serialise.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@net/$(DEPDIR)/tcpclient.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@net/$(DEPDIR)/tcpserver.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@queryparser/$(DEPDIR)/cjk-tokenizer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@queryparser/$(DEPDIR)/queryparser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@queryparser/$(DEPDIR)/queryparser_internal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@queryparser/$(DEPDIR)/termgenerator.Plo@am__quote@
@@ -3005,62 +3020,6 @@ bin/bin_xapian_chert_update-xapian-chert-update.obj: bin/xapian-chert-update.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-chert-update.cc' object='bin/bin_xapian_chert_update-xapian-chert-update.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_chert_update_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_chert_update-xapian-chert-update.obj `if test -f 'bin/xapian-chert-update.cc'; then $(CYGPATH_W) 'bin/xapian-chert-update.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-chert-update.cc'; fi`
-
-bin/bin_xapian_compact-xapian-compact.o: bin/xapian-compact.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact.o -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Tpo -c -o bin/bin_xapian_compact-xapian-compact.o `test -f 'bin/xapian-compact.cc' || echo '$(srcdir)/'`bin/xapian-compact.cc
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact.cc' object='bin/bin_xapian_compact-xapian-compact.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact.o `test -f 'bin/xapian-compact.cc' || echo '$(srcdir)/'`bin/xapian-compact.cc
-
-bin/bin_xapian_compact-xapian-compact.obj: bin/xapian-compact.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact.obj -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Tpo -c -o bin/bin_xapian_compact-xapian-compact.obj `if test -f 'bin/xapian-compact.cc'; then $(CYGPATH_W) 'bin/xapian-compact.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact.cc' object='bin/bin_xapian_compact-xapian-compact.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact.obj `if test -f 'bin/xapian-compact.cc'; then $(CYGPATH_W) 'bin/xapian-compact.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact.cc'; fi`
-
-bin/bin_xapian_compact-xapian-compact-brass.o: bin/xapian-compact-brass.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact-brass.o -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Tpo -c -o bin/bin_xapian_compact-xapian-compact-brass.o `test -f 'bin/xapian-compact-brass.cc' || echo '$(srcdir)/'`bin/xapian-compact-brass.cc
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact-brass.cc' object='bin/bin_xapian_compact-xapian-compact-brass.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact-brass.o `test -f 'bin/xapian-compact-brass.cc' || echo '$(srcdir)/'`bin/xapian-compact-brass.cc
-
-bin/bin_xapian_compact-xapian-compact-brass.obj: bin/xapian-compact-brass.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact-brass.obj -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Tpo -c -o bin/bin_xapian_compact-xapian-compact-brass.obj `if test -f 'bin/xapian-compact-brass.cc'; then $(CYGPATH_W) 'bin/xapian-compact-brass.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact-brass.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-brass.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact-brass.cc' object='bin/bin_xapian_compact-xapian-compact-brass.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact-brass.obj `if test -f 'bin/xapian-compact-brass.cc'; then $(CYGPATH_W) 'bin/xapian-compact-brass.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact-brass.cc'; fi`
-
-bin/bin_xapian_compact-xapian-compact-chert.o: bin/xapian-compact-chert.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact-chert.o -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Tpo -c -o bin/bin_xapian_compact-xapian-compact-chert.o `test -f 'bin/xapian-compact-chert.cc' || echo '$(srcdir)/'`bin/xapian-compact-chert.cc
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact-chert.cc' object='bin/bin_xapian_compact-xapian-compact-chert.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact-chert.o `test -f 'bin/xapian-compact-chert.cc' || echo '$(srcdir)/'`bin/xapian-compact-chert.cc
-
-bin/bin_xapian_compact-xapian-compact-chert.obj: bin/xapian-compact-chert.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact-chert.obj -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Tpo -c -o bin/bin_xapian_compact-xapian-compact-chert.obj `if test -f 'bin/xapian-compact-chert.cc'; then $(CYGPATH_W) 'bin/xapian-compact-chert.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact-chert.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-chert.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact-chert.cc' object='bin/bin_xapian_compact-xapian-compact-chert.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact-chert.obj `if test -f 'bin/xapian-compact-chert.cc'; then $(CYGPATH_W) 'bin/xapian-compact-chert.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact-chert.cc'; fi`
-
-bin/bin_xapian_compact-xapian-compact-flint.o: bin/xapian-compact-flint.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact-flint.o -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Tpo -c -o bin/bin_xapian_compact-xapian-compact-flint.o `test -f 'bin/xapian-compact-flint.cc' || echo '$(srcdir)/'`bin/xapian-compact-flint.cc
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact-flint.cc' object='bin/bin_xapian_compact-xapian-compact-flint.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact-flint.o `test -f 'bin/xapian-compact-flint.cc' || echo '$(srcdir)/'`bin/xapian-compact-flint.cc
-
-bin/bin_xapian_compact-xapian-compact-flint.obj: bin/xapian-compact-flint.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_compact-xapian-compact-flint.obj -MD -MP -MF bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Tpo -c -o bin/bin_xapian_compact-xapian-compact-flint.obj `if test -f 'bin/xapian-compact-flint.cc'; then $(CYGPATH_W) 'bin/xapian-compact-flint.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact-flint.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Tpo bin/$(DEPDIR)/bin_xapian_compact-xapian-compact-flint.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bin/xapian-compact-flint.cc' object='bin/bin_xapian_compact-xapian-compact-flint.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_compact_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bin/bin_xapian_compact-xapian-compact-flint.obj `if test -f 'bin/xapian-compact-flint.cc'; then $(CYGPATH_W) 'bin/xapian-compact-flint.cc'; else $(CYGPATH_W) '$(srcdir)/bin/xapian-compact-flint.cc'; fi`
 
 bin/bin_xapian_inspect-xapian-inspect.o: bin/xapian-inspect.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bin_xapian_inspect_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bin/bin_xapian_inspect-xapian-inspect.o -MD -MP -MF bin/$(DEPDIR)/bin_xapian_inspect-xapian-inspect.Tpo -c -o bin/bin_xapian_inspect-xapian-inspect.o `test -f 'bin/xapian-inspect.cc' || echo '$(srcdir)/'`bin/xapian-inspect.cc
@@ -3767,7 +3726,7 @@ uninstall-man: uninstall-man1
 .PHONY: check-none check-inmemory check-multi \
         check-remote check-remoteprog check-remotetcp \
         check-chert check-flint check-perftest \
-	coverage-reconfigure coverage-check
+	coverage-reconfigure coverage-reconfigure-maintainer-mode coverage-check
 
 check-none:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check-none
@@ -3807,7 +3766,10 @@ check-perf:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check-perf
 
 coverage-reconfigure: distclean
-	$(srcdir)/configure CXXFLAGS='-O0 --coverage' --enable-quiet --disable-shared CCACHE_DISABLE=1 VALGRIND=
+	$(COVERAGE_CONFIGURE)
+
+coverage-reconfigure-maintainer-mode: distclean
+	$(COVERAGE_CONFIGURE) --enable-maintainer-mode
 
 coverage-check:
 	find . -name '*.gcda' -print0|xargs -0 rm -f
@@ -3821,7 +3783,7 @@ coverage-check:
 	cd tests && lcov -c -b `pwd` -d `pwd` -o ../tmp.lcov
 	sed '/^SF:\/usr/,/^end_of_record/{d};s,^\(SF:/.*/xapian-core/\)\([^t]\),\1tests/\2,' tmp.lcov > xapian-core.lcov
 	genhtml -q -t "Test Coverage for xapian-core r`svn info|sed 's/^Revision: //p;d'`" -o lcov xapian-core.lcov
-docsource.mk: preautoreconf Makefile.am api/Makefile.mk bin/Makefile.mk backends/Makefile.mk backends/brass/Makefile.mk backends/chert/Makefile.mk backends/flint/Makefile.mk backends/inmemory/Makefile.mk backends/multi/Makefile.mk backends/remote/Makefile.mk common/Makefile.mk examples/Makefile.mk expand/Makefile.mk include/Makefile.mk languages/Makefile.mk matcher/Makefile.mk net/Makefile.mk queryparser/Makefile.mk unicode/Makefile.mk weight/Makefile.mk docs/Makefile.am tests/Makefile.am tests/perftest/Makefile.mk tests/harness/Makefile.mk dir_contents api/dir_contents bin/dir_contents backends/dir_contents backends/brass/dir_contents backends/chert/dir_contents backends/flint/dir_contents backends/inmemory/dir_contents backends/multi/dir_contents backends/remote/dir_contents common/dir_contents examples/dir_contents expand/dir_contents include/dir_contents languages/dir_contents matcher/dir_contents net/dir_contents queryparser/dir_contents unicode/dir_contents weight/dir_contents docs/dir_contents tests/dir_contents tests/perftest/dir_contents tests/harness/dir_contents
+docsource.mk: preautoreconf Makefile.am api/Makefile.mk bin/Makefile.mk backends/Makefile.mk backends/brass/Makefile.mk backends/chert/Makefile.mk backends/flint/Makefile.mk backends/inmemory/Makefile.mk backends/multi/Makefile.mk backends/remote/Makefile.mk common/Makefile.mk examples/Makefile.mk expand/Makefile.mk include/Makefile.mk languages/Makefile.mk matcher/Makefile.mk net/Makefile.mk queryparser/Makefile.mk unicode/Makefile.mk weight/Makefile.mk docs/Makefile.am tests/Makefile.am tests/harness/Makefile.mk tests/perftest/Makefile.mk tests/soaktest/Makefile.mk dir_contents api/dir_contents bin/dir_contents backends/dir_contents backends/brass/dir_contents backends/chert/dir_contents backends/flint/dir_contents backends/inmemory/dir_contents backends/multi/dir_contents backends/remote/dir_contents common/dir_contents examples/dir_contents expand/dir_contents include/dir_contents languages/dir_contents matcher/dir_contents net/dir_contents queryparser/dir_contents unicode/dir_contents weight/dir_contents docs/dir_contents tests/dir_contents tests/harness/dir_contents tests/perftest/dir_contents tests/soaktest/dir_contents
 	cd $(top_srcdir) && ./preautoreconf
 
 Makefile.am:
@@ -3868,9 +3830,11 @@ docs/Makefile.am:
 
 tests/Makefile.am:
 
+tests/harness/Makefile.mk:
+
 tests/perftest/Makefile.mk:
 
-tests/harness/Makefile.mk:
+tests/soaktest/Makefile.mk:
 
 dir_contents:
 
@@ -3916,18 +3880,11 @@ docs/dir_contents:
 
 tests/dir_contents:
 
-tests/perftest/dir_contents:
-
 tests/harness/dir_contents:
 
-@DOCUMENTATION_RULES_TRUE@bin/quartzcheck.1: bin/quartzcheck$(EXEEXT) makemanpage
-@DOCUMENTATION_RULES_TRUE@	./makemanpage bin/quartzcheck $(srcdir)/bin/quartzcheck.cc bin/quartzcheck.1
+tests/perftest/dir_contents:
 
-@DOCUMENTATION_RULES_TRUE@bin/quartzcompact.1: bin/quartzcompact$(EXEEXT) makemanpage
-@DOCUMENTATION_RULES_TRUE@	./makemanpage bin/quartzcompact $(srcdir)/bin/quartzcompact.cc bin/quartzcompact.1
-
-@DOCUMENTATION_RULES_TRUE@bin/quartzdump.1: bin/quartzdump$(EXEEXT) makemanpage
-@DOCUMENTATION_RULES_TRUE@	./makemanpage bin/quartzdump $(srcdir)/bin/quartzdump.cc bin/quartzdump.1
+tests/soaktest/dir_contents:
 
 @DOCUMENTATION_RULES_TRUE@bin/xapian-check.1: bin/xapian-check$(EXEEXT) makemanpage
 @DOCUMENTATION_RULES_TRUE@	./makemanpage bin/xapian-check $(srcdir)/bin/xapian-check.cc bin/xapian-check.1

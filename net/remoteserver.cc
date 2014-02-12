@@ -183,13 +183,14 @@ RemoteServer::run()
 		&RemoteServer::msg_setmetadata,
 		&RemoteServer::msg_addspelling,
 		&RemoteServer::msg_removespelling,
-		// MSG_GETMSET - used during a conversation.
-		// MSG_SHUTDOWN - handled by get_message().
+		0, // MSG_GETMSET - used during a conversation.
+		0, // MSG_SHUTDOWN - handled by get_message().
+		&RemoteServer::msg_openmetadatakeylist,
 	    };
 
 	    string message;
 	    size_t type = get_message(idle_timeout, message);
-	    if (type >= sizeof(dispatch)/sizeof(dispatch[0])) {
+	    if (type >= sizeof(dispatch)/sizeof(dispatch[0]) || !dispatch[type]) {
 		string errmsg("Unexpected message type ");
 		errmsg += str(type);
 		throw Xapian::InvalidArgumentError(errmsg);
@@ -232,9 +233,7 @@ RemoteServer::run()
 void
 RemoteServer::msg_allterms(const string &message)
 {
-    const char *p = message.data();
-    const char *p_end = p + message.size();
-    string prefix(p, p_end - p);
+    const string & prefix = message;
 
     const Xapian::TermIterator end = db->allterms_end(prefix);
     for (Xapian::TermIterator t = db->allterms_begin(prefix); t != end; ++t) {
@@ -288,9 +287,7 @@ RemoteServer::msg_positionlist(const string &message)
 void
 RemoteServer::msg_postlist(const string &message)
 {
-    const char *p = message.data();
-    const char *p_end = p + message.size();
-    string term(p, p_end - p);
+    const string & term = message;
 
     Xapian::doccount termfreq = db->get_termfreq(term);
     Xapian::termcount collfreq = db->get_collection_freq(term);
@@ -334,10 +331,6 @@ RemoteServer::msg_reopen(const string & msg)
 void
 RemoteServer::msg_update(const string &)
 {
-    // reopen() doesn't do anything for a WritableDatabase, so there's
-    // no harm in calling it unconditionally.
-    db->reopen();
-
     string message = encode_length(db->get_doccount());
     message += encode_length(db->get_lastdocid());
     message += encode_length(db->get_doclength_lower_bound());
@@ -546,13 +539,13 @@ RemoteServer::msg_valuestats(const string & message)
     const char *p = message.data();
     const char *p_end = p + message.size();
     while (p != p_end) {
-	Xapian::valueno valno = decode_length(&p, p_end, false);
+	Xapian::valueno slot = decode_length(&p, p_end, false);
 	string message_out;
-	message_out += encode_length(db->get_value_freq(valno));
-	string bound = db->get_value_lower_bound(valno);
+	message_out += encode_length(db->get_value_freq(slot));
+	string bound = db->get_value_lower_bound(slot);
 	message_out += encode_length(bound.size());
 	message_out += bound;
-	bound = db->get_value_upper_bound(valno);
+	bound = db->get_value_upper_bound(slot);
 	message_out += encode_length(bound.size());
 	message_out += bound;
 
@@ -661,6 +654,18 @@ void
 RemoteServer::msg_getmetadata(const string & message)
 {
     send_message(REPLY_METADATA, db->get_metadata(message));
+}
+
+void
+RemoteServer::msg_openmetadatakeylist(const string & message)
+{
+    const Xapian::TermIterator end = db->metadata_keys_end(message);
+    Xapian::TermIterator t = db->metadata_keys_begin(message);
+    for (; t != end; ++t) {
+	send_message(REPLY_METADATAKEYLIST, *t);
+    }
+
+    send_message(REPLY_DONE, string());
 }
 
 void

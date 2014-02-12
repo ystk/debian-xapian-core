@@ -1,7 +1,7 @@
 /** @file xapian-chert-update.cc
  * @brief Update a chert database to the new format keys
  */
-/* Copyright (C) 2003,2004,2005,2006,2007,2008,2009 Olly Betts
+/* Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2011 Olly Betts
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -157,7 +157,7 @@ copy_position(FlintTable &in, ChertTable *out)
     if (in.empty()) return;
 
     FlintCursor cur(&in);
-    cur.find_entry("");
+    cur.find_entry(string());
 
     string newkey;
     while (cur.next()) {
@@ -178,21 +178,66 @@ copy_position(FlintTable &in, ChertTable *out)
 static void
 copy_postlist(FlintTable &in, ChertTable *out)
 {
+    const string firstvaluechunk("\0\xd8", 2);
+    const string firstdoclenchunk("\0\xe0", 2);
     const string firstchunk("\0\xff", 2);
 
     in.open();
     if (in.empty()) return;
 
+    // Copy metainfo item and valuestats.
     FlintCursor cur(&in);
-    cur.find_entry("");
+    cur.find_entry(string());
     while (true) {
 	if (!cur.next()) return;
-	if (cur.current_key >= firstchunk) break;
+	if (cur.current_key >= firstvaluechunk) break;
 	bool compressed = cur.read_tag(true);
 	out->add(cur.current_key, cur.current_tag, compressed);
     }
 
+    // Copy valuestream chunks, adjusting keys.
     string newkey;
+    do {
+	const string & key = cur.current_key;
+	const char * d = key.data();
+	const char * d_orig = d;
+	const char * e = d + key.size();
+	d += 2;
+	Xapian::valueno slot;
+	if (!unpack_uint(&d, e, &slot))
+	    throw Xapian::DatabaseCorruptError("Bad value chunk key (no slot)");
+	newkey.assign(d_orig, d - d_orig);
+	Xapian::docid did;
+	if (!F_unpack_uint_preserving_sort(&d, e, &did))
+	    throw Xapian::DatabaseCorruptError("Bad value chunk key (no docid)");
+	if (d != e)
+	    throw Xapian::DatabaseCorruptError("Bad value chunk key (trailing junk)");
+	pack_uint_preserving_sort(newkey, did);
+	bool compressed = cur.read_tag(true);
+	out->add(newkey, cur.current_tag, compressed);
+	if (!cur.next()) return;
+    } while (cur.current_key < firstdoclenchunk);
+
+    // Copy doclen chunks, adjusting keys.
+    do {
+	const string & key = cur.current_key;
+	const char * d = key.data();
+	const char * e = d + key.size();
+	newkey.assign(d, 2);
+	d += 2;
+	if (d != e) {
+	    Xapian::docid did;
+	    if (!F_unpack_uint_preserving_sort(&d, e, &did))
+		throw Xapian::DatabaseCorruptError("Bad doclen chunk key (no docid)");
+	    if (d != e)
+		throw Xapian::DatabaseCorruptError("Bad doclen chunk key (trailing junk)");
+	    pack_uint_preserving_sort(newkey, did);
+	}
+	bool compressed = cur.read_tag(true);
+	out->add(newkey, cur.current_tag, compressed);
+	if (!cur.next()) return;
+    } while (cur.current_key < firstchunk);
+
     do {
 	const string & key = cur.current_key;
 	const char * d = key.data();
@@ -222,10 +267,40 @@ copy_unchanged(FlintTable &in, ChertTable *out)
     if (in.empty()) return;
 
     FlintCursor cur(&in);
-    cur.find_entry("");
+    cur.find_entry(string());
     while (cur.next()) {
 	bool compressed = cur.read_tag(true);
 	out->add(cur.current_key, cur.current_tag, compressed);
+    }
+}
+
+static void
+copy_termlist(FlintTable &in, ChertTable *out)
+{
+    in.open();
+    if (in.empty()) return;
+
+    FlintCursor cur(&in);
+    cur.find_entry(string());
+
+    string newkey;
+    while (cur.next()) {
+	const string & key = cur.current_key;
+	const char * d = key.data();
+	const char * e = d + key.size();
+	Xapian::docid did;
+	if (!F_unpack_uint_preserving_sort(&d, e, &did))
+	    throw Xapian::DatabaseCorruptError("Bad termlist key");
+	newkey.resize(0);
+	pack_uint_preserving_sort(newkey, did);
+	if (d != e) {
+	    // slot keys have a single zero byte suffix.
+	    if (*d++ != '\0' || d != e)
+		throw Xapian::DatabaseCorruptError("Bad termlist key");
+	    newkey.append(1, '\0');
+	}
+	bool compressed = cur.read_tag(true);
+	out->add(newkey, cur.current_tag, compressed);
     }
 }
 
@@ -236,7 +311,7 @@ copy_docid_keyed(FlintTable &in, ChertTable *out)
     if (in.empty()) return;
 
     FlintCursor cur(&in);
-    cur.find_entry("");
+    cur.find_entry(string());
 
     string newkey;
     while (cur.next()) {
@@ -436,8 +511,11 @@ main(int argc, char **argv)
 		case SPELLING: case SYNONYM:
 		    copy_unchanged(in, &out);
 		    break;
+		case TERMLIST:
+		    copy_termlist(in, &out);
+		    break;
 		default:
-		    // Record, Termlist
+		    // Record
 		    copy_docid_keyed(in, &out);
 		    break;
 	    }

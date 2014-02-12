@@ -26,6 +26,7 @@ SUBDIRS = . docs tests
 noinst_HEADERS =
 BUILT_SOURCES =
 noinst_LTLIBRARIES =
+CLEANFILES =
 DISTCLEANFILES =
 MAINTAINERCLEANFILES =
 bin_PROGRAMS =
@@ -34,7 +35,7 @@ EXTRA_PROGRAMS =
 .PHONY: check-none check-inmemory check-multi \
         check-remote check-remoteprog check-remotetcp \
         check-chert check-flint check-perftest \
-	coverage-reconfigure coverage-check
+	coverage-reconfigure coverage-reconfigure-maintainer-mode coverage-check
 
 check-none:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check-none
@@ -83,10 +84,17 @@ endif
 check-perf:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check-perf
 
+## --disable-shared as shared builds fail for me on x86-64 Debian etch.
+## CCACHE_DISABLE as ccache 2.4 doesn't handle the .gcno files.
+COVERAGE_CONFIGURE = \
+    $(srcdir)/configure CXXFLAGS='-O0 --coverage' \
+    --enable-quiet --disable-shared CCACHE_DISABLE=1 VALGRIND=
+
 coverage-reconfigure: distclean
-	## --disable-shared as shared builds fail for me on x86-64 Debian etch.
-	## CCACHE_DISABLE as ccache 2.4 doesn't handle the .gcno files.
-	$(srcdir)/configure CXXFLAGS='-O0 --coverage' --enable-quiet --disable-shared CCACHE_DISABLE=1 VALGRIND=
+	$(COVERAGE_CONFIGURE)
+
+coverage-reconfigure-maintainer-mode: distclean
+	$(COVERAGE_CONFIGURE) --enable-maintainer-mode
 
 coverage-check:
 	## GNU find and xargs specific.
@@ -105,11 +113,11 @@ coverage-check:
 
 bin_SCRIPTS = xapian-config
 
-CLEANFILES = xapian-config
+DISTCLEANFILES += xapian-config
 
-EXTRA_DIST = ChangeLog ChangeLog.examples HACKING PLATFORMS xapian-core.spec \
- include/xapian/error.h include/xapian/errordispatch.h generate-exceptions \
- exception_data.pm preautoreconf dir_contents
+EXTRA_DIST = ChangeLog ChangeLog.0 ChangeLog.examples HACKING PLATFORMS \
+ xapian-core.spec include/xapian/error.h include/xapian/errordispatch.h \
+ generate-exceptions exception_data.pm preautoreconf dir_contents
 
 cmakedir = $(libdir)/cmake/xapian
 cmake_DATA = cmake/xapian-config.cmake cmake/xapian-config-version.cmake
@@ -162,8 +170,6 @@ MAINTAINERCLEANFILES += $(dist_man_MANS)
 endif
 
 if DOCUMENTATION_RULES
-CLEANFILES += $(dist_man_MANS)
-
 xapian-config.1: xapian-config makemanpage
 	./makemanpage ./xapian-config xapian-config xapian-config.1
 endif

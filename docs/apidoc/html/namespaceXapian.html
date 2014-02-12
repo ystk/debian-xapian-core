@@ -174,6 +174,9 @@ window.onload = initDynSections;
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1RangeError.html">RangeError</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classXapian_1_1RangeError.html" title="RangeError indicates an attempt to access outside the bounds of a container.">RangeError</a> indicates an attempt to access outside the bounds of a container.  <a href="classXapian_1_1RangeError.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Compactor.html">Compactor</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compact a database, or merge and compact several.  <a href="classXapian_1_1Compactor.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1Database.html">Database</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used to access a database, or a group of databases.  <a href="classXapian_1_1Database.html#_details">More...</a><br></td></tr>
@@ -614,7 +617,7 @@ There are 1000 milliseconds in a second, so for example, to set a timeout of 5 s
 <p>
 The number for a value slot in a document. 
 <p>
-Any value slot number except <a class="el" href="namespaceXapian.html#0a75ef120e641c77f703e60f595ffda2" title="Reserved value to indicate &quot;no valueno&quot;.">Xapian::BAD_VALUENO</a> is valid. 
+Value slot numbers are unsigned and (currently) a 32-bit quantity, with <a class="el" href="namespaceXapian.html#0a75ef120e641c77f703e60f595ffda2" title="Reserved value to indicate &quot;no valueno&quot;.">Xapian::BAD_VALUENO</a> being represented by the largest possible value. Therefore value slots 0 to 0xFFFFFFFE are available for use. 
 </div>
 </div><p>
 <a class="anchor" name="dd1b3ce8b08d23e4665b097f785c6a96"></a><!-- doxytag: member="Xapian::valueno_diff" ref="dd1b3ce8b08d23e4665b097f785c6a96" args="" -->
@@ -738,7 +741,13 @@ This method converts a floating point number to a string, suitable for using as 
 The conversion is platform independent.<p>
 The conversion attempts to ensure that, for any pair of values supplied to the conversion algorithm, the result of comparing the original values (with a numeric comparison operator) will be the same as the result of comparing the resulting values (with a string comparison operator). On platforms which represent doubles with the precisions specified by IEEE_754, this will be the case: if the representation of doubles is more precise, it is possible that two very close doubles will be mapped to the same string, so will compare equal.<p>
 Note also that both zero and -zero will be converted to the same representation: since these compare equal, this satisfies the comparison constraint, but it's worth knowing this if you wish to use the encoding in some situation where this distinction matters.<p>
-Handling of NaN isn't (currently) guaranteed to be sensible. 
+Handling of NaN isn't (currently) guaranteed to be sensible.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>The number to serialise. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="326fe2d6b0ee59ac9536f3960e8fd99b"></a><!-- doxytag: member="Xapian::sortable_unserialise" ref="326fe2d6b0ee59ac9536f3960e8fd99b" args="(const std::string &amp;value)" -->
@@ -761,7 +770,13 @@ Handling of NaN isn't (currently) guaranteed to be sensible.
 Convert a string encoded using <em>sortable_serialise</em> back to a floating point number. 
 <p>
 This expects the input to be a string produced by <em><a class="el" href="namespaceXapian.html#29a741b4cda98e10ed5f2fc784039065" title="Convert a floating point number to a string, preserving sort order.">sortable_serialise()</a></em>. If the input is not such a string, the value returned is undefined (but no error will be thrown).<p>
-The result of the conversion will be exactly the value which was supplied to <em><a class="el" href="namespaceXapian.html#29a741b4cda98e10ed5f2fc784039065" title="Convert a floating point number to a string, preserving sort order.">sortable_serialise()</a></em> when making the string on platforms which represent doubles with the precisions specified by IEEE_754, but may be a different (nearby) value on other platforms. 
+The result of the conversion will be exactly the value which was supplied to <em><a class="el" href="namespaceXapian.html#29a741b4cda98e10ed5f2fc784039065" title="Convert a floating point number to a string, preserving sort order.">sortable_serialise()</a></em> when making the string on platforms which represent doubles with the precisions specified by IEEE_754, but may be a different (nearby) value on other platforms.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>The serialised string to decode. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="adb3ea72641cec03826dcd4215f02d55"></a><!-- doxytag: member="Xapian::version_string" ref="adb3ea72641cec03826dcd4215f02d55" args="()" -->
@@ -874,8 +889,8 @@ Open for read/write; fail if no db exists.
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

@@ -356,7 +356,13 @@ Unserialise parameters.
 <p>
 This method unserialises parameters serialised by the <em><a class="el" href="classXapian_1_1BM25Weight.html#2dd2eb60deb5690e471d68f4c7fc3203" title="Return this object&#39;s parameters serialised as a single string.">serialise()</a></em> method and allocates and returns a new object initialised with them.<p>
 If you don't want to support the remote backend, you can use the default implementation which simply throws <a class="el" href="classXapian_1_1UnimplementedError.html" title="UnimplementedError indicates an attempt to use an unimplemented feature.">Xapian::UnimplementedError</a>.<p>
-Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". It must therefore have been allocated with "new". 
+Note that the returned object will be deallocated by <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> after use with "delete". If you want to handle the deletion in a special way (for example when wrapping the <a class="el" href="namespaceXapian.html" title="The Xapian namespace contains public interfaces for the Xapian library.">Xapian</a> API for use from another language) then you can define a static <code>operator delete</code> method in your subclass as shown here: <a href="http://trac.xapian.org/ticket/554#comment:1">http://trac.xapian.org/ticket/554#comment:1</a><p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>A string containing the serialised parameters. </td></tr>
+  </table>
+</dl>
+
 <p>Reimplemented from <a class="el" href="classXapian_1_1Weight.html#031c3e0db3ae50e801b324e71a44c140">Xapian::Weight</a>.</p>
 
 </div>
@@ -366,8 +372,8 @@ Note that the returned object will be deallocated by <a class="el" href="namespa
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

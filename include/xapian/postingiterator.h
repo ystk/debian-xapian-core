@@ -3,7 +3,7 @@
  */
 /* Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2002 Ananova Ltd
- * Copyright 2003,2004,2005,2007,2008,2009 Olly Betts
+ * Copyright 2003,2004,2005,2007,2008,2009,2012 Olly Betts
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -70,16 +70,21 @@ class XAPIAN_VISIBILITY_DEFAULT PostingIterator {
 	 */
 	void operator=(const PostingIterator &other);
 
+	/// Advance the iterator to the next position.
 	PostingIterator & operator++();
 
+	/// Advance the iterator to the next position (postfix version).
 	DerefWrapper_<docid> operator++(int) {
 	    Xapian::docid tmp = **this;
 	    operator++();
 	    return DerefWrapper_<docid>(tmp);
 	}
 
-	/** Skip the iterator to document did, or the first document after did
-	 *  if did isn't in the list of documents being iterated.
+	/** Advance the iterator to the specified docid.
+	 *
+	 *  If the specified docid isn't in the list, position ourselves on the
+	 *  first document after it (or at_end() if no greater docids are
+	 *  present).
 	 */
 	void skip_to(Xapian::docid did);
 
@@ -111,7 +116,7 @@ class XAPIAN_VISIBILITY_DEFAULT PostingIterator {
 	 *  current document.
 	 */
 	PositionIterator positionlist_end() const {
-	    return PositionIterator(NULL);
+	    return PositionIterator();
 	}
 
 	// Don't expose these methods here.  A container iterator doesn't

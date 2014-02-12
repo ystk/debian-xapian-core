@@ -4,6 +4,7 @@
  * Copyright 2001,2002 Ananova Ltd
  * Copyright 2002,2003,2004,2005,2006,2007,2008,2009,2010 Olly Betts
  * Copyright 2007,2009 Lemur Consulting Ltd
+ * Copyright 2011, Action Without Borders
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -651,8 +652,10 @@ Enquire::Internal::get_mset(Xapian::doccount first, Xapian::doccount maxitems,
 	weight = new BM25Weight;
     }
 
+    Xapian::doccount first_orig = first;
     {
 	Xapian::doccount docs = db.get_doccount();
+	first = min(first, docs);
 	maxitems = min(maxitems, docs);
 	check_at_least = min(check_at_least, docs);
 	check_at_least = max(check_at_least, maxitems);
@@ -670,6 +673,9 @@ Enquire::Internal::get_mset(Xapian::doccount first, Xapian::doccount maxitems,
     MSet retval;
     match.get_mset(first, maxitems, check_at_least, retval,
 		   stats, mdecider, matchspy_legacy, sorter);
+    if (first_orig != first && retval.internal.get()) {
+	retval.internal->firstitem = first_orig;
+    }
 
     Assert(weight->name() != "bool" || retval.get_max_possible() == 0);
 
@@ -685,9 +691,9 @@ Enquire::Internal::get_mset(Xapian::doccount first, Xapian::doccount maxitems,
 ESet
 Enquire::Internal::get_eset(Xapian::termcount maxitems,
                     const RSet & rset, int flags, double k,
-		    const ExpandDecider * edecider) const
+		    const ExpandDecider * edecider, Xapian::weight min_wt) const
 {
-    LOGCALL(MATCH, ESet, "Enquire::Internal::get_eset", maxitems | rset | flags | k | edecider);
+    LOGCALL(MATCH, ESet, "Enquire::Internal::get_eset", maxitems | rset | flags | k | edecider | min_wt);
 
     if (maxitems == 0 || rset.empty()) {
 	// Either we were asked for no results, or wouldn't produce any
@@ -723,7 +729,7 @@ Enquire::Internal::get_eset(Xapian::termcount maxitems,
     ExpandWeight eweight(db, rset.size(), use_exact_termfreq, k);
 
     Xapian::ESet eset;
-    eset.internal->expand(maxitems, db, rset, edecider, eweight);
+    eset.internal->expand(maxitems, db, rset, edecider, eweight, min_wt);
     RETURN(eset);
 }
 
@@ -749,7 +755,7 @@ Enquire::Internal::get_matching_terms(Xapian::docid did) const
 {
     if (query.empty())
 	throw Xapian::InvalidArgumentError("get_matching_terms with empty query");
-	//return TermIterator(NULL);
+	//return TermIterator();
 
     // The ordered list of terms in the query.
     TermIterator qt = query.get_terms_begin();
@@ -840,12 +846,6 @@ Enquire::Internal::read_doc(const Xapian::Internal::MSetItem &item) const
 	if (errorhandler) (*errorhandler)(e);
 	throw;
     }
-}
-
-void
-Enquire::Internal::register_match_decider(const string &,
-	const MatchDecider *)
-{
 }
 
 // Methods of Xapian::Enquire
@@ -1038,7 +1038,21 @@ Enquire::get_eset(Xapian::termcount maxitems, const RSet & rset, int flags,
     LOGCALL(API, Xapian::ESet, "Xapian::Enquire::get_eset", maxitems | rset | flags | k | edecider);
 
     try {
-	RETURN(internal->get_eset(maxitems, rset, flags, k, edecider));
+	RETURN(internal->get_eset(maxitems, rset, flags, k, edecider, 0));
+    } catch (Error & e) {
+	if (internal->errorhandler) (*internal->errorhandler)(e);
+	throw;
+    }
+}
+
+ESet
+Enquire::get_eset(Xapian::termcount maxitems, const RSet & rset, int flags,
+		  double k, const ExpandDecider * edecider, Xapian::weight min_wt) const
+{
+    LOGCALL(API, Xapian::ESet, "Xapian::Enquire::get_eset", maxitems | rset | flags | k | edecider | min_wt);
+
+    try {
+	RETURN(internal->get_eset(maxitems, rset, flags, k, edecider, min_wt));
     } catch (Error & e) {
 	if (internal->errorhandler) (*internal->errorhandler)(e);
 	throw;

@@ -1,7 +1,7 @@
 /** @file multixorpostlist.cc
  * @brief N-way XOR postlist
  */
-/* Copyright (C) 2007,2009,2010 Olly Betts
+/* Copyright (C) 2007,2009,2010,2012 Olly Betts
  * Copyright (C) 2009 Lemur Consulting Ltd
  *
  * This program is free software; you can redistribute it and/or
@@ -82,6 +82,8 @@ MultiXorPostList::get_termfreq_max() const
 Xapian::doccount
 MultiXorPostList::get_termfreq_est() const
 {
+    if (rare(db_size == 0))
+	RETURN(0);
     // We calculate the estimate assuming independence.  The simplest
     // way to calculate this seems to be a series of (n_kids - 1) pairwise
     // calculations, which gives the same answer regardless of the order.
@@ -127,7 +129,8 @@ MultiXorPostList::get_termfreq_est_using_stats(
 Xapian::weight
 MultiXorPostList::get_maxweight() const
 {
-    return max_total;
+    LOGCALL(MATCH, Xapian::weight, "MultiXorPostList::get_maxweight", NO_ARGS);
+    RETURN(max_total);
 }
 
 Xapian::docid
@@ -177,6 +180,7 @@ MultiXorPostList::at_end() const
 Xapian::weight
 MultiXorPostList::recalc_maxweight()
 {
+    LOGCALL(MATCH, Xapian::weight, "MultiXorPostList::recalc_maxweight", NO_ARGS);
     max_total = plist[0]->recalc_maxweight();
     double min_max = max_total;
     for (size_t i = 1; i < n_kids; ++i) {
@@ -189,12 +193,13 @@ MultiXorPostList::recalc_maxweight()
 	// If n_kids is even, we omit the child with the smallest maxweight.
 	max_total -= min_max;
     }
-    return max_total;
+    RETURN(max_total);
 }
 
 PostList *
 MultiXorPostList::next(Xapian::weight w_min)
 {
+    LOGCALL(MATCH, PostList *, "MultiXorPostList::next", w_min);
     Xapian::docid old_did = did;
     did = 0;
     size_t matching_count = 0;
@@ -225,24 +230,25 @@ MultiXorPostList::next(Xapian::weight w_min)
 
     if (n_kids == 1) {
 	n_kids = 0;
-	return plist[0];
+	RETURN(plist[0]);
     }
 
     // We've reached the end of all posting lists.
     if (did == 0)
-	return NULL;
+	RETURN(NULL);
 
     // An odd number of sub-postlists match this docid, so the XOR matches.
     if (matching_count & 1)
-	return NULL;
+	RETURN(NULL);
 
     // An even number of sub-postlists match this docid, so advance again.
-    return next(w_min);
+    RETURN(next(w_min));
 }
 
 PostList *
 MultiXorPostList::skip_to(Xapian::docid did_min, Xapian::weight w_min)
 {
+    LOGCALL(MATCH, PostList *, "MultiXorPostList::skip_to", did_min | w_min);
     Xapian::docid old_did = did;
     did = 0;
     size_t matching_count = 0;
@@ -274,19 +280,19 @@ MultiXorPostList::skip_to(Xapian::docid did_min, Xapian::weight w_min)
     if (n_kids == 1) {
 	AssertEq(matching_count, 1);
 	n_kids = 0;
-	return plist[0];
+	RETURN(plist[0]);
     }
 
     // We've reached the end of all posting lists.
     if (did == 0)
-	return NULL;
+	RETURN(NULL);
 
     // An odd number of sub-postlists match this docid, so the XOR matches.
     if (matching_count & 1)
-	return NULL;
+	RETURN(NULL);
 
     // An even number of sub-postlists match this docid, so call next.
-    return next(w_min);
+    RETURN(next(w_min));
 }
 
 string

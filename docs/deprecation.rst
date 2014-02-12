@@ -1,7 +1,7 @@
 .. This document was originally written by Richard Boulton.
 
 .. Copyright (C) 2007 Lemur Consulting Ltd
-.. Copyright (C) 2007,2008,2009,2010 Olly Betts
+.. Copyright (C) 2007,2008,2009,2010,2011 Olly Betts
 
 ===========
 Deprecation
@@ -38,10 +38,10 @@ Deprecation markers
 -------------------
 
 At any particular point, some parts of the C++ API will be marked as
-"deprecated".  This is indicated with the ``XAPIAN_DEPRECATED`` macro, which
-will cause compilers with appropriate support (such as GCC 3.1 or later, and
-MSVC 7.0 or later) to emit warning messages about the use of deprecated
-features at compile time.
+"deprecated".  This is indicated with the ``XAPIAN_DEPRECATED()`` or
+``XAPIAN_DEPRECATED_CLASS`` macros, which will cause compilers with appropriate
+support (such as GCC 3.1 or later, and MSVC 7.0 or later) to emit warning
+messages about the use of deprecated features at compile time.
 
 If a feature is marked with one of these markers, you should avoid using it in
 new code, and should migrate your code to use a replacement when possible.  The
@@ -129,6 +129,37 @@ an entire release series to pass.
 Any planned deprecations will be documented in the list of deprecations and
 removed features at the end of this file.
 
+Support for Other Software
+==========================
+
+Support for other software doesn't follow the same deprecation rules as
+for API features.
+
+Our guiding principle for supporting version of other software is that
+we don't aim to actively support versions which are no longer supported
+"upstream".
+
+So Xapian 1.1.0 doesn't support PHP4 because the PHP team no longer did
+when it was released.  By the API deprecation rules we should have announced
+this when Xapian 1.0.0 was released, but we don't have control over when and
+to what timescales other software providers discontinue support for older
+versions.
+
+Sometimes we can support such versions without extra effort (e.g. Tcl's
+stubs mechanism means Tcl 8.1 probably still works, even though the last
+8.1.x release was over a decade ago), and in some cases Linux distros
+continue to support software after upstream stops.
+
+But in most cases keeping support around is a maintenance overhead and
+we'd rather spend our time on more useful things.
+
+Note that there's no guarantee that we will support and continue to
+support versions just because upstream still does.  For example, we ceased
+providing backported packages for Ubuntu dapper with Xapian 1.1.0 - in this
+case, it's because we felt that if you're conservative enough to run dapper,
+you'd probably prefer to stick with 1.0.x until you upgrade to hardy (the next
+Ubuntu LTS release).  But we may decide not to support versions for other
+reasons too.
 
 How to avoid using deprecated features
 ======================================
@@ -170,6 +201,8 @@ Native C++ API
 ========== ====== =================================== ========================================================================
 Deprecated Remove Feature name                        Upgrade suggestion and comments
 ========== ====== =================================== ========================================================================
+1.1.0      ?      Xapian::WritableDatabase::flush()   Xapian::WritableDatabase::commit() should be used instead.
+---------- ------ ----------------------------------- ------------------------------------------------------------------------
 1.1.0      1.3.0  Default second parameter to         The parameter name was ``ascending`` and defaulted to ``true``.  However
                   ``Enquire`` sorting functions.      ascending=false gave what you'd expect the default sort order to be (and
                                                       probably think of as ascending) while ascending=true gave the reverse
@@ -213,6 +246,11 @@ Deprecated Remove Feature name                        Upgrade suggestion and com
                   ``Enquire::get_mset()``             instead.
 ========== ====== =================================== ========================================================================
 
+.. flush() is just a simple inlined alias, so perhaps not worth causing pain by
+.. removing it in a hurry, though it would be nice to be able to reuse the
+.. method name to actually implement a flush() which writes out data but
+.. doesn't commit.
+
 Bindings
 --------
 
@@ -225,6 +263,10 @@ Deprecated Remove Language Feature name                 Upgrade suggestion and c
 ---------- ------ -------- ---------------------------- ----------------------------------------------------------------------
 1.1.0      1.3.0  Python   Stem_get_available_languages Use Stem.get_available_languages instead (static method instead of
                                                         function)
+---------- ------ -------- ---------------------------- ----------------------------------------------------------------------
+1.2.5      1.5.0  Python   MSet.items                   Iterate the MSet object itself instead.
+---------- ------ -------- ---------------------------- ----------------------------------------------------------------------
+1.2.5      1.5.0  Python   ESet.items                   Iterate the ESet object itself instead.
 ========== ====== ======== ============================ ======================================================================
 
 Omega
@@ -235,6 +277,7 @@ Omega
 ========== ====== =================================== ========================================================================
 Deprecated Remove Feature name                        Upgrade suggestion and comments
 ========== ====== =================================== ========================================================================
+1.2.5      1.5.0  $set{spelling,true}                 Use $set{flag_spelling_suggestion,true} instead.
 ========== ====== =================================== ========================================================================
 
 .. Features currently marked as experimental
@@ -307,7 +350,7 @@ Removed Feature name                        Upgrade suggestion and comments
 ------- ----------------------------------- ----------------------------------------------------------------------------------
 1.0.0   Document::add_term_nopos()          Use ``Document::add_term()`` instead.
 ------- ----------------------------------- ----------------------------------------------------------------------------------
-1.0.0   Enquire::set_bias()                 No replacement yet implemented.
+1.0.0   Enquire::set_bias()                 Use ``PostingSource`` instead (new in 1.2).
 ------- ----------------------------------- ----------------------------------------------------------------------------------
 1.0.0   ExpandDecider::operator()           Return type is now ``bool`` not ``int``.
 ------- ----------------------------------- ----------------------------------------------------------------------------------
@@ -459,13 +502,26 @@ Removed Language Feature name                 Upgrade suggestion and comments
                                               To convert, just change ``msetitem.get_FOO()`` to ``msetitem.FOO``
 ------- -------- ---------------------------- --------------------------------------------------------------------------------
 1.1.0   Python   Enquire.get_matching_terms   Replaced by ``Enquire.matching_terms``, for consistency with
-                                              rest of Python API.
+                                              rest of Python API.  Note: an ``Enquire.get_matching_terms`` method existed in
+                                              releases up-to and including 1.2.4, but this was actually an old implementation
+                                              which only accepted a MSetIterator as a parameter, and would have failed with
+                                              code written expecting the version in 1.0.0.  It was fully removed after
+                                              release 1.2.4.
 ------- -------- ---------------------------- --------------------------------------------------------------------------------
 1.1.0   SWIG     Error::get_errno()           Use ``Error::get_error_string()`` instead.
         [#rswg]_
 ------- -------- ---------------------------- --------------------------------------------------------------------------------
 1.1.0   SWIG     MSet::get_document_id()      Use ``MSet::get_docid()`` instead.
         [#rsw2]_
+------- -------- ---------------------------- --------------------------------------------------------------------------------
+1.2.0   Python   mset[i][xapian.MSET_DID] etc This was inadvertently removed in 1.2.0, but not noticed until 1.2.5, by which
+                                              point it no longer seemed worthwhile to reinstate it.  Please use the property
+                                              API instead, e.g. ``mset[i].docid``, ``mset[i].weight``, etc.
+------- -------- ---------------------------- --------------------------------------------------------------------------------
+1.2.5   Python   if idx in mset               This was nominally implemented, but never actually worked.  Since nobody seems
+                                              to have noticed in 3.5 years, we just removed it.  If you have uses (which were
+                                              presumably never called), you can replace them with:
+                                              ``if idx >= 0 and idx < len(mset)``
 ======= ======== ============================ ================================================================================
 
 .. [#rswg] This affects all SWIG generated bindings (currently: Python, PHP, Ruby, Tcl8 and CSharp)

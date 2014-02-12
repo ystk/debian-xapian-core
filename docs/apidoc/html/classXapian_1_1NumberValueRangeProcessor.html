@@ -85,21 +85,21 @@ Inheritance diagram for Xapian::NumberValueRangeProcessor:</div>
 <a href="classXapian_1_1NumberValueRangeProcessor-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1NumberValueRangeProcessor.html#63000d1bed81aa14dda245e60039b26b">NumberValueRangeProcessor</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> valno_)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1NumberValueRangeProcessor.html#ca8725af59b1c7711aaf48d1f2f3add7">NumberValueRangeProcessor</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot_)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#63000d1bed81aa14dda245e60039b26b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1NumberValueRangeProcessor.html#e6b8dc03ddaf8f882cb2f80476d6105f">NumberValueRangeProcessor</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> valno_, const std::string &amp;str_, bool prefix_=true)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#ca8725af59b1c7711aaf48d1f2f3add7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1NumberValueRangeProcessor.html#93b0a5e26ad49f7d4ab0b04c50a46ec6">NumberValueRangeProcessor</a> (<a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a> slot_, const std::string &amp;str_, bool prefix_=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#e6b8dc03ddaf8f882cb2f80476d6105f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#93b0a5e26ad49f7d4ab0b04c50a46ec6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1NumberValueRangeProcessor.html#4a0951e57a4ea8fcdcd9bec6a8037514">operator()</a> (std::string &amp;begin, std::string &amp;end)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check for a valid range of this type.  <a href="#4a0951e57a4ea8fcdcd9bec6a8037514"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check for a valid numeric range.  <a href="#4a0951e57a4ea8fcdcd9bec6a8037514"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Handle a number range. 
 <p>
 This class must be used on values which have been encoded using <a class="el" href="namespaceXapian.html#29a741b4cda98e10ed5f2fc784039065" title="Convert a floating point number to a string, preserving sort order.">Xapian::sortable_serialise()</a> which turns numbers into strings which will sort in the same order as the numbers (the same values can be used to implement a numeric sort). <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="63000d1bed81aa14dda245e60039b26b"></a><!-- doxytag: member="Xapian::NumberValueRangeProcessor::NumberValueRangeProcessor" ref="63000d1bed81aa14dda245e60039b26b" args="(Xapian::valueno valno_)" -->
+<a class="anchor" name="ca8725af59b1c7711aaf48d1f2f3add7"></a><!-- doxytag: member="Xapian::NumberValueRangeProcessor::NumberValueRangeProcessor" ref="ca8725af59b1c7711aaf48d1f2f3add7" args="(Xapian::valueno slot_)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -107,7 +107,7 @@ This class must be used on values which have been encoded using <a class="el" hr
           <td class="memname">Xapian::NumberValueRangeProcessor::NumberValueRangeProcessor           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td>
-          <td class="paramname"> <em>valno_</em>          </td>
+          <td class="paramname"> <em>slot_</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
         </tr>
@@ -120,13 +120,13 @@ Constructor.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>valno_</em>&nbsp;</td><td>The value number to return from operator(). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>slot_</em>&nbsp;</td><td>The value number to return from operator(). </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="e6b8dc03ddaf8f882cb2f80476d6105f"></a><!-- doxytag: member="Xapian::NumberValueRangeProcessor::NumberValueRangeProcessor" ref="e6b8dc03ddaf8f882cb2f80476d6105f" args="(Xapian::valueno valno_, const std::string &amp;str_, bool prefix_=true)" -->
+<a class="anchor" name="93b0a5e26ad49f7d4ab0b04c50a46ec6"></a><!-- doxytag: member="Xapian::NumberValueRangeProcessor::NumberValueRangeProcessor" ref="93b0a5e26ad49f7d4ab0b04c50a46ec6" args="(Xapian::valueno slot_, const std::string &amp;str_, bool prefix_=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -134,7 +134,7 @@ Constructor.
           <td class="memname">Xapian::NumberValueRangeProcessor::NumberValueRangeProcessor           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceXapian.html#94a899651fa920c72ffa9635bde630ea">Xapian::valueno</a>&nbsp;</td>
-          <td class="paramname"> <em>valno_</em>, </td>
+          <td class="paramname"> <em>slot_</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -162,7 +162,7 @@ Constructor.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>valno_</em>&nbsp;</td><td>The value number to return from operator().</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>slot_</em>&nbsp;</td><td>The value number to return from operator().</td></tr>
     <tr><td valign="top"></td><td valign="top"><em>str_</em>&nbsp;</td><td>A string to look for to recognise values as belonging to this numeric range.</td></tr>
     <tr><td valign="top"></td><td valign="top"><em>prefix_</em>&nbsp;</td><td>Whether to look for the string at the start or end of the values. If true, the string is a prefix; if false, the string is a suffix (default: true).</td></tr>
   </table>
@@ -200,10 +200,17 @@ For example, if str_ is "$" and prefix_ is true, and the range processor has bee
 <div class="memdoc">
 
 <p>
-Check for a valid range of this type. 
+Check for a valid numeric range. 
 <p>
-If BEGIN..END is a valid numeric value range, and has the appropriate prefix or suffix (if specified) required for this <a class="el" href="classXapian_1_1NumberValueRangeProcessor.html" title="Handle a number range.">NumberValueRangeProcessor</a>, this method returns the value number of range filter on, and sets begin and end to the appropriate serialised values needed to delimit the range. Otherwise it returns <a class="el" href="namespaceXapian.html#0a75ef120e641c77f703e60f595ffda2" title="Reserved value to indicate &quot;no valueno&quot;.">Xapian::BAD_VALUENO</a>. 
-<p>Reimplemented from <a class="el" href="classXapian_1_1StringValueRangeProcessor.html#3001cf2c0e25875c7ffba9fe9de7f874">Xapian::StringValueRangeProcessor</a>.</p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>begin</em>&nbsp;</td><td>The start of the range as specified in the query string by the user. This parameter is a non-const reference so the <a class="el" href="structXapian_1_1ValueRangeProcessor.html" title="Base class for value range processors.">ValueRangeProcessor</a> can modify it to return the value to start the range with. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>end</em>&nbsp;</td><td>The end of the range. This is also a non-const reference so it can be modified.</td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>If BEGIN..END is a valid numeric range with the specified prefix/suffix (if one was specified), this method modifies them by removing the prefix/suffix, converting to a number, and encoding with <a class="el" href="namespaceXapian.html#29a741b4cda98e10ed5f2fc784039065" title="Convert a floating point number to a string, preserving sort order.">Xapian::sortable_serialise()</a>, and returns the value of slot_ passed at construction time. Otherwise it returns <a class="el" href="namespaceXapian.html#0a75ef120e641c77f703e60f595ffda2" title="Reserved value to indicate &quot;no valueno&quot;.">Xapian::BAD_VALUENO</a>. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classXapian_1_1StringValueRangeProcessor.html#ac2cd6bf4645a3bb242cf5ad5022ae5e">Xapian::StringValueRangeProcessor</a>.</p>
 
 </div>
 </div><p>
@@ -212,8 +219,8 @@ If BEGIN..END is a valid numeric value range, and has the appropriate prefix or 
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

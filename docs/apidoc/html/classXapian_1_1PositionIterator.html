@@ -92,6 +92,21 @@ window.onload = initDynSections;
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1PositionIterator.html#5cbc03e21296bb5347736977d0f27547">operator=</a> (const <a class="el" href="classXapian_1_1PositionIterator.html">PositionIterator</a> &amp;o)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assignment is allowed.  <a href="#5cbc03e21296bb5347736977d0f27547"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e673659cdc4225d2b2eb7922fac95449"></a><!-- doxytag: member="Xapian::PositionIterator::operator*" ref="e673659cdc4225d2b2eb7922fac95449" args="() const " -->
+<a class="el" href="namespaceXapian.html#e5a16f073d0c8ed54085a9de07248d45">Xapian::termpos</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1PositionIterator.html#e673659cdc4225d2b2eb7922fac95449">operator*</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the term position at the current iterator position. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f4a068fa03b75f797ab4cae83fc0810f"></a><!-- doxytag: member="Xapian::PositionIterator::operator++" ref="f4a068fa03b75f797ab4cae83fc0810f" args="()" -->
+<a class="el" href="classXapian_1_1PositionIterator.html">PositionIterator</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1PositionIterator.html#f4a068fa03b75f797ab4cae83fc0810f">operator++</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the iterator to the next position. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="28688871c66063b2cf3b78766f988fd5"></a><!-- doxytag: member="Xapian::PositionIterator::operator++" ref="28688871c66063b2cf3b78766f988fd5" args="(int)" -->
+DerefWrapper_&lt; <a class="el" href="namespaceXapian.html#e5a16f073d0c8ed54085a9de07248d45">termpos</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1PositionIterator.html#28688871c66063b2cf3b78766f988fd5">operator++</a> (int)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the iterator to the next position (postfix version). <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1PositionIterator.html#5ecfb4a9c90777b64368c8f61b26e296">skip_to</a> (<a class="el" href="namespaceXapian.html#e5a16f073d0c8ed54085a9de07248d45">Xapian::termpos</a> pos)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance the iterator to the specified termpos.  <a href="#5ecfb4a9c90777b64368c8f61b26e296"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ae9e6e3e7481bd22f228de4c2deb03eb"></a><!-- doxytag: member="Xapian::PositionIterator::get_description" ref="ae9e6e3e7481bd22f228de4c2deb03eb" args="() const " -->
 std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1PositionIterator.html#ae9e6e3e7481bd22f228de4c2deb03eb">get_description</a> () const </td></tr>
 
@@ -149,13 +164,35 @@ Assignment is allowed.
 The internals are reference counted, so assignment is also cheap. 
 </div>
 </div><p>
+<a class="anchor" name="5ecfb4a9c90777b64368c8f61b26e296"></a><!-- doxytag: member="Xapian::PositionIterator::skip_to" ref="5ecfb4a9c90777b64368c8f61b26e296" args="(Xapian::termpos pos)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Xapian::PositionIterator::skip_to           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceXapian.html#e5a16f073d0c8ed54085a9de07248d45">Xapian::termpos</a>&nbsp;</td>
+          <td class="paramname"> <em>pos</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Advance the iterator to the specified termpos. 
+<p>
+If the specified termpos isn't in the list, position ourselves on the first termpos after it (or at_end() if no greater term positions are present). 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>xapian/<a class="el" href="positioniterator_8h.html">positioniterator.h</a></ul>
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

@@ -87,7 +87,7 @@ Inheritance diagram for Xapian::MultiValueKeyMaker:</div>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classXapian_1_1MultiValueKeyMaker.html#8f827517ed1ea394f99d4db362f23b31">operator()</a> (const <a class="el" href="classXapian_1_1Document.html">Xapian::Document</a> &amp;doc) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method takes a <a class="el" href="classXapian_1_1Document.html" title="A handle representing a document in a Xapian database.">Document</a> object and builds a key string from it.  <a href="#8f827517ed1ea394f99d4db362f23b31"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Build a key string for a <a class="el" href="classXapian_1_1Document.html" title="A handle representing a document in a Xapian database.">Document</a>.  <a href="#8f827517ed1ea394f99d4db362f23b31"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <a class="el" href="classXapian_1_1KeyMaker.html" title="Virtual base class for key making functors.">KeyMaker</a> subclass which combines several values. 
@@ -111,9 +111,15 @@ When used for collapsing, the documents will only be considered equal if all the
 <div class="memdoc">
 
 <p>
-This method takes a <a class="el" href="classXapian_1_1Document.html" title="A handle representing a document in a Xapian database.">Document</a> object and builds a key string from it. 
+Build a key string for a <a class="el" href="classXapian_1_1Document.html" title="A handle representing a document in a Xapian database.">Document</a>. 
 <p>
-These keys are then used for ordering or collapsing matching documents. 
+These keys can be used for sorting or collapsing matching documents.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>doc</em>&nbsp;</td><td><a class="el" href="classXapian_1_1Document.html" title="A handle representing a document in a Xapian database.">Document</a> object to build a key for. </td></tr>
+  </table>
+</dl>
+
 <p>Implements <a class="el" href="classXapian_1_1KeyMaker.html#cd0a775f8546a830833357e5d792bedc">Xapian::KeyMaker</a>.</p>
 
 </div>
@@ -123,8 +129,8 @@ These keys are then used for ordering or collapsing matching documents.
 </div>
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.3).<br>
-Generated on 24 Aug 2010 by
+Documentation for Xapian (version 1.2.12).<br>
+Generated on 27 Jun 2012 by
 <a href="http://www.doxygen.org/">Doxygen 1.5.9</a>.
 </small></address>
 </body>

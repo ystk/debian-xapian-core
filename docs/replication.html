@@ -288,7 +288,7 @@ ul.auto-toc {
 <h1 class="title">Xapian Database Replication Users Guide</h1>
 
 <!-- Copyright (C) 2008 Lemur Consulting Ltd -->
-<!-- Copyright (C) 2008 Olly Betts -->
+<!-- Copyright (C) 2008,2010,2011,2012 Olly Betts -->
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title first">Table of contents</p>
 <ul class="simple">
@@ -363,11 +363,16 @@ would probably be easy to support replication of inmemory databases.</p>
 there is one configuration step to be performed on the master machine, and two
 servers to run.</p>
 <p>Firstly, on the master machine, the indexer must be run with the environment
-variable <cite>XAPIAN_MAX_CHANGESETS</cite> set to a non-zero value.  (Currently, the
-actual value it is set to is irrelevant, but I suggest using a value of 10).
-This will cause changeset files to be created whenever a transaction is
-performed, which allow the transaction to be replaced efficiently on a replica
+variable <cite>XAPIAN_MAX_CHANGESETS</cite> set to a non-zero value, which will cause
+changeset files to be created whenever a transaction is committed.  A
+changeset file allows the transaction to be replayed efficiently on a replica
 of the database.</p>
+<p>The value which <cite>XAPIAN_MAX_CHANGESETS</cite> is set to determines the maximum number
+of changeset files which will be kept.  The best number to keep depends on how
+you frequently you run replication and how big your transactions are - if all
+the changeset files needed to update a replica aren't present, a full copy of
+the database will be sent, but at some point that becomes more efficient
+anyway.  <cite>10</cite> is probably a good value to start with.</p>
 <p>Secondly, also on the master machine, run the <cite>xapian-replicate-server</cite> server
 to serve the databases which are to be replicated.  This takes various
 parameters to control the directory that databases are found in, and the
@@ -375,7 +380,7 @@ network interface to serve on.  The <cite>--help</cite> option will cause usage
 information to be displayed.  For example, if <cite>/var/search/dbs`</cite> contains a
 set of Xapian databases to be replicated:</p>
 <pre class="literal-block">
-./xapian-replicate-server /var/search/dbs -p 7010
+xapian-replicate-server /var/search/dbs -p 7010
 </pre>
 <p>would run a server allowing access to these databases, on port 7010.</p>
 <p>Finally, on the client machine, run the <cite>xapian-replicate</cite> server to keep an
@@ -385,10 +390,18 @@ the <cite>-m</cite> option to the client.  One non-option argument is required -
 the name that the database should be stored in on the slave machine.  For
 example, contacting the above server from the same machine:</p>
 <pre class="literal-block">
-./xapian-replicate -h 127.0.0.1 -p 7010 -m foo foo2
+xapian-replicate -h 127.0.0.1 -p 7010 -m foo foo2
 </pre>
 <p>would produce a database &quot;foo2&quot; containing a replica of the database
-&quot;/var/search/dbs/foo&quot;.</p>
+&quot;/var/search/dbs/foo&quot;.  Note that the first time you run this, this command
+will create the foo2 directory and populate it with appropriate files; you
+should not create this directory yourself.</p>
+<p>As of 1.2.5, if you don't specify the master name, the same name is used
+remotely and locally, so this will replicate remote database &quot;foo2&quot; to
+local database &quot;foo2&quot;:</p>
+<pre class="literal-block">
+xapian-replicate -h 127.0.0.1 -p 7010 foo2
+</pre>
 <p>Both the server and client can be run in &quot;one-shot&quot; mode, by passing <cite>-o</cite>.
 This may be particularly useful for the client, to allow a shell script to be
 used to cycle through a set of databases, updating each in turn (and then
@@ -418,21 +431,21 @@ Or at least, if you must do this, wait until any replications in progress when
 you were using the original database have finished.</p>
 <div class="section" id="calling-reopen">
 <h2><a class="toc-backref" href="#id5">Calling reopen</a></h2>
-<p>The reopen method is usually an efficient way to ensure that a database is
+<p><cite>Database::reopen()</cite> is usually an efficient way to ensure that a database is
 up-to-date with the latest changes.  Unfortunately, it does not currently work
-correctly with databases which are being updated by the replication client.
-The workaround is simple; don't use the reopen() method on databases created by
-the replication client: instead, you should close the database and open it
+as you might expect with databases which are being updated by the replication
+client.  The workaround is simple; don't use the reopen() method on such
+databases: instead, you should close the database and open it
 again from scratch.</p>
 <p>Briefly, the issue is that the databases created by the replication client are
 created in a subdirectory of the target path supplied to the client, rather
 than at that path.  A &quot;stub database&quot; file is then created in that directory,
 pointing to the database.  This allows the database which readers open to be
 switched atomically after a database copy has occurred.  The reopen() method
-doesn't currently re-read the stub database file in this situation, so ends up
+doesn't re-read the stub database file in this situation, so ends up
 attempting to read the old database which has been deleted.</p>
-<p>Ticket #434 in the Xapian Trac system gives some more details and discussion
-about this issue, and will be updated when a fix is implemented.</p>
+<p>We intend to fix this issue in the Brass backend (currently under development
+by eliminating this hidden use of a stub database file).</p>
 </div>
 </div>
 <div class="section" id="alternative-approaches">
@@ -459,8 +472,8 @@ satisfy all the desired characteristics.  Let's examine them in detail:</p>
 <p>Databases could be pushed to the slaves after each update simply by copying the
 entire database from the master (using scp, ftp, http or one of the many other
 transfer options).  After the copy is completed, the new database would be made
-live (perhaps by symlink switching, if symlinks are available).  After a
-reasonable interval to allow searches in progress on the old database to
+live by indirecting access through a stub database and switching what it points to.</p>
+<p>After a sufficient interval to allow searches in progress on the old database to
 complete, the old database would be removed.  (On UNIX filesystems, the old
 database could be unlinked immediately, and the resources used by it would be
 automatically freed as soon as the current searches using it complete.)</p>

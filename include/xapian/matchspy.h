@@ -1,7 +1,7 @@
 /** @file matchspy.h
  * @brief MatchSpy implementation.
  */
-/* Copyright (C) 2007,2008,2009 Olly Betts
+/* Copyright (C) 2007,2008,2009,2010,2012 Olly Betts
  * Copyright (C) 2007,2009 Lemur Consulting Ltd
  * Copyright (C) 2010 Richard Boulton
  *
@@ -86,7 +86,11 @@ class XAPIAN_VISIBILITY_DEFAULT MatchSpy {
      *  Xapian::UnimplementedError.
      *
      *  Note that the returned object will be deallocated by Xapian after use
-     *  with "delete".  It must therefore have been allocated with "new".
+     *  with "delete".  If you want to handle the deletion in a special way
+     *  (for example when wrapping the Xapian API for use from another
+     *  language) then you can define a static <code>operator delete</code>
+     *  method in your subclass as shown here:
+     *  http://trac.xapian.org/ticket/554#comment:1
      */
     virtual MatchSpy * clone() const;
 
@@ -124,7 +128,16 @@ class XAPIAN_VISIBILITY_DEFAULT MatchSpy {
      *  Xapian::UnimplementedError.
      *
      *  Note that the returned object will be deallocated by Xapian after use
-     *  with "delete".  It must therefore have been allocated with "new".
+     *  with "delete".  If you want to handle the deletion in a special way
+     *  (for example when wrapping the Xapian API for use from another
+     *  language) then you can define a static <code>operator delete</code>
+     *  method in your subclass as shown here:
+     *  http://trac.xapian.org/ticket/554#comment:1
+     *
+     *  @param s	A string containing the serialised results.
+     *  @param context	Registry object to use for unserialisation to permit
+     *			MatchSpy subclasses with sub-MatchSpy objects to be
+     *			implemented.
      */
     virtual MatchSpy * unserialise(const std::string & s,
 				   const Registry & context) const;
@@ -146,6 +159,8 @@ class XAPIAN_VISIBILITY_DEFAULT MatchSpy {
      *  If you don't want to support the remote backend in your match spy, you
      *  can use the default implementation which simply throws
      *  Xapian::UnimplementedError.
+     *
+     *  @param s	A string containing the serialised results.
      */
     virtual void merge_results(const std::string & s);
 
@@ -161,9 +176,6 @@ class XAPIAN_VISIBILITY_DEFAULT MatchSpy {
 
 
 /** Class for counting the frequencies of values in the matching documents.
- *
- *  Warning: this API is currently experimental, and is liable to change
- *  between releases without warning.
  */
 class XAPIAN_VISIBILITY_DEFAULT ValueCountMatchSpy : public MatchSpy {
   public:
@@ -214,7 +226,7 @@ class XAPIAN_VISIBILITY_DEFAULT ValueCountMatchSpy : public MatchSpy {
 
     /** End iterator corresponding to values_begin() */
     TermIterator values_end() const {
-	return TermIterator(NULL);
+	return TermIterator();
     }
 
     /** Get an iterator over the most frequent values seen in the slot.
@@ -231,12 +243,15 @@ class XAPIAN_VISIBILITY_DEFAULT ValueCountMatchSpy : public MatchSpy {
 
     /** End iterator corresponding to top_values_begin() */
     TermIterator top_values_end(size_t) const {
-	return TermIterator(NULL);
+	return TermIterator();
     }
 
     /** Implementation of virtual operator().
      *
      *  This implementation tallies values for a matching document.
+     *
+     *  @param doc	The document to tally values for.
+     *  @param wt	The weight of the document (ignored by this class).
      */
     void operator()(const Xapian::Document &doc, Xapian::weight wt);
 

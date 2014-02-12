@@ -2,9 +2,9 @@ dnl Process this file with autoconf to produce a configure script.
 
 dnl NB When updating the version for a release, update LIBRARY_VERSION_INFO
 dnl below too.
-AC_INIT([xapian-core], [1.2.3], [http://xapian.org/bugs])
+AC_INIT([xapian-core], [1.2.12], [http://xapian.org/bugs])
 dnl See HACKING document for details of the reasons for required versions.
-AC_PREREQ([2.63])
+AC_PREREQ([2.64])
 dnl Extract from the libtool info manual:
 dnl
 dnl Here are a set of rules to help you update your library version information:
@@ -34,7 +34,16 @@ dnl 22:0:0 1.2.0 Many API changes!
 dnl 23:0:1 1.2.1 QueryParser::add_boolean_prefix()'s exclusive parameter.
 dnl 23:1:1 1.2.2 No API changes
 dnl 23:2:1 1.2.3 No API changes
-LIBRARY_VERSION_INFO=23:2:1
+dnl 24:0:2 1.2.4 Compactor
+dnl 25:0:3 1.2.5 New min_wt overload for Enquire::get_eset()
+dnl 26:0:4 1.2.6 QueryParser::set_max_wildcard_expansion() added
+dnl 26:1:4 1.2.7 No API changes
+dnl 26:2:4 1.2.8 No API changes
+dnl 26:3:4 1.2.9 No API changes
+dnl 26:4:4 1.2.10 No API changes
+dnl 26:0:5 1.2.11 TermGenerator::set_stemming_strategy() added
+dnl 27:0:5 1.2.12 Corrects error in 1.2.11's LIBRARY_VERSION_INFO
+LIBRARY_VERSION_INFO=27:0:5
 AC_SUBST(LIBRARY_VERSION_INFO)
 
 LIBRARY_VERSION_SUFFIX=
@@ -133,8 +142,9 @@ AM_MAINTAINER_MODE
 dnl Checks for programs.
 AC_PROG_CXX
 
+# Checked: freebsd8.0 openbsd4.6 solaris2.9 solaris2.10
 case $host_os in
-  linux* | k*bsd*-gnu)
+  linux* | k*bsd*-gnu | freebsd* | openbsd* | solaris*)
     dnl Vanilla libtool sets this to "unknown" which it then handles as "yes".
     link_all_deplibs_CXX=no
     ;;
@@ -256,8 +266,10 @@ WARNING_CXXFLAGS=
 ANSI_CXXFLAGS=
 AC_MSG_CHECKING([for $CXX options to enable ANSI C++ mode])
 if test yes = "$GXX"; then
+  compiler=gcc
   AC_MSG_RESULT([none required])
 else
+  compiler=unknown
   dnl Some C++ compilers need a special switch to select ANSI C++ mode.  Do
   dnl this early in configure so such settings are used for other tests.
   case $CXX in
@@ -314,6 +326,7 @@ else
 	dnl http://developers.sun.com/sunstudio/documentation/ss12/mr/READMEs/c++_faq.html#Coding12
 	dnl (Looks like -features=tmplife was added around 2000 so just pass
 	dnl it unconditionally)
+	compiler=sun
 	ANSI_CXXFLAGS="-library=stlport4 -features=tmplife" ;;
       *)
 	case `$CXX -v 2>&1` in
@@ -356,26 +369,42 @@ dnl x86 has excess precision issues with 387 FP instructions, which are
 dnl avoided by using SSE instructions instead.  This is also faster (~6% in
 dnl a CPU bound testcase).
 AC_ARG_ENABLE([sse],
-  [AS_HELP_STRING([--disable-sse], [disable use of SSE FP instructions (only affects x86)])],
+[AS_HELP_STRING([--disable-sse],
+		[disable use of SSE FP instructions on x86])]
+[AS_HELP_STRING([[--enable-sse[=sse|sse2]]],
+		[set which SSE FP instructions to use on x86 (default: sse2)])],
   [case ${enableval} in
-    yes|no) ;;
-    *) AC_MSG_ERROR([bad value ${enableval} for --disable-sse]) ;;
-  esac])
+    sse|sse2|yes|no) ;;
+    *) AC_MSG_ERROR([bad value ${enableval} for --enable-sse or --disable-sse]) ;;
+  esac],
+  [enable_sse=yes])
 
 dnl Some versions of Sun's C++ compiler reportedly need an explicit -lm.
 dnl The maths functions we use include: exp log ceil fabs sqrt
 AC_MSG_CHECKING([if -lm is required for maths functions])
-dnl Don't use a constant argument to log as the compiler might simply evaluate
-dnl the whole expression at compile time.
-AC_TRY_LINK([#include <cmath>
-#include <cstdlib>
-using namespace std;], [double a = log((double)rand());], [AC_MSG_RESULT(no)], [
+dnl Don't use constant arguments as the compiler might simply evaluate the
+dnl whole expression at compile time, and it might inline certain functions
+dnl so test several functions.  Also write results using printf() so that
+dnl the compiler can't optimise away the computations.
+AC_TRY_LINK([#ifdef __SUNPRO_CC
+#error Need -lm for Sun C++ 5.9 under libtool 2.2.10
+#endif
+#include <cmath>
+#include <cstdio>
+#include <ctime>
+using namespace std;], [
+  double a = log(ceil(time(NULL)/7.0));
+  printf("%f %f %f\n", a, sqrt(a), exp(fabs(a - 12345.6)));
+  ], [AC_MSG_RESULT(no)], [
     LIBS="-lm $LIBS"
     AC_TRY_LINK([#include <cmath>
-#include <cstdlib>
-using namespace std;], [double a = log((double)rand());],
+#include <cstdio>
+#include <ctime>
+using namespace std;], [
+  double a = log(ceil(time(NULL)/7.0));
+  printf("%f %f %f\n", a, sqrt(a), exp(fabs(a - 12345.6)));],
 	[AC_MSG_RESULT(yes)],
-	[AC_MSG_ERROR([Failed to link a C++ program using log()])
+	[AC_MSG_ERROR([Failed to link a C++ program using <cmath>])
     ])
 ])
 
@@ -391,6 +420,14 @@ AC_TRY_COMPILE([#include <typeinfo>],
 dnl Check for time functions.
 AC_CHECK_FUNCS(gettimeofday ftime)
 
+dnl For _ftime64() on mingw we need to tell it we're happy to require
+dnl MSVCRT 0x0601, which isn't too onerous a requirement it seems.
+case $host_os in
+  *mingw*)
+    AC_DEFINE([__MSVCRT_VERSION__], [0x0601], [Define on mingw to the minimum msvcrt version to assume])
+    ;;
+esac
+
 dnl Used by tests/harness/testsuite.cc
 AC_CHECK_FUNCS([sigaction])
 AC_MSG_CHECKING([for sigsetjmp and siglongjmp])
@@ -402,6 +439,8 @@ AC_TRY_COMPILE([#include <setjmp.h>],
 
 dnl Used by tests/harness/cputimer.cc:
 AC_CHECK_FUNCS([getrusage times sysconf])
+dnl Used by tests/api_replicate.cc (Solaris < 10 only has putenv()):
+AC_CHECK_FUNCS([setenv])
 
 dnl Check for a more efficient way of closing fds during daemonisation.
 dnl Apparently closefrom() is available on at least "Solaris 9 or later, NetBSD
@@ -446,8 +485,8 @@ AC_ARG_ENABLE(documentation,
   [case ${enableval} in
     yes|no) ;;
     *) AC_MSG_ERROR([bad value ${enableval} for --enable-documentation]) ;;
-  esac])
-test -z "$enable_documentation" && enable_documentation=$USE_MAINTAINER_MODE
+  esac],
+  [enable_documentation=$USE_MAINTAINER_MODE])
 AM_CONDITIONAL(DOCUMENTATION_RULES, test x"$enable_documentation" = xyes)
 AM_CONDITIONAL(MAINTAINER_NO_DOCS, test x"$USE_MAINTAINER_MODE$enable_documentation" = xyesno)
 
@@ -731,11 +770,11 @@ AM_CONDITIONAL([USE_WIN32_UUID_API], [test "$use_win32_uuid_api" = 1])
 
 REMOTE_LDFLAGS=
 if test "$enable_backend_remote" = yes ; then
-  AC_PREPROC_IFELSE([
+  AC_PREPROC_IFELSE([AC_LANG_SOURCE([[
 #ifdef __WIN32__
 #error WIN32
 #endif
-  ], [win32=no], [win32=yes])
+  ]])], [win32=no], [win32=yes])
 
   case $host_os-$win32 in
     *-yes )
@@ -928,9 +967,6 @@ esac
 
 AC_CHECK_FUNCS(link)
 
-dnl See if we want to use STLport
-RJB_FIND_STLPORT
-
 dnl *************************
 dnl * Set debugging options *
 dnl *************************
@@ -978,33 +1014,19 @@ dnl * Set special compiler flags *
 dnl ******************************
 
 dnl Set flags to control warnings (enable more, or disable annoying ones).
+dash_d_visibility=
 if test yes = "$GXX"; then
-  dnl Intel's C++ compiler is identified as "GXX" by autoconf's test - check
-  dnl which we actually have.
-  AC_EGREP_CPP(yes,
-    [#ifdef __INTEL_COMPILER
-     yes
-     #endif
-    ],
-    [
-      dnl Intel's compiler:
-      dnl
-      dnl -w1 stops the avalanche of uninteresting "remark" messages.
-      dnl -wd... disables warnings which don't have good code workarounds.
-      AM_CXXFLAGS="$AM_CXXFLAGS -Wall -w1 -wd177,1572"
-      dnl Automatically add -Werror if maintainer mode is enabled.
-      if test x$USE_MAINTAINER_MODE = xyes; then
-	AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
-      fi
-    ],
-    [
-      dnl GCC:
+  dnl Intel's C++ compiler and clang both lie and define __GNUC__, so check which
+  dnl we actually have, as neither is really 100% compatible.
+  case `echo __INTEL_COMPILER __clang__|$CXX -E - 2>&AS_MESSAGE_LOG_FD|grep -v '^#'` in
+    *__INTEL_COMPILER*__clang__*)
+      dnl GCC (since neither substituted):
       dnl
       dnl -Wundef was supported by g++ 3.0 and since we now require GCC >= 3.1,
       dnl we can rely on it.
       dnl
       dnl All the other options were supported by g++ 2.95.
-      AM_CXXFLAGS="$AM_CXXFLAGS -Wall -W -Wredundant-decls -Wpointer-arith -Wcast-qual -Wcast-align -Wno-long-long -Wformat-security -fno-gnu-keywords -Wundef -Wshadow -Woverloaded-virtual"
+      AM_CXXFLAGS="$AM_CXXFLAGS -Wall -W -Wredundant-decls -Wpointer-arith -Wcast-qual -Wcast-align -Wno-long-long -Wformat-security -fno-gnu-keywords -Wundef -Woverloaded-virtual"
 
       dnl The output of g++ --version seems to change with almost every minor
       dnl release so use the preprocessor macros which should be more robust.
@@ -1016,19 +1038,18 @@ if test yes = "$GXX"; then
       [[012]].* | 3.0)
 	AC_MSG_ERROR([Xapian requires GCC 3.1 or later (you appear to have $gxx_version)])
 	;;
-      3.*) ;;
-      *) dnl GCC >= 4.0
-	dnl -Wstrict-null-sentinel was new 4.0.
-	AM_CXXFLAGS="$AM_CXXFLAGS -Wstrict-null-sentinel"
-
+      3.*|4.0) ;;
+      *) dnl GCC >= 4.1
 	case $gxx_version in
-	4.0) ;;
 	4.1)
+	  dnl -Wstrict-null-sentinel was new in 4.0.1, but for simplicity we
+	  dnl only enable it for GCC >= 4.1.
+	  dnl
 	  dnl -Wshadow was supported by g++ 3.0 (though buggy then).  But it's
 	  dnl also buggy in 4.0 (at least on Mac OS X) and warns if a parameter
 	  dnl in a static method is the same as a member variable, so only
 	  dnl enable it for GCC >= 4.1.
-	  AM_CXXFLAGS="$AM_CXXFLAGS -Wshadow" ;;
+	  AM_CXXFLAGS="$AM_CXXFLAGS -Wstrict-null-sentinel -Wshadow" ;;
 	4.2)
 	  dnl -Wstrict-overflow was new in GCC 4.2.  Higher settings than 1
 	  dnl have proved too noisy.
@@ -1038,18 +1059,20 @@ if test yes = "$GXX"; then
 	  dnl GCC 4.1 and 4.3 produce working code.  This bug can be avoided
 	  dnl by disabling aliasing with -fno-strict-aliasing, so we do that.
 	  dnl See http://trac.xapian.org/ticket/449 for more details.
-	  AM_CXXFLAGS="$AM_CXXFLAGS -Wshadow -Wstrict-overflow=1 -fno-strict-aliasing" ;;
-	*)
+	  AM_CXXFLAGS="$AM_CXXFLAGS -Wstrict-null-sentinel -Wshadow -Wstrict-overflow=1 -fno-strict-aliasing" ;;
+	4.[[345]])
 	  dnl -Wlogical-op and -Wmissing-declarations (for C++) were added in
 	  dnl GCC 4.3.
+	  AM_CXXFLAGS="$AM_CXXFLAGS -Wstrict-null-sentinel -Wshadow -Wstrict-overflow=1 -Wlogical-op -Wmissing-declarations" ;;
+	*) dnl GCC >= 4.6
+	  dnl -Wdouble-promotion was added in GCC 4.6.
 	  dnl
-	  dnl -Winit-self was added in GCC 3.4, but up to at least GCC 4.4 it
-	  dnl is ignored by g++ which warns for this case with -Wuninitialized
-	  dnl (implied by -W).  But at some point this bug (filed upstream as
-	  dnl http://gcc.gnu.org/PR34772) may get fixed so we pass this option
-	  dnl anyway - we don't intend to use this idiom, so any instances are
-	  dnl bugs we'd like to know about.
-	  AM_CXXFLAGS="$AM_CXXFLAGS -Wshadow -Wstrict-overflow=1 -Winit-self -Wlogical-op -Wmissing-declarations" ;;
+	  dnl -Winit-self was added in GCC 3.4, but for GCC < 4.7 g++ always
+	  dnl warns for this case with -Wuninitialized (implied by -W).  We
+	  dnl don't intend to use this idiom, so any instances are bugs we'd
+	  dnl like to know about.
+	  AM_CXXFLAGS="$AM_CXXFLAGS -Wstrict-null-sentinel -Wshadow -Wstrict-overflow=1 -Wlogical-op -Wmissing-declarations"
+	  AM_CXXFLAGS="$AM_CXXFLAGS -Wdouble-promotion -Winit-self" ;;
 	esac
 
 	dnl FIXME:
@@ -1062,62 +1085,93 @@ if test yes = "$GXX"; then
 	dnl -Wold-style-cast is interesting, but triggers for macros from
 	dnl system headers (e.g. FD_SET) (tested with GCC 4.4).
 
-	if test no != "$enable_visibility"; then
-	  dnl GCC doesn't support symbol visibility on all platforms (notably
-	  dnl not Mac OS X or mingw).  Currently it seems to be ELF-only.
-	  AC_MSG_CHECKING([if $CXX -fvisibility=hidden works])
-	  if echo 'int foo() {return 42;}'|$CXX -Werror -fvisibility=hidden -c -oconftest.o -xc++ - >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD ; then
-	    AC_MSG_RESULT([yes])
-	    AM_CXXFLAGS="$AM_CXXFLAGS -fvisibility=hidden"
-	    dash_d_visibility=-DXAPIAN_ENABLE_VISIBILITY
-	  else
-	    AC_MSG_RESULT([no])
-	  fi
-	fi
-
 	dnl Automatically add -Werror if maintainer mode is enabled and we're
-	dnl using GCC4 or newer.  We don't do this for older GCCs as GCC 2.95
-	dnl and some GCC 3.x compilers issue spurious warnings.
+	dnl using GCC 4.1 or newer.  We don't do this for older GCCs as GCC 2.95,
+	dnl some GCC 3.x compilers, and Apple's GCC 4.0 issue spurious warnings.
 	if test x$USE_MAINTAINER_MODE = xyes; then
-	  case $gxx_version in
-	  4.0)
-	    dnl Apple's GCC 4.0 issues spurious uninitialised warnings.
-	    ;;
-	  *)
-	    AM_CXXFLAGS="$AM_CXXFLAGS -Werror" ;;
-	  esac
+	  AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
 	fi
 	;;
       esac
+      ;;
+    *__clang__*)
+      dnl Intel's compiler (since __clang__ not substituted):
+      dnl
+      dnl -w1 stops the avalanche of uninteresting "remark" messages.
+      dnl -wd... disables warnings which don't have good code workarounds.
+      AM_CXXFLAGS="$AM_CXXFLAGS -Wall -w1 -wd177,1572"
 
-      XAPIAN_TEST_LINKER_FLAG([-Bsymbolic-functions], [symbolic_functions],
-	[XAPIAN_LDFLAGS="$XAPIAN_LDFLAGS $flag"])
-    ])
+      dnl Automatically add -Werror if maintainer mode is enabled.
+      if test x$USE_MAINTAINER_MODE = xyes; then
+	AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
+      fi
+      ;;
+    *__INTEL_COMPILER*)
+      dnl clang (since __INTEL_COMPILER not substituted):
+      AM_CXXFLAGS="$AM_CXXFLAGS -Wall -W -Wredundant-decls -Wpointer-arith -Wcast-qual -Wcast-align -Wno-long-long -Wformat-security -fno-gnu-keywords -Wundef -Woverloaded-virtual"
+      AM_CXXFLAGS="$AM_CXXFLAGS -Wstrict-null-sentinel -Wshadow -Wstrict-overflow=1 -Winit-self -Wlogical-op -Wmissing-declarations"
+
+      dnl Automatically add -Werror if maintainer mode is enabled.
+      if test x$USE_MAINTAINER_MODE = xyes; then
+	AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
+      fi
+      ;;
+  esac
+
+  if test no != "$enable_visibility"; then
+    dnl GCC doesn't support symbol visibility on all platforms (notably
+    dnl not Mac OS X or mingw).  Currently it seems to be ELF-only.
+    AC_MSG_CHECKING([if $CXX -fvisibility=hidden works])
+    if echo 'int bar() __attribute__((visibility("default"))); int foo() {return 42;}'|$CXX -Werror -fvisibility=hidden -c -oconftest.o -xc++ - >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD ; then
+      AC_MSG_RESULT([yes])
+      AM_CXXFLAGS="$AM_CXXFLAGS -fvisibility=hidden"
+      dash_d_visibility=-DXAPIAN_ENABLE_VISIBILITY
+    else
+      AC_MSG_RESULT([no])
+    fi
+  fi
 else
   dnl WARNING_CXXFLAGS is set above.
   AM_CXXFLAGS="$AM_CXXFLAGS $WARNING_CXXFLAGS"
 fi
 
+XAPIAN_TEST_LINKER_FLAG([-Bsymbolic-functions], [symbolic_functions],
+  [XAPIAN_LDFLAGS="$XAPIAN_LDFLAGS $flag"])
+
+FP_EXCESS_PRECISION=no
 AC_MSG_CHECKING([whether to use SSE instructions on x86])
 case $host_cpu in
   i*86)
     if test "$enable_sse" = no ; then
       AC_MSG_RESULT([no])
-    elif test yes = "$GXX"; then
-      AC_MSG_RESULT([yes (configure with --disable-sse to disable)])
-      case $gxx_version in
-      3.*|4.[[01]]) dnl -mtune=generic added in GCC 4.2.
-        AM_CXXFLAGS="$AM_CXXFLAGS -mfpmath=sse -msse2" ;;
-      *)
-        AM_CXXFLAGS="$AM_CXXFLAGS -mfpmath=sse -msse2 -mtune=generic" ;;
-      esac
+      FP_EXCESS_PRECISION=yes
     else
-      AC_MSG_RESULT([don't know how to for compiler $CXX])
+      dnl Default to sse2.
+      test "$enable_sse" != yes || enable_sse=sse2
+      case $compiler in
+      gcc)
+	AC_MSG_RESULT([yes (configure with --disable-sse to disable)])
+	case $gxx_version in
+	3.*|4.[[01]]) dnl -mtune=generic added in GCC 4.2.
+	  AM_CXXFLAGS="$AM_CXXFLAGS -mfpmath=sse -m$enable_sse" ;;
+	*)
+	  AM_CXXFLAGS="$AM_CXXFLAGS -mfpmath=sse -m$enable_sse -mtune=generic" ;;
+	esac
+	;;
+      sun)
+	AC_MSG_RESULT([yes (configure with --disable-sse to disable)])
+	AM_CXXFLAGS="$AM_CXXFLAGS -xarch=$enable_sse"
+	;;
+      *)
+        AC_MSG_RESULT([don't know how to for compiler $CXX])
+	;;
+      esac
     fi
     ;;
   *)
     AC_MSG_RESULT([non-x86 arch ($host_cpu)]) ;;
 esac
+AC_SUBST(FP_EXCESS_PRECISION)
 
 AH_BOTTOM(
 [/* Disable stupid MSVC "performance" warning for converting int to bool. */
@@ -1153,18 +1207,6 @@ AH_BOTTOM(
 # define usual(COND) (COND)
 #endif
 ])
-
-dnl modify flags for building with stlport
-STLPORT_CXXFLAGS=
-if test yes = "$use_stlport"; then
-  if test yes = "$GXX"; then
-    STLPORT_CXXFLAGS="-nostdinc++"
-  fi
-  STLPORT_CXXFLAGS="$STLPORT_CXXFLAGS $STLPORT_INCLUDE"
-  AM_CXXFLAGS="$STLPORT_CXXFLAGS $AM_CXXFLAGS"
-  LIBS="$STLPORT_LIBS $LIBS"
-fi
-AC_SUBST(STLPORT_CXXFLAGS)
 
 AC_SUBST(AM_CXXFLAGS)
 

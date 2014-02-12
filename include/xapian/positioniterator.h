@@ -3,7 +3,7 @@
  */
 /* Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2002 Ananova Ltd
- * Copyright 2003,2004,2007,2009 Olly Betts
+ * Copyright 2003,2004,2007,2009,2012 Olly Betts
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -73,17 +73,25 @@ class XAPIAN_VISIBILITY_DEFAULT PositionIterator {
 	 */
 	void operator=(const PositionIterator &o);
 
+	/// Return the term position at the current iterator position.
 	Xapian::termpos operator *() const;
 
+	/// Advance the iterator to the next position.
 	PositionIterator & operator++();
 
+	/// Advance the iterator to the next position (postfix version).
 	DerefWrapper_<termpos> operator++(int) {
 	    Xapian::termpos tmp = **this;
 	    operator++();
 	    return DerefWrapper_<termpos>(tmp);
 	}
 
-	// extra method, not required for an input_iterator
+	/** Advance the iterator to the specified termpos.
+	 *
+	 *  If the specified termpos isn't in the list, position ourselves on the
+	 *  first termpos after it (or at_end() if no greater term positions are
+	 *  present).
+	 */
 	void skip_to(Xapian::termpos pos);
 
 	/// Return a string describing this object.

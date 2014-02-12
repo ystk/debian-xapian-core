@@ -2,7 +2,7 @@
  *
  * Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2002 Ananova Ltd
- * Copyright 2002,2003,2004,2005,2006,2007,2008,2009,2010 Olly Betts
+ * Copyright 2002,2003,2004,2005,2006,2007,2008,2009,2010,2011 Olly Betts
  * Copyright 2008 Lemur Consulting Ltd
  * Copyright 2010 Richard Boulton
  *
@@ -109,23 +109,6 @@ static void report_cursor(int N, Btree * B, Cursor * C)
 /*------to here--------*/
 #endif /* BTREE_DEBUG_FULL */
 
-/* Input/output is defined with calls to the basic Unix system interface: */
-
-static void sys_unlink(const string &filename)
-{
-#ifdef __WIN32__
-    if (msvc_posix_unlink(filename.c_str()) == -1) {
-#else
-    if (unlink(filename) == -1) {
-#endif
-	string message = "Failed to unlink ";
-	message += filename;
-	message += ": ";
-	message += strerror(errno);
-	throw Xapian::DatabaseCorruptError(message);
-    }
-}
-
 static inline byte *zeroed_new(size_t size)
 {
     byte *temp = new byte[size];
@@ -185,10 +168,6 @@ static inline byte *zeroed_new(size_t size)
 /** Flip to sequential addition block-splitting after this number of observed
  *  sequential additions (in negated form). */
 #define SEQ_START_POINT (-10)
-
-/** Even for items of at maximum size, it must be possible to get this number of
- *  items in a block */
-#define BLOCK_CAPACITY 4
 
 
 /* There are two bit maps in bit_map0 and bit_map. The nth bit of bitmap is 0
@@ -274,7 +253,13 @@ ChertTable::write_block(uint4 n, const byte * p) const
 
     if (both_bases) {
 	// Delete the old base before modifying the database.
-	sys_unlink(name + "base" + other_base_letter());
+	//
+	// If the file is on NFS, then io_unlink() may return false even if
+	// the file was removed, so on balance throwing an exception in this
+	// case is unhelpful, since we wanted the file gone anyway!  The
+	// likely explanation is that somebody moved, deleted, or changed a
+	// symlink to the database directory.
+	(void)io_unlink(name + "base" + other_base_letter());
 	both_bases = false;
 	latest_revision_number = revision_number;
     }
@@ -1351,7 +1336,7 @@ ChertTable::basic_open(bool revision_supplied, chert_revision_number_t revision_
 	bool valid_base = false;
 	{
 	    for (size_t i = 0; i < BTREE_BASES; ++i) {
-		bool ok = bases[i].read(name, basenames[i], err_msg);
+		bool ok = bases[i].read(name, basenames[i], writable, err_msg);
 		base_ok[i] = ok;
 		if (ok) {
 		    valid_base = true;
@@ -1696,32 +1681,15 @@ ChertTable::exists() const {
 	    (file_exists(name + "baseA") || file_exists(name + "baseB")));
 }
 
-/** Delete file, throwing an error if we can't delete it (but not if it
- *  doesn't exist).
- */
-static void
-sys_unlink_if_exists(const string & filename)
-{
-#ifdef __WIN32__
-    if (msvc_posix_unlink(filename.c_str()) == -1) {
-#else
-    if (unlink(filename) == -1) {
-#endif
-	if (errno == ENOENT) return;
-	throw Xapian::DatabaseError("Can't delete file: `" + filename +
-			      "': " + strerror(errno));
-    }
-}
-
 void
 ChertTable::erase()
 {
     LOGCALL_VOID(DB, "ChertTable::erase", NO_ARGS);
     close();
 
-    sys_unlink_if_exists(name + "baseA");
-    sys_unlink_if_exists(name + "baseB");
-    sys_unlink_if_exists(name + "DB");
+    (void)io_unlink(name + "baseA");
+    (void)io_unlink(name + "baseB");
+    (void)io_unlink(name + "DB");
 }
 
 void
@@ -1764,7 +1732,7 @@ ChertTable::create_and_open(unsigned int block_size_)
     base_.write_to_file(name + "baseA", 'A', string(), -1, NULL);
 
     /* remove the alternative base file, if any */
-    sys_unlink_if_exists(name + "baseB");
+    (void)io_unlink(name + "baseB");
 
     // Any errors are thrown if revision_supplied is false.
     (void)do_open_to_write(false, 0, true);
@@ -2000,7 +1968,7 @@ ChertTable::cancel()
     // This causes problems: if (!Btree_modified) return;
 
     string err_msg;
-    if (!base.read(name, base_letter, err_msg)) {
+    if (!base.read(name, base_letter, writable, err_msg)) {
 	throw Xapian::DatabaseCorruptError(string("Couldn't reread base ") + base_letter);
     }
 
