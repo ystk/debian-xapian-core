@@ -6,14 +6,14 @@
 
 Summary: The Xapian Probabilistic Information Retrieval Library
 Name: xapian-core
-Version: 1.2.12
+Version: 1.2.18
 Release: 1
 License: GPL
 Vendor: xapian.org
 Group: Applications/Databases
 URL: http://xapian.org/
 Requires: %{name}-libs = %{version}
-Source: http://www.oligarchy.co.uk/xapian/%{version}/%{name}-%{version}.tar.gz
+Source: http://www.oligarchy.co.uk/xapian/%{version}/%{name}-%{version}.tar.xz
 # May need e2fsprogs-devel instead of libuuid-devel on older platforms
 BuildRequires: gcc-c++ zlib-devel libuuid-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)

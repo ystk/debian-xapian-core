@@ -27,6 +27,9 @@
 /* Define to 1 if you have the `gethostname' function. */
 #undef HAVE_GETHOSTNAME
 
+/* Define to 1 if you have the `getrlimit' function. */
+#undef HAVE_GETRLIMIT
+
 /* Define to 1 if you have the `getrusage' function. */
 #undef HAVE_GETRUSAGE
 
@@ -54,6 +57,9 @@
 /* Define if pwrite is available on this system */
 #undef HAVE_PWRITE
 
+/* Define to 1 if you have the `random' function. */
+#undef HAVE_RANDOM
+
 /* Define to 1 if you have the `setenv' function. */
 #undef HAVE_SETENV
 
@@ -65,6 +71,9 @@
 
 /* Define to 1 if you have the 'socketpair' function. */
 #undef HAVE_SOCKETPAIR
+
+/* Define to 1 if you have the `srandom' function. */
+#undef HAVE_SRANDOM
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -86,6 +95,9 @@
 
 /* Define to 1 if you have the <sys/errno.h> header file. */
 #undef HAVE_SYS_ERRNO_H
+
+/* Define to 1 if you have the <sys/resource.h> header file. */
+#undef HAVE_SYS_RESOURCE_H
 
 /* Define to 1 if you have the <sys/select.h> header file. */
 #undef HAVE_SYS_SELECT_H
@@ -122,6 +134,9 @@
 
 /* Define to 1 if you have the <zlib.h> header file. */
 #undef HAVE_ZLIB_H
+
+/* Define to 1 if you have the `_putenv_s' function. */
+#undef HAVE__PUTENV_S
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */

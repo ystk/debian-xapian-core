@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Sorting of Search Results</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -287,7 +317,7 @@ ul.auto-toc {
 <div class="document" id="sorting-of-search-results">
 <h1 class="title">Sorting of Search Results</h1>
 
-<!-- Copyright (C) 2007,2009 Olly Betts -->
+<!-- Copyright (C) 2007,2009,2014 Olly Betts -->
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title first">Table of contents</p>
 <ul class="simple">
@@ -308,9 +338,9 @@ a mixture of other criteria and relevance score.</p>
 <p>If two or more results compare equal by the sorting criteria, then their order
 is decided by their document ids.  By default, the document ids sort in
 ascending order (so a lower document id is &quot;better&quot;), but this can be set
-to descending using <tt class="docutils literal"><span class="pre">enquire.set_docid_order(enquire.DESCENDING);</span></tt>.  If you
+to descending using <tt class="docutils literal">enquire.set_docid_order(enquire.DESCENDING);</tt>.  If you
 have no preference, you can tell Xapian to use whatever order is most efficient
-using <tt class="docutils literal"><span class="pre">enquire.set_docid_order(enquire.DONT_CARE);</span></tt>.</p>
+using <tt class="docutils literal">enquire.set_docid_order(enquire.DONT_CARE);</tt>.</p>
 </div>
 <div class="section" id="sorting-by-relevance">
 <h1><a class="toc-backref" href="#id2">Sorting by Relevance</a></h1>
@@ -321,7 +351,7 @@ indexed and the type of queries being run, so you may be able to improve the
 effectiveness of your search system by adjusting these values, but it's a
 fiddly process to tune them so people tend not to bother.</p>
 <p>See the <a class="reference external" href="bm25.html">BM25 documentation</a> for more details of BM25.</p>
-<p>The other included weighting schemes are <tt class="docutils literal"><span class="pre">TradWeight</span></tt> and <tt class="docutils literal"><span class="pre">BoolWeight</span></tt>.</p>
+<p>The other included weighting schemes are <tt class="docutils literal">TradWeight</tt> and <tt class="docutils literal">BoolWeight</tt>.</p>
 <p>TradWeight implements the original probabilistic weighting formula, which is
 essentially a special case of BM25 (it's BM25 with k2 = 0, k3 = 0, b = 1, and
 min_normlen = 0, except that the weights are scaled by a constant factor).</p>
@@ -345,12 +375,12 @@ class CoordinateWeight : public Xapian::Weight {
         return new CoordinateWeight;
     }
 
-    Xapian::weight get_sumpart(Xapian::termcount, Xapian::doclength) const {
+    Xapian::weight get_sumpart(Xapian::termcount, Xapian::termcount) const {
         return 1;
     }
     Xapian::weight get_maxpart() const { return 1; }
 
-    Xapian::weight get_sumextra(Xapian::doclength) const { return 0; }
+    Xapian::weight get_sumextra(Xapian::termcount) const { return 0; }
     Xapian::weight get_maxextra() const { return 0; }
 
     bool get_sumpart_needs_doclength() const { return false; }
@@ -374,7 +404,7 @@ documents to arrive in date order than in other orders.</p>
 <h2><a class="toc-backref" href="#id4">Sorting by Value</a></h2>
 <p>You can order documents by comparing a specified document value.  Note that the
 comparison used compares the byte values in the value (i.e. it's a string sort
-ignoring locale), so <tt class="docutils literal"><span class="pre">1</span></tt> &lt; <tt class="docutils literal"><span class="pre">10</span></tt> &lt; <tt class="docutils literal"><span class="pre">2</span></tt>.  If you want to encode the value
+ignoring locale), so <tt class="docutils literal">1</tt> &lt; <tt class="docutils literal">10</tt> &lt; <tt class="docutils literal">2</tt>.  If you want to encode the value
 such that it sorts numerically, use <tt class="docutils literal"><span class="pre">Xapian::sortable_serialise()</span></tt> to encode
 values at index time - this works equally will on integers and floating point
 values:</p>

@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Xapian::QueryParser Syntax</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -307,7 +337,7 @@ either of the subexpressions.</p>
 <h2>NOT</h2>
 <p><em>expression</em> NOT <em>expression</em> matches documents which are matched by
 only the first subexpression. This can also be written as <em>expression</em>
-AND NOT <em>expression</em>. If <tt class="docutils literal"><span class="pre">FLAG_PURE_NOT</span></tt> is enabled, then</p>
+AND NOT <em>expression</em>. If <tt class="docutils literal">FLAG_PURE_NOT</tt> is enabled, then</p>
 <p>NOT <em>expression</em> will match documents which don't match the
 subexpression.</p>
 </div>
@@ -320,9 +350,9 @@ esoteric.</p>
 <div class="section" id="bracketed-expressions">
 <h2>Bracketed expressions</h2>
 <p>You can control the precedence of the boolean operators using brackets.
-In the query <tt class="docutils literal"><span class="pre">one</span> <span class="pre">OR</span> <span class="pre">two</span> <span class="pre">AND</span> <span class="pre">three</span></tt> the AND takes precedence, so this
-is the same as <tt class="docutils literal"><span class="pre">one</span> <span class="pre">OR</span> <span class="pre">(two</span> <span class="pre">AND</span> <span class="pre">three)</span></tt>. You can override the
-precedence using <tt class="docutils literal"><span class="pre">(one</span> <span class="pre">OR</span> <span class="pre">two)</span> <span class="pre">AND</span> <span class="pre">three</span></tt>.</p>
+In the query <tt class="docutils literal">one OR two AND three</tt> the AND takes precedence, so this
+is the same as <tt class="docutils literal">one OR (two AND three)</tt>. You can override the
+precedence using <tt class="docutils literal">(one OR two) AND three</tt>.</p>
 <p>The default precedence from highest to lowest is:</p>
 <ul class="simple">
 <li>+, - (equal)</li>
@@ -340,33 +370,33 @@ and - on phrases and on bracketed expressions.</p>
 </div>
 <div class="section" id="near">
 <h2>NEAR</h2>
-<p><tt class="docutils literal"><span class="pre">one</span> <span class="pre">NEAR</span> <span class="pre">two</span> <span class="pre">NEAR</span> <span class="pre">three</span></tt> matches documents containing those words
+<p><tt class="docutils literal">one NEAR two NEAR three</tt> matches documents containing those words
 within 10 words of each other. You can set the threshold to <em>n</em> by using
-<tt class="docutils literal"><span class="pre">NEAR/n</span></tt> like so: <tt class="docutils literal"><span class="pre">one</span> <span class="pre">NEAR/6</span> <span class="pre">two</span></tt>.</p>
+<tt class="docutils literal">NEAR/n</tt> like so: <tt class="docutils literal">one NEAR/6 two</tt>.</p>
 </div>
 <div class="section" id="adj">
 <h2>ADJ</h2>
-<p><tt class="docutils literal"><span class="pre">ADJ</span></tt> is like <tt class="docutils literal"><span class="pre">NEAR</span></tt> but only matches if the words appear in the
-same order as in the query. So <tt class="docutils literal"><span class="pre">one</span> <span class="pre">ADJ</span> <span class="pre">two</span> <span class="pre">ADJ</span> <span class="pre">three</span></tt> matches
+<p><tt class="docutils literal">ADJ</tt> is like <tt class="docutils literal">NEAR</tt> but only matches if the words appear in the
+same order as in the query. So <tt class="docutils literal">one ADJ two ADJ three</tt> matches
 documents containing those three words in that order and within 10 words
-of each other. You can set the threshold to <em>n</em> by using <tt class="docutils literal"><span class="pre">ADJ/n</span></tt> like
-so: <tt class="docutils literal"><span class="pre">one</span> <span class="pre">ADJ/6</span> <span class="pre">two</span></tt>.</p>
+of each other. You can set the threshold to <em>n</em> by using <tt class="docutils literal">ADJ/n</tt> like
+so: <tt class="docutils literal">one ADJ/6 two</tt>.</p>
 </div>
 <div class="section" id="phrase-searches">
 <h2>Phrase searches</h2>
 <p>A phrase surrounded with double quotes (&quot;&quot;) matches documents containing
 that exact phrase. Hyphenated words are also treated as phrases, as are
-cases such as filenames and email addresses (e.g. <tt class="docutils literal"><span class="pre">/etc/passwd</span></tt> or
-<tt class="docutils literal"><span class="pre">president&#64;whitehouse.gov</span></tt>).</p>
+cases such as filenames and email addresses (e.g. <tt class="docutils literal">/etc/passwd</tt> or
+<tt class="docutils literal">president&#64;whitehouse.gov</tt>).</p>
 </div>
 <div class="section" id="searching-within-a-probabilistic-field">
 <h2>Searching within a probabilistic field</h2>
 <p>If the database has been indexed with prefixes on probabilistic terms
 from certain fields, you can set up a prefix map so that the user can
-search within those fields. For example <tt class="docutils literal"><span class="pre">author:dickens</span> <span class="pre">title:shop</span></tt>
+search within those fields. For example <tt class="docutils literal">author:dickens title:shop</tt>
 might find documents by dickens with shop in the title. You can also
-specify a prefix on a quoted phrase (e.g. <tt class="docutils literal"><span class="pre">author:&quot;charles</span> <span class="pre">dickens&quot;</span></tt>)
-or on a bracketed subexpression (e.g. <tt class="docutils literal"><span class="pre">title:(mice</span> <span class="pre">men)</span></tt>).</p>
+specify a prefix on a quoted phrase (e.g. <tt class="docutils literal"><span class="pre">author:&quot;charles</span> dickens&quot;</tt>)
+or on a bracketed subexpression (e.g. <tt class="docutils literal"><span class="pre">title:(mice</span> men)</tt>).</p>
 </div>
 <div class="section" id="searching-for-proper-names">
 <h2>Searching for proper names</h2>
@@ -380,23 +410,23 @@ range-searching</a> using document values.</p>
 <p>The syntax for a range search is <tt class="docutils literal"><span class="pre">start..end</span></tt> - for example,
 <tt class="docutils literal"><span class="pre">01/03/2007..04/04/2007</span></tt>, <tt class="docutils literal"><span class="pre">$10..100</span></tt>, <tt class="docutils literal"><span class="pre">5..10kg</span></tt>.</p>
 <p>Open-ended ranges are also supported - an empty start or end is
-interpreted as no limit, for example: <tt class="docutils literal"><span class="pre">..2010-06-17</span></tt>, <tt class="docutils literal"><span class="pre">$10..</span></tt>,
-<tt class="docutils literal"><span class="pre">$..100</span></tt>, <tt class="docutils literal"><span class="pre">..5kg</span></tt>.</p>
+interpreted as no limit, for example: <tt class="docutils literal"><span class="pre">..2010-06-17</span></tt>, <tt class="docutils literal">$10..</tt>,
+<tt class="docutils literal"><span class="pre">$..100</span></tt>, <tt class="docutils literal">..5kg</tt>.</p>
 </div>
 <div class="section" id="synonyms">
 <h2>Synonyms</h2>
 <p>The QueryParser can be configured to support synonyms, which can either
-be used when explicitly specified (using the syntax <tt class="docutils literal"><span class="pre">~term</span></tt>) or
+be used when explicitly specified (using the syntax <tt class="docutils literal">~term</tt>) or
 implicitly (synonyms will be used for all terms or groups of terms for
 which they have been specified).</p>
 </div>
 <div class="section" id="wildcards">
 <h2>Wildcards</h2>
 <p>The QueryParser supports using a trailing '*' wildcard, which matches
-any number of trailing characters, so <tt class="docutils literal"><span class="pre">wildc*</span></tt> would match wildcard,
+any number of trailing characters, so <tt class="docutils literal">wildc*</tt> would match wildcard,
 wildcarded, wildcards, wildcat, wildcats, etc. This feature is disabled
 by default - pass <tt class="docutils literal"><span class="pre">Xapian::QueryParser::FLAG_WILDCARD</span></tt> in the flags
-argument of <tt class="docutils literal"><span class="pre">Xapian::QueryParser::parse_query(query_string,</span> <span class="pre">flags)</span></tt> to
+argument of <tt class="docutils literal"><span class="pre">Xapian::QueryParser::parse_query(query_string,</span> flags)</tt> to
 enable it, and tell the QueryParser which database to expand wildcards
 from using the <tt class="docutils literal"><span class="pre">QueryParser::set_database(database)</span></tt> method.</p>
 <p>You can limit the number of terms a wildcard will expand to by
@@ -430,7 +460,7 @@ However, this would be confused by searches which ended with punctuation
 or other characters.</p>
 <p>This feature is disabled by default - pass
 <tt class="docutils literal"><span class="pre">Xapian::QueryParser::FLAG_PARTIAL</span></tt> flag in the flags argument of
-<tt class="docutils literal"><span class="pre">Xapian::QueryParser::parse_query(query_string,</span> <span class="pre">flags)</span></tt> to enable it,
+<tt class="docutils literal"><span class="pre">Xapian::QueryParser::parse_query(query_string,</span> flags)</tt> to enable it,
 and tell the QueryParser which database to expand wildcards from using
 the <tt class="docutils literal"><span class="pre">QueryParser::set_database(database)</span></tt> method.</p>
 </div>

@@ -2,7 +2,7 @@
 
 if MAINTAINER_MODE
 # Export these so that we run the locally installed autotools when building
-# from a bootstrapped SVN tree.
+# from a bootstrapped git tree.
 export ACLOCAL AUTOCONF AUTOHEADER AUTOM4TE AUTOMAKE
 endif
 
@@ -50,18 +50,12 @@ RSTHTML = $(RSTDOCS:.rst=.html)
 EXTRA_DIST = doxygen_api.conf.in doxygen_source.conf.in \
 	doxygen_api_header.html_tmpl doxygen_api_footer.html_tmpl \
 	doxygen_source_header.html_tmpl doxygen_source_footer.html_tmpl \
-	$(RSTDOCS) \
+	$(RSTDOCS) $(HTMLDOCS) $(RSTHTML) apidoc.pdf \
 	dir_contents
 
 # Other files which should be distributed
 dist-hook: doxygen_api_docs
-	test -d $(distdir) || mkdir $(distdir)
-	test -d $(distdir)/apidoc || mkdir $(distdir)/apidoc
-	test -d $(distdir)/apidoc/html || mkdir $(distdir)/apidoc/html
-	test "`echo $(srcdir)/apidoc/html/*.gif`" = "$(srcdir)/apidoc/html/*.gif" || \
-	  cp -p $(srcdir)/apidoc/html/*.gif $(distdir)/apidoc/html
-	test "`echo apidoc/html/*.gif`" = "apidoc/html/*.gif" || \
-	  cp -p apidoc/html/*.gif $(distdir)/apidoc/html
+	$(MKDIR_P) '$(distdir)/apidoc/html'
 	test "`echo $(srcdir)/apidoc/html/*.png`" = "$(srcdir)/apidoc/html/*.png" || \
 	  cp -p $(srcdir)/apidoc/html/*.png $(distdir)/apidoc/html
 	test "`echo apidoc/html/*.png`" = "apidoc/html/*.png" || \
@@ -75,15 +69,13 @@ dist-hook: doxygen_api_docs
 	test "`echo apidoc/html/*.html`" = "apidoc/html/*.html" || \
 	  cp -p apidoc/html/*.html $(distdir)/apidoc/html
 
+# Disable these rules if configured with --enable-maintainer-mode and
+# --disable-documentation so that "make install" works in this case.
 if !MAINTAINER_NO_DOCS
-# Build API docs with doxygen
-all-local: doxygen_api_docs
-
-dist_doc_DATA = $(HTMLDOCS) $(RSTHTML) apidoc.pdf
+doc_DATA = $(HTMLDOCS) $(RSTHTML) apidoc.pdf
 
 install-data-local: doxygen_api_docs
 	$(mkinstalldirs) $(DESTDIR)$(docdir)/apidoc/html
-	$(INSTALL_DATA) `test -f apidoc/html/index.html || echo $(srcdir)/`apidoc/html/*.gif $(DESTDIR)$(docdir)/apidoc/html
 	$(INSTALL_DATA) `test -f apidoc/html/index.html || echo $(srcdir)/`apidoc/html/*.png $(DESTDIR)$(docdir)/apidoc/html
 	$(INSTALL_DATA) `test -f apidoc/html/index.html || echo $(srcdir)/`apidoc/html/*.css $(DESTDIR)$(docdir)/apidoc/html
 	$(INSTALL_DATA) `test -f apidoc/html/index.html || echo $(srcdir)/`apidoc/html/*.html $(DESTDIR)$(docdir)/apidoc/html
@@ -113,6 +105,9 @@ doxygen_api_docs: apidoc/html/index.html
 doxygen_docs: doxygen_source_docs doxygen_api_docs
 
 if DOCUMENTATION_RULES
+# Build API docs with doxygen
+all-local: doxygen_api_docs
+
 # We use $T instead of $(top_srcdir) in APIDOC_SRC, SOURCEDOC_SRC, and
 # DIR_CONTENTS_FILES to keep their sizes down.
 T=$(top_srcdir)

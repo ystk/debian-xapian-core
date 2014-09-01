@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Deprecation</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -340,8 +370,8 @@ to be deprecated, but to save words this document will often use the term
 <div class="section" id="deprecation-markers">
 <h2><a class="toc-backref" href="#id24">Deprecation markers</a></h2>
 <p>At any particular point, some parts of the C++ API will be marked as
-&quot;deprecated&quot;.  This is indicated with the <tt class="docutils literal"><span class="pre">XAPIAN_DEPRECATED()</span></tt> or
-<tt class="docutils literal"><span class="pre">XAPIAN_DEPRECATED_CLASS</span></tt> macros, which will cause compilers with appropriate
+&quot;deprecated&quot;.  This is indicated with the <tt class="docutils literal">XAPIAN_DEPRECATED()</tt> or
+<tt class="docutils literal">XAPIAN_DEPRECATED_CLASS</tt> macros, which will cause compilers with appropriate
 support (such as GCC 3.1 or later, and MSVC 7.0 or later) to emit warning
 messages about the use of deprecated features at compile time.</p>
 <p>If a feature is marked with one of these markers, you should avoid using it in
@@ -358,8 +388,8 @@ make 'CPPFLAGS=&quot;-DXAPIAN_DEPRECATED(X)=X&quot;'
 </div>
 <div class="section" id="api-and-abi-compatibility">
 <h2><a class="toc-backref" href="#id25">API and ABI compatibility</a></h2>
-<p>Releases are given three-part version numbers (e.g. 1.0.2), the three parts
-being termed &quot;major&quot; (1), &quot;minor&quot; (0), and &quot;revision&quot; (2).  Releases with
+<p>Releases are given three-part version numbers (e.g. 1.2.9), the three parts
+being termed &quot;major&quot; (1), &quot;minor&quot; (2), and &quot;revision&quot; (9).  Releases with
 the same major and minor version are termed a &quot;release series&quot;.</p>
 <p>For Xapian releases 1.0.0 and higher, an even minor version indicates a stable
 release series, while an odd minor version indicates a development release
@@ -463,7 +493,7 @@ documentation, for each feature you use in your application.  This
 documentation will indicate features which are deprecated, or planned for
 deprecation.</li>
 <li>For applications which are not written in C++, there is currently no
-equivalent of the <tt class="docutils literal"><span class="pre">XAPIAN_DEPRECATED</span></tt> macro for the bindings, and thus
+equivalent of the <tt class="docutils literal">XAPIAN_DEPRECATED</tt> macro for the bindings, and thus
 there is no way for the bindings to give a warning if a deprecated feature
 is used.  This would be a nice addition for those languages in which there
 is a reasonable way to give such warnings.  Until such a feature is
@@ -501,34 +531,34 @@ they are using in the list at the end of this file.</li>
 <tr><td>1.1.0</td>
 <td>1.3.0</td>
 <td>Default second parameter to
-<tt class="docutils literal"><span class="pre">Enquire</span></tt> sorting functions.</td>
-<td><p class="first">The parameter name was <tt class="docutils literal"><span class="pre">ascending</span></tt> and defaulted to <tt class="docutils literal"><span class="pre">true</span></tt>.  However
+<tt class="docutils literal">Enquire</tt> sorting functions.</td>
+<td><p class="first">The parameter name was <tt class="docutils literal">ascending</tt> and defaulted to <tt class="docutils literal">true</tt>.  However
 ascending=false gave what you'd expect the default sort order to be (and
 probably think of as ascending) while ascending=true gave the reverse
-(descending) order.  For sanity, we renamed the parameter to <tt class="docutils literal"><span class="pre">reverse</span></tt>
+(descending) order.  For sanity, we renamed the parameter to <tt class="docutils literal">reverse</tt>
 and deprecated the default value.  In the more distant future, we'll
-probably add a default again, but of <tt class="docutils literal"><span class="pre">false</span></tt> instead.</p>
+probably add a default again, but of <tt class="docutils literal">false</tt> instead.</p>
 <p class="last">The methods affected are:
-<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value(Xapian::valueno</span> <span class="pre">sort_key)</span></tt>
-<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_key(Xapian::Sorter</span> <span class="pre">*</span> <span class="pre">sorter)</span></tt>
-<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_then_relevance(Xapian::valueno</span> <span class="pre">sort_key)</span></tt>
-<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_key_then_relevance(Xapian::Sorter</span> <span class="pre">*</span> <span class="pre">sorter)</span></tt>
-<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_relevance_then_value(Xapian::valueno</span> <span class="pre">sort_key)</span></tt>
-<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_relevance_then_key(Xapian::Sorter</span> <span class="pre">*</span> <span class="pre">sorter)</span></tt></p>
+<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value(Xapian::valueno</span> sort_key)</tt>
+<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_key(Xapian::Sorter</span> * sorter)</tt>
+<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_then_relevance(Xapian::valueno</span> sort_key)</tt>
+<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_key_then_relevance(Xapian::Sorter</span> * sorter)</tt>
+<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_relevance_then_value(Xapian::valueno</span> sort_key)</tt>
+<tt class="docutils literal"><span class="pre">Enquire::set_sort_by_relevance_then_key(Xapian::Sorter</span> * sorter)</tt></p>
 </td>
 </tr>
 <tr><td>1.1.3</td>
 <td>1.3.0</td>
-<td><tt class="docutils literal"><span class="pre">Sorter</span></tt> abstract base class.</td>
-<td>Use <tt class="docutils literal"><span class="pre">KeyMaker</span></tt> class instead, which has the same semantics, but has
+<td><tt class="docutils literal">Sorter</tt> abstract base class.</td>
+<td>Use <tt class="docutils literal">KeyMaker</tt> class instead, which has the same semantics, but has
 been renamed to indicate that the keys produced may be used for purposes
 other than sorting (we plan to allow collapsing on generated keys in the
 future).</td>
 </tr>
 <tr><td>1.1.3</td>
 <td>1.3.0</td>
-<td><tt class="docutils literal"><span class="pre">MultiValueSorter</span></tt> class.</td>
-<td><p class="first">Use <tt class="docutils literal"><span class="pre">MultiValueKeyMaker</span></tt> class instead.  Note that
+<td><tt class="docutils literal">MultiValueSorter</tt> class.</td>
+<td><p class="first">Use <tt class="docutils literal">MultiValueKeyMaker</tt> class instead.  Note that
 <tt class="docutils literal"><span class="pre">MultiValueSorter::add()</span></tt> becomes <tt class="docutils literal"><span class="pre">MultiValueKeyMaker::add_value()</span></tt>,
 but the sense of the direction flag is reversed (to be consistent with
 <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value()</span></tt>), so:</p>
@@ -551,9 +581,9 @@ sorter.add_value(5, true);
 </tr>
 <tr><td>1.1.3</td>
 <td>1.3.0</td>
-<td><tt class="docutils literal"><span class="pre">matchspy</span></tt> parameter to
+<td><tt class="docutils literal">matchspy</tt> parameter to
 <tt class="docutils literal"><span class="pre">Enquire::get_mset()</span></tt></td>
-<td>Use the newer <tt class="docutils literal"><span class="pre">MatchSpy</span></tt> class and <tt class="docutils literal"><span class="pre">Enquire::add_matchspy()</span></tt> method
+<td>Use the newer <tt class="docutils literal">MatchSpy</tt> class and <tt class="docutils literal"><span class="pre">Enquire::add_matchspy()</span></tt> method
 instead.</td>
 </tr>
 </tbody>
@@ -667,24 +697,24 @@ function)</td>
 <tbody valign="top">
 <tr><td>1.0.0</td>
 <td>QueryParser::set_stemming_options()</td>
-<td><p class="first">Use <tt class="docutils literal"><span class="pre">set_stemmer()</span></tt>, <tt class="docutils literal"><span class="pre">set_stemming_strategy()</span></tt> and/or <tt class="docutils literal"><span class="pre">set_stopper()</span></tt>
+<td><p class="first">Use <tt class="docutils literal">set_stemmer()</tt>, <tt class="docutils literal">set_stemming_strategy()</tt> and/or <tt class="docutils literal">set_stopper()</tt>
 instead:</p>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">set_stemming_options(&quot;&quot;)</span></tt> becomes
 <tt class="docutils literal"><span class="pre">set_stemming_strategy(Xapian::QueryParser::STEM_NONE)</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">set_stemming_options(&quot;none&quot;)</span></tt> becomes
 <tt class="docutils literal"><span class="pre">set_stemming_strategy(Xapian::QueryParser::STEM_NONE)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_stemming_options(LANG)</span></tt> becomes
+<li><tt class="docutils literal">set_stemming_options(LANG)</tt> becomes
 <tt class="docutils literal"><span class="pre">set_stemmer(Xapian::Stem(LANG)</span></tt> and
 <tt class="docutils literal"><span class="pre">set_stemming_strategy(Xapian::QueryParser::STEM_SOME)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_stemming_options(LANG,</span> <span class="pre">false)</span></tt> becomes
+<li><tt class="docutils literal">set_stemming_options(LANG, false)</tt> becomes
 <tt class="docutils literal"><span class="pre">set_stemmer(Xapian::Stem(LANG)</span></tt> and
 <tt class="docutils literal"><span class="pre">set_stemming_strategy(Xapian::QueryParser::STEM_SOME)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_stemming_options(LANG,</span> <span class="pre">true)</span></tt> becomes
+<li><tt class="docutils literal">set_stemming_options(LANG, true)</tt> becomes
 <tt class="docutils literal"><span class="pre">set_stemmer(Xapian::Stem(LANG)</span></tt> and
 <tt class="docutils literal"><span class="pre">set_stemming_strategy(Xapian::QueryParser::STEM_ALL)</span></tt></li>
 </ul>
-<p class="last">If a third parameter is passed, <tt class="docutils literal"><span class="pre">set_stopper(PARAM3)</span></tt> and treat the first two
+<p class="last">If a third parameter is passed, <tt class="docutils literal">set_stopper(PARAM3)</tt> and treat the first two
 parameters as above.</p>
 </td>
 </tr>
@@ -693,8 +723,8 @@ parameters as above.</p>
 <td><p class="first">Use <tt class="docutils literal"><span class="pre">Enquire::set_docid_order()</span></tt> instead:</p>
 <blockquote class="last">
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">set_sort_forward(true)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_docid_order(ASCENDING)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sort_forward(false)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_docid_order(DESCENDING)</span></tt></li>
+<li><tt class="docutils literal">set_sort_forward(true)</tt> becomes <tt class="docutils literal">set_docid_order(ASCENDING)</tt></li>
+<li><tt class="docutils literal">set_sort_forward(false)</tt> becomes <tt class="docutils literal">set_docid_order(DESCENDING)</tt></li>
 </ul>
 </blockquote>
 </td>
@@ -705,12 +735,12 @@ parameters as above.</p>
 <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_then_relevance()</span></tt> instead.</p>
 <blockquote class="last">
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">set_sorting(KEY,</span> <span class="pre">1)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_sort_by_value(KEY)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(KEY,</span> <span class="pre">1,</span> <span class="pre">false)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_sort_by_value(KEY)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(KEY,</span> <span class="pre">1,</span> <span class="pre">true)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_sort_by_value_then_relevance(KEY)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(ANYTHING,</span> <span class="pre">0)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_sort_by_relevance()</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(Xapian::BAD_VALUENO,</span> <span class="pre">ANYTHING)</span></tt> becomes
-<tt class="docutils literal"><span class="pre">set_sort_by_relevance()</span></tt></li>
+<li><tt class="docutils literal">set_sorting(KEY, 1)</tt> becomes <tt class="docutils literal">set_sort_by_value(KEY)</tt></li>
+<li><tt class="docutils literal">set_sorting(KEY, 1, false)</tt> becomes <tt class="docutils literal">set_sort_by_value(KEY)</tt></li>
+<li><tt class="docutils literal">set_sorting(KEY, 1, true)</tt> becomes <tt class="docutils literal">set_sort_by_value_then_relevance(KEY)</tt></li>
+<li><tt class="docutils literal">set_sorting(ANYTHING, 0)</tt> becomes <tt class="docutils literal">set_sort_by_relevance()</tt></li>
+<li><tt class="docutils literal"><span class="pre">set_sorting(Xapian::BAD_VALUENO,</span> ANYTHING)</tt> becomes
+<tt class="docutils literal">set_sort_by_relevance()</tt></li>
 </ul>
 </blockquote>
 </td>
@@ -721,11 +751,11 @@ parameters as above.</p>
 </tr>
 <tr><td>1.0.0</td>
 <td>Auto::open(path)</td>
-<td>Use the <tt class="docutils literal"><span class="pre">Database(path)</span></tt> constructor instead.</td>
+<td>Use the <tt class="docutils literal">Database(path)</tt> constructor instead.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>Auto::open(path, action)</td>
-<td>Use the <tt class="docutils literal"><span class="pre">WritableDatabase(path,</span> <span class="pre">action)</span></tt> constructor instead.</td>
+<td>Use the <tt class="docutils literal">WritableDatabase(path, action)</tt> constructor instead.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>Query::is_empty()</td>
@@ -737,56 +767,56 @@ parameters as above.</p>
 </tr>
 <tr><td>1.0.0</td>
 <td>Enquire::set_bias()</td>
-<td>Use <tt class="docutils literal"><span class="pre">PostingSource</span></tt> instead (new in 1.2).</td>
+<td>Use <tt class="docutils literal">PostingSource</tt> instead (new in 1.2).</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>ExpandDecider::operator()</td>
-<td>Return type is now <tt class="docutils literal"><span class="pre">bool</span></tt> not <tt class="docutils literal"><span class="pre">int</span></tt>.</td>
+<td>Return type is now <tt class="docutils literal">bool</tt> not <tt class="docutils literal">int</tt>.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>MatchDecider::operator()</td>
-<td>Return type is now <tt class="docutils literal"><span class="pre">bool</span></tt> not <tt class="docutils literal"><span class="pre">int</span></tt>.</td>
+<td>Return type is now <tt class="docutils literal">bool</tt> not <tt class="docutils literal">int</tt>.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>Error::get_type()</td>
-<td>Return type is now <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt> not <tt class="docutils literal"><span class="pre">std::string</span></tt>.  Most existing code
+<td>Return type is now <tt class="docutils literal">const char *</tt> not <tt class="docutils literal"><span class="pre">std::string</span></tt>.  Most existing code
 won't need changes, but if it does the simplest fix is to write
-<tt class="docutils literal"><span class="pre">std::string(e.get_type())</span></tt> instead of <tt class="docutils literal"><span class="pre">e.get_type()</span></tt>.</td>
+<tt class="docutils literal"><span class="pre">std::string(e.get_type())</span></tt> instead of <tt class="docutils literal">e.get_type()</tt>.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>&lt;xapian/output.h&gt;</td>
-<td>Use <tt class="docutils literal"><span class="pre">cout</span> <span class="pre">&lt;&lt;</span> <span class="pre">obj.get_description();</span></tt> instead of <tt class="docutils literal"><span class="pre">cout</span> <span class="pre">&lt;&lt;</span> <span class="pre">obj;</span></tt></td>
+<td>Use <tt class="docutils literal">cout &lt;&lt; <span class="pre">obj.get_description();</span></tt> instead of <tt class="docutils literal">cout &lt;&lt; obj;</tt></td>
 </tr>
 <tr><td>1.0.0</td>
 <td>Several constructors marked
 as explicit.</td>
 <td>Explicitly create the object type required, for example use
 <tt class="docutils literal"><span class="pre">Xapian::Enquire</span> <span class="pre">enq(Xapian::Database(path));</span></tt> instead of
-<tt class="docutils literal"><span class="pre">Xapian::Enquire</span> <span class="pre">enq(path);</span></tt></td>
+<tt class="docutils literal"><span class="pre">Xapian::Enquire</span> enq(path);</tt></td>
 </tr>
 <tr><td>1.0.0</td>
 <td>QueryParser::parse_query() throwing
-<tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt> exception.</td>
-<td>Catch <tt class="docutils literal"><span class="pre">Xapian::QueryParserError</span></tt> instead of <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt>, and call
-<tt class="docutils literal"><span class="pre">get_msg()</span></tt> on the caught object.  If you need to build with either version,
-catch both (you'll need to compile the part which catches <tt class="docutils literal"><span class="pre">QueryParserError</span></tt>
+<tt class="docutils literal">const char *</tt> exception.</td>
+<td>Catch <tt class="docutils literal"><span class="pre">Xapian::QueryParserError</span></tt> instead of <tt class="docutils literal">const char *</tt>, and call
+<tt class="docutils literal">get_msg()</tt> on the caught object.  If you need to build with either version,
+catch both (you'll need to compile the part which catches <tt class="docutils literal">QueryParserError</tt>
 conditionally, since this exception isn't present in the 0.9 release series).</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>xapian_version_string()</td>
-<td>Use <tt class="docutils literal"><span class="pre">version_string()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">version_string()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>xapian_major_version()</td>
-<td>Use <tt class="docutils literal"><span class="pre">major_version()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">major_version()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>xapian_minor_version()</td>
-<td>Use <tt class="docutils literal"><span class="pre">minor_version()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">minor_version()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>xapian_revision()</td>
-<td>Use <tt class="docutils literal"><span class="pre">revision()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">revision()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>Enquire::include_query_terms</td>
@@ -851,16 +881,16 @@ conditionally, since this exception isn't present in the 0.9 release series).</t
 </tr>
 <tr><td>1.1.0</td>
 <td><tt class="docutils literal"><span class="pre">Database::positionlist_begin()</span></tt>
-throwing <tt class="docutils literal"><span class="pre">RangeError</span></tt> if the
+throwing <tt class="docutils literal">RangeError</tt> if the
 term specified doesn't index the
 document specified.</td>
 <td>This check is quite expensive, and often you don't care.  If you
-do it's easy to check - just open a <tt class="docutils literal"><span class="pre">TermListIterator</span></tt> for the
-document and use <tt class="docutils literal"><span class="pre">skip_to()</span></tt> to check if the term is there.</td>
+do it's easy to check - just open a <tt class="docutils literal">TermListIterator</tt> for the
+document and use <tt class="docutils literal">skip_to()</tt> to check if the term is there.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td><tt class="docutils literal"><span class="pre">Database::positionlist_begin()</span></tt>
-throwing <tt class="docutils literal"><span class="pre">DocNotFoundError</span></tt> if
+throwing <tt class="docutils literal">DocNotFoundError</tt> if
 the document specified doesn't
 exist.</td>
 <td>This check is quite expensive, and often you don't care.  If you
@@ -900,8 +930,8 @@ and earlier.  Just use -V instead.</td>
 <td><p class="first">Use <tt class="docutils literal"><span class="pre">Enquire::set_docid_order()</span></tt> instead.</p>
 <blockquote class="last">
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">set_sort_forward(true)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_docid_order(ASCENDING)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sort_forward(false)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_docid_order(DESCENDING)</span></tt></li>
+<li><tt class="docutils literal">set_sort_forward(true)</tt> becomes <tt class="docutils literal">set_docid_order(ASCENDING)</tt></li>
+<li><tt class="docutils literal">set_sort_forward(false)</tt> becomes <tt class="docutils literal">set_docid_order(DESCENDING)</tt></li>
 </ul>
 </blockquote>
 </td>
@@ -914,13 +944,13 @@ and earlier.  Just use -V instead.</td>
 or <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_then_relevance()</span></tt> instead.</p>
 <blockquote class="last">
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">set_sorting(KEY,</span> <span class="pre">1)</span></tt> becomes <tt class="docutils literal"><span class="pre">set_sort_by_value(KEY)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(KEY,</span> <span class="pre">1,</span> <span class="pre">false)</span> <span class="pre">becomes</span> <span class="pre">``set_sort_by_value(KEY)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(KEY,</span> <span class="pre">1,</span> <span class="pre">true)</span></tt> becomes
-<tt class="docutils literal"><span class="pre">set_sort_by_value_then_relevance(KEY)</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(ANYTHING,</span> <span class="pre">0)</span> <span class="pre">becomes</span> <span class="pre">set_sort_by_relevance()</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set_sorting(Xapian::BAD_VALUENO,</span> <span class="pre">ANYTHING)</span></tt> becomes
-<tt class="docutils literal"><span class="pre">set_sort_by_relevance()</span></tt></li>
+<li><tt class="docutils literal">set_sorting(KEY, 1)</tt> becomes <tt class="docutils literal">set_sort_by_value(KEY)</tt></li>
+<li><tt class="docutils literal">set_sorting(KEY, 1, false) becomes ``set_sort_by_value(KEY)</tt></li>
+<li><tt class="docutils literal">set_sorting(KEY, 1, true)</tt> becomes
+<tt class="docutils literal">set_sort_by_value_then_relevance(KEY)</tt></li>
+<li><tt class="docutils literal">set_sorting(ANYTHING, 0) becomes set_sort_by_relevance()</tt></li>
+<li><tt class="docutils literal"><span class="pre">set_sorting(Xapian::BAD_VALUENO,</span> ANYTHING)</tt> becomes
+<tt class="docutils literal">set_sort_by_relevance()</tt></li>
 </ul>
 </blockquote>
 </td>
@@ -929,13 +959,13 @@ or <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_the
 <td>SWIG
 <a class="footnote-reference" href="#rswg" id="id5">[1]</a></td>
 <td>Auto::open(path)</td>
-<td>Use the <tt class="docutils literal"><span class="pre">Database(path)</span></tt> constructor instead.</td>
+<td>Use the <tt class="docutils literal">Database(path)</tt> constructor instead.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>SWIG
 <a class="footnote-reference" href="#rswg" id="id6">[1]</a></td>
 <td>Auto::open(path, action)</td>
-<td>Use the <tt class="docutils literal"><span class="pre">WritableDatabase(path,</span> <span class="pre">action)</span></tt> constructor instead.</td>
+<td>Use the <tt class="docutils literal">WritableDatabase(path, action)</tt> constructor instead.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>SWIG
@@ -970,12 +1000,12 @@ or <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_the
 <tr><td>1.0.0</td>
 <td>CSharp</td>
 <td>ExpandDecider::Apply()</td>
-<td>Return type is now <tt class="docutils literal"><span class="pre">bool</span></tt> instead of <tt class="docutils literal"><span class="pre">int</span></tt>.</td>
+<td>Return type is now <tt class="docutils literal">bool</tt> instead of <tt class="docutils literal">int</tt>.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>CSharp</td>
 <td>MatchDecider::Apply()</td>
-<td>Return type is now <tt class="docutils literal"><span class="pre">bool</span></tt> instead of <tt class="docutils literal"><span class="pre">int</span></tt>.</td>
+<td>Return type is now <tt class="docutils literal">bool</tt> instead of <tt class="docutils literal">int</tt>.</td>
 </tr>
 <tr><td>1.0.0</td>
 <td>SWIG
@@ -987,25 +1017,25 @@ or <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_the
 <td>SWIG
 <a class="footnote-reference" href="#rswg" id="id14">[1]</a></td>
 <td>xapian_version_string()</td>
-<td>Use <tt class="docutils literal"><span class="pre">version_string()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">version_string()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>SWIG
 <a class="footnote-reference" href="#rswg" id="id15">[1]</a></td>
 <td>xapian_major_version()</td>
-<td>Use <tt class="docutils literal"><span class="pre">major_version()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">major_version()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>SWIG
 <a class="footnote-reference" href="#rswg" id="id16">[1]</a></td>
 <td>xapian_minor_version()</td>
-<td>Use <tt class="docutils literal"><span class="pre">minor_version()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">minor_version()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>SWIG
 <a class="footnote-reference" href="#rswg" id="id17">[1]</a></td>
 <td>xapian_revision()</td>
-<td>Use <tt class="docutils literal"><span class="pre">revision()</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">revision()</tt> instead.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>SWIG
@@ -1013,25 +1043,25 @@ or <tt class="docutils literal"><span class="pre">Enquire::set_sort_by_value_the
 <td>ESetIterator::get_termname()</td>
 <td>Use <tt class="docutils literal"><span class="pre">ESetIterator::get_term()</span></tt> instead.  This change is intended to
 bring the ESet iterators in line with other term iterators, which all
-support <tt class="docutils literal"><span class="pre">get_term()</span></tt> instead of <tt class="docutils literal"><span class="pre">get_termname()</span></tt>.</td>
+support <tt class="docutils literal">get_term()</tt> instead of <tt class="docutils literal">get_termname()</tt>.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>Python</td>
 <td>get_description()</td>
-<td>All <tt class="docutils literal"><span class="pre">get_description()</span></tt> methods have been renamed to <tt class="docutils literal"><span class="pre">__str__()</span></tt>,
-so the normal python <tt class="docutils literal"><span class="pre">str()</span></tt> function can be used.</td>
+<td>All <tt class="docutils literal">get_description()</tt> methods have been renamed to <tt class="docutils literal">__str__()</tt>,
+so the normal python <tt class="docutils literal">str()</tt> function can be used.</td>
 </tr>
 <tr><td>1.1.0</td>
 <td>Python</td>
 <td>MSetItem.get_*()</td>
 <td>All these methods are deprecated, in favour of properties.
-To convert, just change <tt class="docutils literal"><span class="pre">msetitem.get_FOO()</span></tt> to <tt class="docutils literal"><span class="pre">msetitem.FOO</span></tt></td>
+To convert, just change <tt class="docutils literal">msetitem.get_FOO()</tt> to <tt class="docutils literal">msetitem.FOO</tt></td>
 </tr>
 <tr><td>1.1.0</td>
 <td>Python</td>
 <td>Enquire.get_matching_terms</td>
-<td>Replaced by <tt class="docutils literal"><span class="pre">Enquire.matching_terms</span></tt>, for consistency with
-rest of Python API.  Note: an <tt class="docutils literal"><span class="pre">Enquire.get_matching_terms</span></tt> method existed in
+<td>Replaced by <tt class="docutils literal">Enquire.matching_terms</tt>, for consistency with
+rest of Python API.  Note: an <tt class="docutils literal">Enquire.get_matching_terms</tt> method existed in
 releases up-to and including 1.2.4, but this was actually an old implementation
 which only accepted a MSetIterator as a parameter, and would have failed with
 code written expecting the version in 1.0.0.  It was fully removed after
@@ -1062,7 +1092,7 @@ API instead, e.g. <tt class="docutils literal"><span class="pre">mset[i].docid</
 <td>This was nominally implemented, but never actually worked.  Since nobody seems
 to have noticed in 3.5 years, we just removed it.  If you have uses (which were
 presumably never called), you can replace them with:
-<tt class="docutils literal"><span class="pre">if</span> <span class="pre">idx</span> <span class="pre">&gt;=</span> <span class="pre">0</span> <span class="pre">and</span> <span class="pre">idx</span> <span class="pre">&lt;</span> <span class="pre">len(mset)</span></tt></td>
+<tt class="docutils literal">if idx &gt;= 0 and idx &lt; len(mset)</tt></td>
 </tr>
 </tbody>
 </table>
@@ -1121,7 +1151,7 @@ presumably never called), you can replace them with:
 </tr>
 <tr><td>1.1.0</td>
 <td>scriptindex index=nopos</td>
-<td>Use <tt class="docutils literal"><span class="pre">indexnopos</span></tt> instead.</td>
+<td>Use <tt class="docutils literal">indexnopos</tt> instead.</td>
 </tr>
 </tbody>
 </table>

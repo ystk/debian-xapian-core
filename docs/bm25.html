@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>The BM25 Weighting Scheme</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -321,7 +351,7 @@ function is:</p>
 </tr></table><p>where</p>
 <blockquote>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">k</span></tt><sub>1</sub>, <tt class="docutils literal"><span class="pre">k</span></tt><sub>3</sub> are constants,</li>
+<li><tt class="docutils literal">k</tt><sub>1</sub>, <tt class="docutils literal">k</tt><sub>3</sub> are constants,</li>
 <li>q is the wqf, the within query frequency,</li>
 <li>f is the wdf, the within document frequency,</li>
 <li>n is the number of documents in the collection indexed by this term,</li>
@@ -332,14 +362,14 @@ function is:</p>
 divided by the average length of documents in the collection).</li>
 </ul>
 </blockquote>
-<p>The factors (<tt class="docutils literal"><span class="pre">k</span></tt><sub>3</sub><tt class="docutils literal"><span class="pre">+1</span></tt>) and (<tt class="docutils literal"><span class="pre">k</span></tt><sub>1</sub><tt class="docutils literal"><span class="pre">+1</span></tt>) are unnecessary here, but help
-scale the weights, so the first component is 1 when <tt class="docutils literal"><span class="pre">q=1</span></tt> etc. But
+<p>The factors (<tt class="docutils literal">k</tt><sub>3</sub><tt class="docutils literal">+1</tt>) and (<tt class="docutils literal">k</tt><sub>1</sub><tt class="docutils literal">+1</tt>) are unnecessary here, but help
+scale the weights, so the first component is 1 when <tt class="docutils literal">q=1</tt> etc. But
 they are critical below when we add an extra item to the sum of term
 weights.</p>
 </div>
 <div class="section" id="bm11">
 <h1>BM11</h1>
-<p>Stephen Robertson's BM11 uses formula <tt class="docutils literal"><span class="pre">(1)</span></tt> for the term weights, but
+<p>Stephen Robertson's BM11 uses formula <tt class="docutils literal">(1)</tt> for the term weights, but
 adds an extra item to the sum of term weights to give the overall
 document score:</p>
 <table border=0><tr valign=center> <td><tt>k<sub>2</sub>
@@ -347,14 +377,14 @@ n<sub>q</sub></tt></td> <td> <tt><center>
 <u>(1-L)</u><br>(1+L)</center></tt> </td> <td> <tt> &nbsp;...(2) </tt> </td>
 </tr></table><p>where:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">n</span></tt><sub>q</sub> is the number of terms in the query (the query length),</li>
-<li><tt class="docutils literal"><span class="pre">k</span></tt><sub>2</sub> is yet another constant.</li>
+<li><tt class="docutils literal">n</tt><sub>q</sub> is the number of terms in the query (the query length),</li>
+<li><tt class="docutils literal">k</tt><sub>2</sub> is yet another constant.</li>
 </ul>
-<p>Note that this extra item is zero when <tt class="docutils literal"><span class="pre">L=1</span></tt>.</p>
+<p>Note that this extra item is zero when <tt class="docutils literal">L=1</tt>.</p>
 </div>
 <div class="section" id="bm15">
 <h1>BM15</h1>
-<p>BM15 is BM11 with the <tt class="docutils literal"><span class="pre">k</span></tt><sub>1</sub><tt class="docutils literal"><span class="pre">+f</span></tt> in place of <tt class="docutils literal"><span class="pre">k</span></tt><sub>1</sub><tt class="docutils literal"><span class="pre">L+f</span></tt> in <tt class="docutils literal"><span class="pre">(1)</span></tt>.</p>
+<p>BM15 is BM11 with the <tt class="docutils literal">k</tt><sub>1</sub><tt class="docutils literal">+f</tt> in place of <tt class="docutils literal">k</tt><sub>1</sub><tt class="docutils literal">L+f</tt> in <tt class="docutils literal">(1)</tt>.</p>
 </div>
 <div class="section" id="bm25">
 <h1>BM25</h1>
@@ -367,25 +397,25 @@ into BM11 as it moves from 0 to 1:</p>
 <td><tt>&middot;log</tt></td> <td><tt><center>
 <u>(r+0.5)(N-n-R+r+0.5)</u><br>(n-r+0.5)(R-r+0.5)</center></tt> </td> <td>
 <tt> &nbsp;...(3) </tt> </td> </tr></table><p>where:</p>
-<p><tt class="docutils literal"><span class="pre">K=</span></tt><tt class="docutils literal"><span class="pre">k</span></tt><sub>1</sub><tt class="docutils literal"><span class="pre">(bL+(1-b))</span></tt></p>
+<p><tt class="docutils literal">K=</tt><tt class="docutils literal">k</tt><sub>1</sub><tt class="docutils literal"><span class="pre">(bL+(1-b))</span></tt></p>
 <p>BM25 originally introduced another constant, as a power to which f and K
 are raised. However, Stephen remarks that powers other than 1 were <em>'not
 helpful'</em>, and other tests confirm this, so Xapian's implementation of
 BM25 ignores this.</p>
-<p><tt class="docutils literal"><span class="pre">(2)</span></tt> and <tt class="docutils literal"><span class="pre">(3)</span></tt> make up BM25, with which Stephen has had so much
+<p><tt class="docutils literal">(2)</tt> and <tt class="docutils literal">(3)</tt> make up BM25, with which Stephen has had so much
 recent success.</p>
 <p>This does all seem somewhat ad-hoc, with so many unknown constants in
-the formula. But note that with <tt class="docutils literal"><span class="pre">k</span></tt><sub>2</sub><tt class="docutils literal"><span class="pre">=0</span></tt> and <tt class="docutils literal"><span class="pre">b=1</span></tt> we get the
+the formula. But note that with <tt class="docutils literal">k</tt><sub>2</sub><tt class="docutils literal">=0</tt> and <tt class="docutils literal">b=1</tt> we get the
 traditional formula anyway.</p>
-<p>The default parameter values Xapian uses are <tt class="docutils literal"><span class="pre">k</span></tt><sub>1</sub><tt class="docutils literal"><span class="pre">=1</span></tt>, <tt class="docutils literal"><span class="pre">k</span></tt><sub>2</sub><tt class="docutils literal"><span class="pre">=0</span></tt>,
-<tt class="docutils literal"><span class="pre">k</span></tt><sub>3</sub><tt class="docutils literal"><span class="pre">=1</span></tt>, and <tt class="docutils literal"><span class="pre">b=0.5</span></tt>. These are reasonable defaults, but the
+<p>The default parameter values Xapian uses are <tt class="docutils literal">k</tt><sub>1</sub><tt class="docutils literal">=1</tt>, <tt class="docutils literal">k</tt><sub>2</sub><tt class="docutils literal">=0</tt>,
+<tt class="docutils literal">k</tt><sub>3</sub><tt class="docutils literal">=1</tt>, and <tt class="docutils literal">b=0.5</tt>. These are reasonable defaults, but the
 optimum values will vary with both the documents being searched and the
 type of queries, so you may be able to improve the effectiveness of your
 search system by tuning the values of these parameters.</p>
 <p>In Xapian, we also apply a floor to L (0.5 by default) which helps stop
 tiny documents get ridiculously high weights. And the matcher wants the
-extra item in the sum to be positive, so we add <tt class="docutils literal"><span class="pre">k</span></tt><sub>2</sub><tt class="docutils literal"><span class="pre">n</span></tt><sub>q</sub> (constant for a
-given query) to <tt class="docutils literal"><span class="pre">(2)</span></tt> to give:</p>
+extra item in the sum to be positive, so we add <tt class="docutils literal">k</tt><sub>2</sub><tt class="docutils literal">n</tt><sub>q</sub> (constant for a
+given query) to <tt class="docutils literal">(2)</tt> to give:</p>
 <table border=0><tr valign=center> <td> <tt><center> <u>2 k<sub>2</sub>
 n<sub>q</sub></u><br>(1 + L)</center></tt> </td> <td> <tt> &nbsp;...(4)
 </tt> </td> </tr></table></div>

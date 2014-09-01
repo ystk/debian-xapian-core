@@ -1,7 +1,7 @@
 /** \file  queryparser.h
  *  \brief parsing a user query string to build a Xapian::Query object
  */
-/* Copyright (C) 2005,2006,2007,2008,2009,2010,2011 Olly Betts
+/* Copyright (C) 2005,2006,2007,2008,2009,2010,2011,2014 Olly Betts
  * Copyright (C) 2010 Adam Sjøgren
  *
  * This program is free software; you can redistribute it and/or
@@ -60,7 +60,15 @@ class XAPIAN_VISIBILITY_DEFAULT SimpleStopper : public Stopper {
     /// Default constructor.
     SimpleStopper() { }
 
-    /// Initialise from a pair of iterators.
+    /** Initialise from a pair of iterators.
+     *
+     * Xapian includes stop list files for many languages. You can initialise from a file like that:
+     * @code
+     * ifstream inFile ("stopwords/english/stop.txt");
+     * Xapian::SimplerStopper stopper(istream_iterator<string>(inFile), istream_iterator<string>());
+     * @endcode
+     *
+     */
 #if ! defined __SUNPRO_CC || __SUNPRO_CC - 0 >= 0x580
     template <class Iterator>
     SimpleStopper(Iterator begin, Iterator end) : stop_words(begin, end) { }
@@ -220,6 +228,58 @@ class XAPIAN_VISIBILITY_DEFAULT DateValueRangeProcessor : public StringValueRang
 			    bool prefer_mdy_ = false, int epoch_year_ = 1970)
 	: StringValueRangeProcessor(slot_, str_, prefix_),
 	  prefer_mdy(prefer_mdy_), epoch_year(epoch_year_) { }
+
+#ifndef SWIG
+    /** Constructor.
+     *
+     *  This is like the previous version, but with const char * instead of
+     *  std::string - we need this overload as otherwise
+     *  DateValueRangeProcessor(1, "date:") quietly interprets the second
+     *  argument as a boolean in preference to std::string.  If you want to
+     *  be compatible with 1.2.12 and earlier, then explicitly convert to
+     *  std::string, i.e.: DateValueRangeProcessor(1, std::string("date:"))
+     *
+     *  @param slot_	    The value number to return from operator().
+     *
+     *  @param str_     A string to look for to recognise values as belonging
+     *                  to this date range.
+     *
+     *  @param prefix_  Whether to look for the string at the start or end of
+     *                  the values.  If true, the string is a prefix; if
+     *                  false, the string is a suffix (default: true).
+     *
+     *  @param prefer_mdy_  Should ambiguous dates be interpreted as
+     *			    month/day/year rather than day/month/year?
+     *			    (default: false)
+     *
+     *  @param epoch_year_  Year to use as the epoch for dates with 2 digit
+     *			    years (default: 1970, so 1/1/69 is 2069 while
+     *			    1/1/70 is 1970).
+     *
+     *  The string supplied in str_ is used by @a operator() to decide whether
+     *  the pair of strings supplied to it constitute a valid range.  If
+     *  prefix_ is true, the first value in a range must begin with str_ (and
+     *  the second value may optionally begin with str_);
+     *  if prefix_ is false, the second value in a range must end with str_
+     *  (and the first value may optionally end with str_).
+     *
+     *  If str_ is empty, the setting of prefix_ is irrelevant, and no special
+     *  strings are required at the start or end of the strings defining the
+     *  range.
+     *
+     *  The remainder of both strings defining the endpoints must be valid
+     *  dates.
+     *
+     *  For example, if str_ is "created:" and prefix_ is true, and the range
+     *  processor has been added to the queryparser, the queryparser will
+     *  accept "created:1/1/2000..31/12/2001".
+     */
+    DateValueRangeProcessor(Xapian::valueno slot_, const char * str_,
+			    bool prefix_ = true,
+			    bool prefer_mdy_ = false, int epoch_year_ = 1970)
+	: StringValueRangeProcessor(slot_, str_, prefix_),
+	  prefer_mdy(prefer_mdy_), epoch_year(epoch_year_) { }
+#endif
 
     /** Check for a valid date range.
      *
@@ -445,16 +505,15 @@ class XAPIAN_VISIBILITY_DEFAULT QueryParser {
      *  @param strategy	The strategy to use - possible values are:
      *   - STEM_NONE:	Don't perform any stemming.  (default in Xapian <=
      *			1.3.0)
-     *   - STEM_SOME:	Search for stemmed forms of terms except for those
-     *			which start with a capital letter, or are followed by
-     *			certain characters (currently: (/\@<>=*[{" ), or are
-     *			used with operators which need positional information.
+     *   - STEM_SOME:	Stem all terms except for those which start with a
+     *			capital letter, or are followed by certain characters
+     *			(currently: <code>(/\@<>=*[{"</code> ), or are used
+     *			with operators which need positional information.
      *			Stemmed terms are prefixed with 'Z'.  (default in
      *			Xapian >= 1.3.1)
-     *   - STEM_ALL:	Search for stemmed forms of all words (note: no 'Z'
-     *			prefix is added).
-     *   - STEM_ALL_Z:	Search for stemmed forms of all words (note: 'Z'
-     *			prefix is added).  (new in Xapian 1.2.11 and 1.3.1)
+     *   - STEM_ALL:	Stem all terms (note: no 'Z' prefix is added).
+     *   - STEM_ALL_Z:	Stem all terms (note: 'Z' prefix is added).  (new in
+     *			Xapian 1.2.11 and 1.3.1)
      */
     void set_stemming_strategy(stem_strategy strategy);
 

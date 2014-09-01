@@ -1,7 +1,7 @@
 /** @file flint_lock.cc
  * @brief Flint-compatible database locking.
  */
-/* Copyright (C) 2005,2006,2007,2008,2009,2010,2011 Olly Betts
+/* Copyright (C) 2005,2006,2007,2008,2009,2010,2011,2012,2013 Olly Betts
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -56,7 +56,15 @@ FlintLock::lock(bool exclusive, string & explanation) {
     Assert(hFile == INVALID_HANDLE_VALUE);
 #ifdef __CYGWIN__
     char fnm[MAX_PATH];
+#if CYGWIN_VERSION_API_MAJOR == 0 && CYGWIN_VERSION_API_MINOR < 181
     cygwin_conv_to_win32_path(filename.c_str(), fnm);
+#else
+    if (cygwin_conv_path(CCP_POSIX_TO_WIN_A|CCP_RELATIVE, filename.c_str(),
+			 fnm, MAX_PATH) < 0) {
+	explanation = string("cygwin_conv_path failed:") + strerror(errno);
+	return UNKNOWN;
+    }
+#endif
 #else
     const char *fnm = filename.c_str();
 #endif
@@ -133,6 +141,22 @@ FlintLock::lock(bool exclusive, string & explanation) {
 	// Child process.
 	close(fds[0]);
 
+	// Connect pipe to stdin and stdout.
+	dup2(fds[1], 0);
+	dup2(fds[1], 1);
+
+	// Make sure we don't hang on to open files which may get deleted but
+	// not have their disk space released until we exit.  Close these
+	// before we try to get the lock because if one of them is open on
+	// the lock file then closing it after obtaining the lock would release
+	// the lock, which would be really bad.
+	for (int i = 2; i < lockfd; ++i) {
+	    // Retry on EINTR; just ignore other errors (we'll get
+	    // EBADF if the fd isn't open so that's OK).
+	    while (close(i) < 0 && errno == EINTR) { }
+	}
+	closefrom(lockfd + 1);
+
 	reason why = SUCCESS;
 	{
 	    struct flock fl;
@@ -159,7 +183,7 @@ FlintLock::lock(bool exclusive, string & explanation) {
 	{
 	    // Tell the parent if we got the lock, and if not, why not.
 	    char ch = static_cast<char>(why);
-	    while (write(fds[1], &ch, 1) < 0) {
+	    while (write(1, &ch, 1) < 0) {
 		// EINTR means a signal interrupted us, so retry.
 		// Otherwise we're DOOMED!  The best we can do is just exit
 		// and the parent process should get EOF and know the lock
@@ -168,10 +192,6 @@ FlintLock::lock(bool exclusive, string & explanation) {
 	    }
 	    if (why != SUCCESS) _exit(0);
 	}
-
-	// Connect pipe to stdin and stdout.
-	dup2(fds[1], 0);
-	dup2(fds[1], 1);
 
 	// Make sure we don't block unmount() of partition holding the current
 	// directory.
@@ -183,15 +203,6 @@ FlintLock::lock(bool exclusive, string & explanation) {
 	    // We need the if statement because glibc's _FORTIFY_SOURCE mode
 	    // gives a warning even if we cast the result to void.
 	}
-
-	// Make sure we don't hang on to open files which may get deleted but
-	// not have their disk space released until we exit.
-	for (int i = 2; i < lockfd; ++i) {
-	    // Retry on EINTR; just ignore other errors (we'll get
-	    // EBADF if the fd isn't open so that's OK).
-	    while (close(i) < 0 && errno == EINTR) { }
-	}
-	closefrom(lockfd + 1);
 
 	// FIXME: use special statically linked helper instead of cat.
 	execl("/bin/cat", "/bin/cat", static_cast<void*>(NULL));

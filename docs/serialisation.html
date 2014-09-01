@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Serialisation of Queries and Documents</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -319,7 +349,7 @@ serialise them.  The serialised document will have identical contents (data,
 terms, positions, values) to the original document.</p>
 <p>To get a document from a serialised form, call the static
 <tt class="docutils literal"><span class="pre">Document::unserialise()</span></tt> method, passing it the string returned from
-<tt class="docutils literal"><span class="pre">serialise()</span></tt>:</p>
+<tt class="docutils literal">serialise()</tt>:</p>
 <pre class="literal-block">
 static Document unserialise(const std::string &amp;s);
 </pre>
@@ -337,13 +367,13 @@ static Query unserialise(const std::string &amp;s);
 <p>However, there is a wrinkle.  Queries can contain arbitrary user-defined
 PostingSource subqueries.  In order to serialise and unserialise such queries,
 all the PostingSource subclasses used in the query must implement the
-<tt class="docutils literal"><span class="pre">name()</span></tt>, <tt class="docutils literal"><span class="pre">serialise()</span></tt> and <tt class="docutils literal"><span class="pre">unserialise()</span></tt> methods (see the
+<tt class="docutils literal">name()</tt>, <tt class="docutils literal">serialise()</tt> and <tt class="docutils literal">unserialise()</tt> methods (see the
 <a class="reference external" href="postingsource.html">postingsource topic document</a> for details of these).
 In addition, a special form of unserialise must be used:</p>
 <pre class="literal-block">
 static Query unserialise(const std::string &amp; s, const Registry &amp; registry);
 </pre>
-<p>The <tt class="docutils literal"><span class="pre">Registry</span></tt> passed to this method must know about all the
+<p>The <tt class="docutils literal">Registry</tt> passed to this method must know about all the
 custom posting sources used in the query.  You can tell a Registry
 about a custom posting source using the
 <tt class="docutils literal"><span class="pre">Registry::register_posting_source</span></tt> method:</p>
@@ -351,8 +381,8 @@ about a custom posting source using the
 void register_posting_source(const Xapian::PostingSource &amp;source);
 </pre>
 <p>Note that Registry objects always know about built-in posting sources
-(such as <tt class="docutils literal"><span class="pre">ValueWeightPostingSource</span></tt>), so you don't need to call
-<tt class="docutils literal"><span class="pre">register_posting_source()</span></tt> for them.</p>
+(such as <tt class="docutils literal">ValueWeightPostingSource</tt>), so you don't need to call
+<tt class="docutils literal">register_posting_source()</tt> for them.</p>
 </div>
 </div>
 </body>
