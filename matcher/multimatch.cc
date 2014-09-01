@@ -42,8 +42,6 @@
 #include "document.h"
 #include "omqueryinternal.h"
 
-#include "submatch.h"
-
 #include "msetcmp.h"
 
 #include "valuestreamdocument.h"
@@ -821,11 +819,6 @@ new_greatest_weight:
 
     double percent_scale = 0;
     if (!items.empty() && greatest_wt > 0) {
-	// Find the document with the highest weight, then total up the
-	// weights for the terms it contains
-	vector<Xapian::Internal::MSetItem>::const_iterator best;
-	best = min_element(items.begin(), items.end(), mcmp);
-
 #ifdef XAPIAN_HAS_REMOTE_BACKEND
 	if (greatest_wt_subqs_db_num != UINT_MAX) {
 	    const unsigned int n = greatest_wt_subqs_db_num;
@@ -863,7 +856,6 @@ new_greatest_weight:
 	    }
 #endif
 	}
-	percent_scale *= 100.0;
     }
 
     LOGLINE(MATCH,
@@ -1081,9 +1073,10 @@ new_greatest_weight:
     // is any more.  If we keep or find references we won't need to mess with
     // is_heap so much maybe?
     if (!items.empty() && collapser && !collapser.empty()) {
-	// Nicked this formula from above, but for some reason percent_scale
-	// has since been multiplied by 100 so we take that into account
-	Xapian::weight min_wt = percent_cutoff_factor / (percent_scale / 100);
+	// Nicked this formula from above.
+	Xapian::weight min_wt = 0.0;
+	if (percent_scale > 0.0)
+	    min_wt = percent_cutoff_factor / percent_scale;
 	Xapian::doccount entries = collapser.entries();
 	vector<Xapian::Internal::MSetItem>::iterator i;
 	for (i = items.begin(); i != items.end(); ++i) {
@@ -1109,5 +1102,5 @@ new_greatest_weight:
 				       uncollapsed_estimated,
 				       max_possible, greatest_wt, items,
 				       termfreqandwts,
-				       percent_scale));
+				       percent_scale * 100.0));
 }

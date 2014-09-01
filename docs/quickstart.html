@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Quickstart</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -343,18 +373,18 @@ command line, and stores that document as a new entry in the database.</p>
 <div class="section" id="include-header-files">
 <h2>Include header files</h2>
 <p>The first requirement in any program using the Xapian library is to
-include the Xapian header file, &quot;<tt class="docutils literal"><span class="pre">xapian.h</span></tt>&quot;:</p>
+include the Xapian header file, &quot;<tt class="docutils literal">xapian.h</tt>&quot;:</p>
 <pre class="literal-block">
 #include &lt;xapian.h&gt;
 </pre>
 <p>We're going to use C++ iostreams for output, so we need to include the
-<tt class="docutils literal"><span class="pre">iostream</span></tt> header, and we'll also import everything from namespace
-<tt class="docutils literal"><span class="pre">std</span></tt> for convenience:</p>
+<tt class="docutils literal">iostream</tt> header, and we'll also import everything from namespace
+<tt class="docutils literal">std</tt> for convenience:</p>
 <pre class="literal-block">
 #include &lt;iostream&gt;
 using namespace std;
 </pre>
-<p>Our example only has a single function, <tt class="docutils literal"><span class="pre">main()</span></tt>, so next we define
+<p>Our example only has a single function, <tt class="docutils literal">main()</tt>, so next we define
 that:</p>
 <pre class="literal-block">
 int main(int argc, char **argv)
@@ -393,7 +423,7 @@ exception mechanism. All errors in Xapian are derived classes of
 <tt class="docutils literal"><span class="pre">Xapian::Error</span></tt>, so simple error handling can be performed by
 enclosing all the code in a try-catch block to catch any
 <tt class="docutils literal"><span class="pre">Xapian::Error</span></tt> exceptions. A (hopefully) helpful message can be
-extracted from the <tt class="docutils literal"><span class="pre">Xapian::Error</span></tt> object by calling its <tt class="docutils literal"><span class="pre">get_msg()</span></tt>
+extracted from the <tt class="docutils literal"><span class="pre">Xapian::Error</span></tt> object by calling its <tt class="docutils literal">get_msg()</tt>
 method, which returns a human readable string.</p>
 <p>Note that all calls to the Xapian library should be performed inside a
 try-catch block, since otherwise errors will result in uncaught
@@ -447,7 +477,7 @@ newdocument.set_data(string(argv[2]));
 </pre>
 <p>The next step is to put the terms which are to be used when searching
 for the document into the Xapian::Document object.</p>
-<p>We shall use the <tt class="docutils literal"><span class="pre">add_posting()</span></tt> method, which adds an occurrence of a
+<p>We shall use the <tt class="docutils literal">add_posting()</tt> method, which adds an occurrence of a
 term to the struct. The first parameter is the &quot;<em>termname</em>&quot;, which is a
 string defining the term. This string can be anything, as long as the
 same string is always used to refer to the same term. The string will
@@ -477,10 +507,10 @@ database.add_document(newdocument);
 <p>The operation of adding a document is atomic: either the document will
 be added, or an exception will be thrown and the document will not be in
 the new database.</p>
-<p><tt class="docutils literal"><span class="pre">add_document()</span></tt> returns a value of type <tt class="docutils literal"><span class="pre">Xapian::docid</span></tt>. This is
+<p><tt class="docutils literal">add_document()</tt> returns a value of type <tt class="docutils literal"><span class="pre">Xapian::docid</span></tt>. This is
 the document ID of the newly added document, which is simply a handle
 which can be used to access the document in future.</p>
-<p>Note that this use of <tt class="docutils literal"><span class="pre">add_document()</span></tt> is actually fairly inefficient:
+<p>Note that this use of <tt class="docutils literal">add_document()</tt> is actually fairly inefficient:
 if we had a large database, it would be desirable to group as many
 document additions together as possible, by encapsulating them within a
 session. For details of this, and of the transaction facility for
@@ -617,9 +647,9 @@ give the query object to the enquire session:</p>
 enquire.set_query(query);
 </pre>
 <p>Next, we ask for the results of the search, which implicitly performs the
-the search.  We use the <tt class="docutils literal"><span class="pre">get_mset()</span></tt> method to get the results, which are
+the search.  We use the <tt class="docutils literal">get_mset()</tt> method to get the results, which are
 returned in an <tt class="docutils literal"><span class="pre">Xapian::MSet</span></tt> object. (MSet for Match Set)</p>
-<p><tt class="docutils literal"><span class="pre">get_mset()</span></tt> can take many parameters, such as a set of relevant
+<p><tt class="docutils literal">get_mset()</tt> can take many parameters, such as a set of relevant
 documents to use, and various options to modify the search, but we give
 it the minimum, which is the first document to return (starting at 0 for
 the top ranked document), and the maximum number of documents to return
@@ -641,19 +671,19 @@ cout &lt;&lt; matches.size() &lt;&lt; &quot; results found&quot; &lt;&lt; endl;
 <tt class="docutils literal"><span class="pre">Xapian::MSet</span></tt>. We access these items using an
 <tt class="docutils literal"><span class="pre">Xapian::MSetIterator</span></tt>:</p>
 <ul class="simple">
-<li>First, we display the document ID, accessed by <tt class="docutils literal"><span class="pre">*i</span></tt>. This is not
+<li>First, we display the document ID, accessed by <tt class="docutils literal">*i</tt>. This is not
 usually very useful information to give to users, but it is at least
 a unique handle on each document.</li>
 <li>Next, we display a &quot;percentage&quot; score for the document. Readers
 familiar with Information Retrieval will not be surprised to hear
 that this is not really a percentage: it is just a value from 0 to
 100, such that a more relevant document has a higher value. We get
-this using <tt class="docutils literal"><span class="pre">i.get_percent()</span></tt>.</li>
+this using <tt class="docutils literal">i.get_percent()</tt>.</li>
 <li>Last, we display the data associated with each returned document,
 which was specified by the user at database generation time. To do
-this, we first use <tt class="docutils literal"><span class="pre">i.get_document()</span></tt> to get an
+this, we first use <tt class="docutils literal">i.get_document()</tt> to get an
 <tt class="docutils literal"><span class="pre">Xapian::Document</span></tt> object representing the returned document; then
-we use the <tt class="docutils literal"><span class="pre">get_data()</span></tt> method of this object to get access to the
+we use the <tt class="docutils literal">get_data()</tt> method of this object to get access to the
 data stored in this document.</li>
 </ul>
 <pre class="literal-block">
@@ -689,9 +719,9 @@ xapian-config --libs
 on the utility's standard output (so you could use backtick notation to
 include them on your command line).</p>
 <p>If your project uses the GNU autoconf tool, you may also use the
-<tt class="docutils literal"><span class="pre">XO_LIB_XAPIAN</span></tt> macro, which is included as part of Xapian, and will
-check for an installation of Xapian and set (and <tt class="docutils literal"><span class="pre">AC_SUBST</span></tt>) the
-<tt class="docutils literal"><span class="pre">XAPIAN_CXXFLAGS</span></tt> and <tt class="docutils literal"><span class="pre">XAPIAN_LIBS</span></tt> variables to be the flags to
+<tt class="docutils literal">XO_LIB_XAPIAN</tt> macro, which is included as part of Xapian, and will
+check for an installation of Xapian and set (and <tt class="docutils literal">AC_SUBST</tt>) the
+<tt class="docutils literal">XAPIAN_CXXFLAGS</tt> and <tt class="docutils literal">XAPIAN_LIBS</tt> variables to be the flags to
 pass to the compiler and linker, respectively.</p>
 <p>If you don't use GNU autoconf, don't worry about this.</p>
 </div>
@@ -701,8 +731,8 @@ pass to the compiler and linker, respectively.</p>
 invoking the compiler! For our example, we could compile the two
 utilities (quickstartindex and quickstartsearch) with the commands:</p>
 <pre class="literal-block">
-c++ quickstartindex.cc `xapian-config --libs --cxxflags` -o quickstartindex
-c++ quickstartsearch.cc `xapian-config --libs --cxxflags` -o quickstartsearch
+c++ `xapian-config --cxxflags` quickstartindex.cc `xapian-config --libs` -o quickstartindex
+c++ `xapian-config --cxxflags` quickstartsearch.cc `xapian-config --libs` -o quickstartsearch
 </pre>
 </div>
 </div>
@@ -710,12 +740,8 @@ c++ quickstartsearch.cc `xapian-config --libs --cxxflags` -o quickstartsearch
 <div class="section" id="running-the-examples">
 <h1>Running the examples</h1>
 <p>Once we have compiled the above examples, we can build up a simple
-database as follows. Note that we must first create a directory for the
-database files to live in; although Xapian will create new empty
-database files if they do not yet exist, it will not create a new
-directory for them.</p>
+database as follows.</p>
 <pre class="literal-block">
-$ mkdir proverbs
 $ ./quickstartindex proverbs \
 &gt; &quot;people who live in glass houses should not throw stones&quot; \
 &gt; people live glass house stone
@@ -723,14 +749,17 @@ $ ./quickstartindex proverbs \
 &gt; &quot;Don't look a gift horse in the mouth&quot; \
 &gt; look gift horse mouth
 </pre>
-<p>Now, we should have a database with a couple of documents in it. Looking
+<p>For the first command, the database directory doesn't already exist, so
+Xapian will create it and also create the database files inside it.  For
+the second command, it will use the database which now exists, so
+we should now have a database with a couple of documents in it. Looking
 in the database directory, you should see something like:</p>
 <pre class="literal-block">
 $ ls proverbs/
 [some files]
 </pre>
 <p>Given the small amount of data in the database, you may be concerned
-that the total size of these files is somewhat over 50k. Be reassured
+that the total size of these files is a little over 32KB. Be reassured
 that the database is block structured, here consisting of largely empty
 blocks, and will behave much better for large databases.</p>
 <p>We can now perform searches over the database using the quickstartsearch

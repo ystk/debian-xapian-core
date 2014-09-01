@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Xapian::PostingSource</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -287,7 +317,7 @@ ul.auto-toc {
 <div class="document" id="xapian-postingsource">
 <h1 class="title">Xapian::PostingSource</h1>
 
-<!-- Copyright (C) 2008,2009,2010,2011 Olly Betts -->
+<!-- Copyright (C) 2008,2009,2010,2011,2013 Olly Betts -->
 <!-- Copyright (C) 2008,2009 Lemur Consulting Ltd -->
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title first">Table of contents</p>
@@ -343,31 +373,32 @@ get_termfreq_min() &lt;= get_termfreq_est() &lt;= get_termfreq_max()
 </pre>
 <p>PostingSources must always return documents in increasing document ID order.</p>
 <p>After construction, a PostingSource points to a position <em>before</em> the first
-document id - so before a docid can be read, the position must be advanced.</p>
-<p>The <tt class="docutils literal"><span class="pre">get_weight()</span></tt> method returns the weight that you want to contribute
+document id - so before a docid can be read, the position must be advanced
+by calling <tt class="docutils literal">next()</tt>, <tt class="docutils literal">skip_to()</tt> or <tt class="docutils literal">check()</tt>.</p>
+<p>The <tt class="docutils literal">get_weight()</tt> method returns the weight that you want to contribute
 to the current document.  This weight must always be &gt;= 0:</p>
 <pre class="literal-block">
 virtual Xapian::weight get_weight() const;
 </pre>
-<p>The default implementation of <tt class="docutils literal"><span class="pre">get_weight()</span></tt> returns 0, for convenience when
+<p>The default implementation of <tt class="docutils literal">get_weight()</tt> returns 0, for convenience when
 deriving &quot;weight-less&quot; subclasses.</p>
-<p>You also need to specify an upper bound on the value which <tt class="docutils literal"><span class="pre">get_weight()</span></tt> can
+<p>You also need to specify an upper bound on the value which <tt class="docutils literal">get_weight()</tt> can
 return, which is used by the matcher to perform various optimisations.  You
 should try hard to find a bound for efficiency, but if there really isn't one
-then you can set <tt class="docutils literal"><span class="pre">DBL_MAX</span></tt>:</p>
+then you can set <tt class="docutils literal">DBL_MAX</tt>:</p>
 <pre class="literal-block">
 void get_maxweight(Xapian::weight max_weight);
 </pre>
-<p>This method specifies an upper bound on what <tt class="docutils literal"><span class="pre">get_weight()</span></tt> will return <em>from
-now on</em> (until the next call to <tt class="docutils literal"><span class="pre">init()</span></tt>).  So if you know that the upper
-bound has decreased, you should call <tt class="docutils literal"><span class="pre">set_maxweight()</span></tt> with the new reduced
+<p>This method specifies an upper bound on what <tt class="docutils literal">get_weight()</tt> will return <em>from
+now on</em> (until the next call to <tt class="docutils literal">init()</tt>).  So if you know that the upper
+bound has decreased, you should call <tt class="docutils literal">set_maxweight()</tt> with the new reduced
 bound.</p>
-<p>One thing to be aware of is that currently calling <tt class="docutils literal"><span class="pre">set_maxweight()</span></tt> during
+<p>One thing to be aware of is that currently calling <tt class="docutils literal">set_maxweight()</tt> during
 the match triggers an recursion through the postlist tree to recalculate the
 new overall maxweight, which takes a comparable amount of time to calculating
 the weight for a matching document.  If your maxweight reduces for nearly
 every document, you may want to profile to see if it's beneficial to notify
-every single change.  Experiments with a modified <tt class="docutils literal"><span class="pre">FixedWeightPostingSource</span></tt>
+every single change.  Experiments with a modified <tt class="docutils literal">FixedWeightPostingSource</tt>
 which forces a pointless recalculation for every document suggest a worst case
 overhead in search times of about 37%, but reports of profiling results for
 real world examples are most welcome.  In real cases, this overhead could
@@ -382,9 +413,9 @@ last_notified_maxweight - new_maxweight &gt;= original_maxweight / 100.0
 </pre>
 <p>This ensures that only reasonably significant drops result in a recalculation
 of the maxweight.</p>
-<p>Since <tt class="docutils literal"><span class="pre">get_weight()</span></tt> must always return &gt;= 0, the upper bound must clearly
-also always be &gt;= 0 too.  If you don't call <tt class="docutils literal"><span class="pre">get_maxweight()</span></tt> then the
-bound defaults to 0, to match the default implementation of <tt class="docutils literal"><span class="pre">get_weight()</span></tt>.</p>
+<p>Since <tt class="docutils literal">get_weight()</tt> must always return &gt;= 0, the upper bound must clearly
+also always be &gt;= 0 too.  If you don't call <tt class="docutils literal">get_maxweight()</tt> then the
+bound defaults to 0, to match the default implementation of <tt class="docutils literal">get_weight()</tt>.</p>
 <p>If you want to read the currently set upper bound, you can call:</p>
 <pre class="literal-block">
 Xapian::weight get_maxweight() const;
@@ -392,54 +423,54 @@ Xapian::weight get_maxweight() const;
 <p>This is just a getter method for a member variable in the
 <tt class="docutils literal"><span class="pre">Xapian::PostingSource</span></tt> class, and is inlined from the API headers, so
 there's no point storing this yourself in your subclass - it should be just as
-efficient to call <tt class="docutils literal"><span class="pre">get_maxweight()</span></tt> whenever you want to use it.</p>
-<p>The <tt class="docutils literal"><span class="pre">at_end()</span></tt> method checks if the current iteration position is past the
+efficient to call <tt class="docutils literal">get_maxweight()</tt> whenever you want to use it.</p>
+<p>The <tt class="docutils literal">at_end()</tt> method checks if the current iteration position is past the
 last entry:</p>
 <pre class="literal-block">
 virtual bool at_end() const = 0;
 </pre>
-<p>The <tt class="docutils literal"><span class="pre">get_docid()</span></tt> method returns the document id at the current iteration
+<p>The <tt class="docutils literal">get_docid()</tt> method returns the document id at the current iteration
 position:</p>
 <pre class="literal-block">
 virtual Xapian::docid get_docid() const = 0;
 </pre>
 <p>There are three methods which advance the current position.  All of these take
-a Xapian::Weight parameter <tt class="docutils literal"><span class="pre">min_wt</span></tt>, which indicates the minimum weight
+a Xapian::Weight parameter <tt class="docutils literal">min_wt</tt>, which indicates the minimum weight
 contribution which the matcher is interested in.  The matcher still checks
 the weight of documents so it's OK to ignore this parameter completely, or to
 use it to discard only some documents.  But it can be useful for optimising
 in some cases.</p>
-<p>The simplest of these three methods is <tt class="docutils literal"><span class="pre">next()</span></tt>, which simply advances the
+<p>The simplest of these three methods is <tt class="docutils literal">next()</tt>, which simply advances the
 iteration position to the next document (possibly skipping documents with
 weight contribution &lt; min_wt):</p>
 <pre class="literal-block">
 virtual void next(Xapian::weight min_wt) = 0;
 </pre>
-<p>Then there's <tt class="docutils literal"><span class="pre">skip_to()</span></tt>.  This advances the iteration position to the next
+<p>Then there's <tt class="docutils literal">skip_to()</tt>.  This advances the iteration position to the next
 document with document id &gt;= that specified (possibly also skipping documents
 with weight contribution &lt; min_wt):</p>
 <pre class="literal-block">
 virtual void skip_to(Xapian::docid did, Xapian::weight min_wt);
 </pre>
-<p>A default implementation of <tt class="docutils literal"><span class="pre">skip_to()</span></tt> is provided which just calls
-<tt class="docutils literal"><span class="pre">next()</span></tt> repeatedly.  This works but <tt class="docutils literal"><span class="pre">skip_to()</span></tt> can often be implemented
+<p>A default implementation of <tt class="docutils literal">skip_to()</tt> is provided which just calls
+<tt class="docutils literal">next()</tt> repeatedly.  This works but <tt class="docutils literal">skip_to()</tt> can often be implemented
 much more efficiently.</p>
-<p>The final method of this group is <tt class="docutils literal"><span class="pre">check()</span></tt>.  In some cases, it's fairly
+<p>The final method of this group is <tt class="docutils literal">check()</tt>.  In some cases, it's fairly
 cheap to check if a given document matches, but the requirement that
-<tt class="docutils literal"><span class="pre">skip_to()</span></tt> must leave the iteration position on the next document is
+<tt class="docutils literal">skip_to()</tt> must leave the iteration position on the next document is
 rather costly to implement (for example, it might require linear scanning
-of document ids).  To avoid this where possible, the <tt class="docutils literal"><span class="pre">check()</span></tt> method
+of document ids).  To avoid this where possible, the <tt class="docutils literal">check()</tt> method
 allows the matcher to just check if a given document matches:</p>
 <pre class="literal-block">
 virtual bool check(Xapian::docid did, Xapian::weight min_wt);
 </pre>
-<p>The return value is <tt class="docutils literal"><span class="pre">true</span></tt> if the method leaves the iteration position valid,
-and <tt class="docutils literal"><span class="pre">false</span></tt> if it doesn't.  In the latter case, <tt class="docutils literal"><span class="pre">next()</span></tt> will advance to
-the first matching position after document id <tt class="docutils literal"><span class="pre">did</span></tt>, and <tt class="docutils literal"><span class="pre">skip_to()</span></tt> will
+<p>The return value is <tt class="docutils literal">true</tt> if the method leaves the iteration position valid,
+and <tt class="docutils literal">false</tt> if it doesn't.  In the latter case, <tt class="docutils literal">next()</tt> will advance to
+the first matching position after document id <tt class="docutils literal">did</tt>, and <tt class="docutils literal">skip_to()</tt> will
 act as it would if the iteration position was the first matching position
-after <tt class="docutils literal"><span class="pre">did</span></tt>.</p>
-<p>The default implementation of <tt class="docutils literal"><span class="pre">check()</span></tt> is just a thin wrapper around
-<tt class="docutils literal"><span class="pre">skip_to()</span></tt> which returns true - you should use this if <tt class="docutils literal"><span class="pre">skip_to()</span></tt> incurs
+after <tt class="docutils literal">did</tt>.</p>
+<p>The default implementation of <tt class="docutils literal">check()</tt> is just a thin wrapper around
+<tt class="docutils literal">skip_to()</tt> which returns true - you should use this if <tt class="docutils literal">skip_to()</tt> incurs
 only a small extra cost.</p>
 <p>There's also a method to return a string describing this object:</p>
 <pre class="literal-block">
@@ -447,12 +478,14 @@ virtual std::string get_description() const;
 </pre>
 <p>The default implementation returns a generic answer.  This default is provided
 to avoid forcing you to provide an implementation if you don't really care
-what <tt class="docutils literal"><span class="pre">get_description()</span></tt> gives for your sub-class.</p>
+what <tt class="docutils literal">get_description()</tt> gives for your sub-class.</p>
 </div>
 <div class="section" id="examples">
 <h1><a class="toc-backref" href="#id3">Examples</a></h1>
 <p>Here is an example of a Python PostingSource which contributes additional
-weight from some external source:</p>
+weight from some external source (note that in Python, you call <tt class="docutils literal">next()</tt>
+on an iterator to get each item, including the first, which is exactly
+the semantics we need to implement here):</p>
 <pre class="literal-block">
 class ExternalWeightPostingSource(xapian.PostingSource):
     &quot;&quot;&quot;
@@ -517,7 +550,7 @@ class WeightSource:
 <h1><a class="toc-backref" href="#id4">Multiple databases, and remote databases</a></h1>
 <p>In order to work with searches across multiple databases, or in remote
 databases, some additional methods need to be implemented in your
-Xapian::PostingSource subclass.  The first of these is <tt class="docutils literal"><span class="pre">clone()</span></tt>, which is
+Xapian::PostingSource subclass.  The first of these is <tt class="docutils literal">clone()</tt>, which is
 used for multi database searches.  This method should just return a newly
 allocated instance of the same posting source class, initialised in the same
 way as the source that clone() was called on.  The returned source will be
@@ -526,20 +559,20 @@ deallocated by the caller (using &quot;delete&quot; - so you should allocate it 
 <p>If you don't care about supporting searches across multiple databases, you can
 simply return NULL from this method.  In fact, the default implementation does
 this, so you can just leave the default implementation in place.  If
-<tt class="docutils literal"><span class="pre">clone()</span></tt> returns NULL, an attempt to perform a search with multiple
+<tt class="docutils literal">clone()</tt> returns NULL, an attempt to perform a search with multiple
 databases will raise an exception:</p>
 <pre class="literal-block">
 virtual PostingSource * clone() const;
 </pre>
 <p>To work with searches across remote databases, you need to implement a few more
-methods.  Firstly, you need to implement the <tt class="docutils literal"><span class="pre">name()</span></tt> method.  This simply
+methods.  Firstly, you need to implement the <tt class="docutils literal">name()</tt> method.  This simply
 returns the name of your posting source (fully qualified with any namespace):</p>
 <pre class="literal-block">
 virtual std::string name() const;
 </pre>
 <p>Next, you need to implement the serialise and unserialise methods.  The
-<tt class="docutils literal"><span class="pre">serialise()</span></tt> method converts all the settings of the PostingSource to a
-string, and the <tt class="docutils literal"><span class="pre">unserialise()</span></tt> method converts one of these strings back
+<tt class="docutils literal">serialise()</tt> method converts all the settings of the PostingSource to a
+string, and the <tt class="docutils literal">unserialise()</tt> method converts one of these strings back
 into a PostingSource.  Note that the serialised string doesn't need to include
 any information about the current iteration position of the PostingSource:</p>
 <pre class="literal-block">
@@ -550,7 +583,7 @@ virtual PostingSource * unserialise(const std::string &amp;s) const;
 Currently, the only way to do this is to modify the source slightly, and
 compile your own xapian-tcpsrv.  To do this, you need to edit
 <tt class="docutils literal"><span class="pre">xapian-core/bin/xapian-tcpsrv.cc</span></tt> and find the
-<tt class="docutils literal"><span class="pre">register_user_weighting_schemes()</span></tt> function.  If <tt class="docutils literal"><span class="pre">MyPostingSource</span></tt> is your
+<tt class="docutils literal">register_user_weighting_schemes()</tt> function.  If <tt class="docutils literal">MyPostingSource</tt> is your
 posting source, at the end of this function, add these lines:</p>
 <pre class="literal-block">
 Xapian::Registry registry;

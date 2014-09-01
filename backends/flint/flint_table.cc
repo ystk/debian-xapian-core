@@ -2,7 +2,7 @@
  *
  * Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2002 Ananova Ltd
- * Copyright 2002,2003,2004,2005,2006,2007,2008,2009,2010,2011 Olly Betts
+ * Copyright 2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2013 Olly Betts
  * Copyright 2008 Lemur Consulting Ltd
  * Copyright 2010 Richard Boulton
  *
@@ -216,9 +216,11 @@ FlintTable::read_block(uint4 n, byte * p) const
 	ssize_t bytes_read = pread(handle, reinterpret_cast<char *>(p), m,
 				   offset);
 	// normal case - read succeeded, so return.
-	if (bytes_read == m) return;
+	if (bytes_read == m) break;
 	if (bytes_read == -1) {
 	    if (errno == EINTR) continue;
+	    if (errno == EBADF && handle == -2)
+		FlintTable::throw_database_closed();
 	    string message = "Error reading block " + str(n) + ": ";
 	    message += strerror(errno);
 	    throw Xapian::DatabaseError(message);
@@ -236,6 +238,8 @@ FlintTable::read_block(uint4 n, byte * p) const
     }
 #else
     if (lseek(handle, off_t(block_size) * n, SEEK_SET) == -1) {
+	if (errno == EBADF && handle == -2)
+	    FlintTable::throw_database_closed();
 	string message = "Error seeking to block: ";
 	message += strerror(errno);
 	throw Xapian::DatabaseError(message);
@@ -243,6 +247,13 @@ FlintTable::read_block(uint4 n, byte * p) const
 
     io_read(handle, reinterpret_cast<char *>(p), block_size, block_size);
 #endif
+
+    int dir_end = DIR_END(p);
+    if (rare(dir_end < DIR_START || unsigned(dir_end) > block_size)) {
+	string msg("dir_end invalid in block ");
+	msg += str(n);
+	throw Xapian::DatabaseCorruptError(msg);
+    }
 }
 
 /** write_block(n, p) writes block n in the DB file from address p.
@@ -374,7 +385,7 @@ FlintTable::block_to_cursor(Cursor_ * C_, int j, uint4 n) const
     }
     // Check if the block is in the built-in cursor (potentially in
     // modified form).
-    if (writable && n == C[j].n) {
+    if (n == C[j].n) {
 	if (p != C[j].p)
 	    memcpy(p, C[j].p, block_size);
     } else {
@@ -1701,7 +1712,6 @@ FlintTable::create_and_open(unsigned int block_size_)
     Assert(writable);
     close();
 
-    if (block_size_ == 0) abort();
     set_block_size(block_size_);
 
     // FIXME: it would be good to arrange that this works such that there's
@@ -1713,7 +1723,7 @@ FlintTable::create_and_open(unsigned int block_size_)
     /* create the base file */
     FlintTable_base base_;
     base_.set_revision(revision_number);
-    base_.set_block_size(block_size_);
+    base_.set_block_size(block_size);
     base_.set_have_fakeroot(true);
     base_.set_sequential(true);
     base_.write_to_file(name + "baseA", 'A', string(), -1, NULL);

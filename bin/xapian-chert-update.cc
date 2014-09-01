@@ -1,7 +1,7 @@
 /** @file xapian-chert-update.cc
  * @brief Update a chert database to the new format keys
  */
-/* Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2011 Olly Betts
+/* Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2011,2013 Olly Betts
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -64,7 +64,7 @@ using namespace std;
 static void show_usage() {
     cout << "Usage: "PROG_NAME" [OPTIONS] SOURCE_DATABASE DESTINATION_DATABASE\n\n"
 "Options:\n"
-"  -b, --blocksize   Set the blocksize in bytes (e.g. 4096) or K (e.g. 4K)\n"
+"  -b                Set the blocksize in bytes (e.g. 4096) or K (e.g. 4K)\n"
 "                    (must be between 2K and 64K and a power of 2, default 8K)\n"
 "  --help            display this help and exit\n"
 "  --version         output version information and exit" << endl;
@@ -331,7 +331,7 @@ copy_docid_keyed(FlintTable &in, ChertTable *out)
 int
 main(int argc, char **argv)
 {
-    const char * opts = "b";
+    const char * opts = "b:";
     const struct option long_opts[] = {
 	{"help",	no_argument, 0, OPT_HELP},
 	{"version",	no_argument, 0, OPT_VERSION},

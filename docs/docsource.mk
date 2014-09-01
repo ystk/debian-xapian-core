@@ -261,6 +261,7 @@ SOURCEDOC_SRC=\
 	$T/bin/xapian-replicate.cc\
 	$T/bin/xapian-tcpsrv.cc\
 	$T/common/alltermslist.h\
+	$T/common/append_filename_arg.h\
 	$T/common/autoptr.h\
 	$T/common/bitstream.cc\
 	$T/common/bitstream.h\
@@ -323,6 +324,7 @@ SOURCEDOC_SRC=\
 	$T/common/safedirent.h\
 	$T/common/safeerrno.h\
 	$T/common/safefcntl.h\
+	$T/common/safenetdb.h\
 	$T/common/safesysselect.h\
 	$T/common/safesysstat.h\
 	$T/common/safesyswait.h\
@@ -466,7 +468,7 @@ SOURCEDOC_SRC=\
 	$T/queryparser/termgenerator.cc\
 	$T/queryparser/termgenerator_internal.cc\
 	$T/queryparser/termgenerator_internal.h\
-	$T/unicode/tclUniData.cc\
+	$(top_builddir)/unicode/unicode-data.cc\
 	$T/unicode/utf8itor.cc\
 	$T/weight/bm25weight.cc\
 	$T/weight/boolweight.cc\

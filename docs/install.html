@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Installing Xapian</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -290,7 +320,7 @@ ul.auto-toc {
 <div class="section" id="introduction">
 <h1>Introduction</h1>
 <p>This document is intended to give a quick guide to how to install
-Xapian. You can find more detailed instructions in the <tt class="docutils literal"><span class="pre">INSTALL</span></tt> file
+Xapian. You can find more detailed instructions in the <tt class="docutils literal">INSTALL</tt> file
 which is in top level directory of each source tree.</p>
 <p>Xapian can be built on UNIX systems (including MacOS X), and also
 Microsoft Windows systems using GCC with mingw or cygwin, or MSVC.</p>
@@ -323,13 +353,19 @@ download page</a>.</p>
 <p>Use the usual tools to unpack the archives. For example, on a Linux
 system:</p>
 <pre class="literal-block">
-tar zxvf xapian-core-&lt;versionnumber&gt;.tar.gz
-tar zxvf xapian-omega-&lt;versionnumber&gt;.tar.gz
-tar zxvf xapian-bindings-&lt;versionnumber&gt;.tar.gz
+tar xf xapian-core-&lt;versionnumber&gt;.tar.xz
+tar xf xapian-omega-&lt;versionnumber&gt;.tar.xz
+tar xf xapian-bindings-&lt;versionnumber&gt;.tar.xz
+</pre>
+<p>If tar on your system doesn't support xz decompression, you can instead use:</p>
+<pre class="literal-block">
+xz -dc xapian-core-&lt;versionnumber&gt;.tar.xz|tar xf -
+xz -dc xapian-omega-&lt;versionnumber&gt;.tar.xz|tar xf -
+xz -dc xapian-bindings-&lt;versionnumber&gt;.tar.xz|tar xf -
 </pre>
 <p>These commands should unpack the archives into separate subdirectories
 (<tt class="docutils literal"><span class="pre">xapian-core-&lt;versionnumber&gt;</span></tt>, <tt class="docutils literal"><span class="pre">xapian-omega-&lt;versionnumber&gt;</span></tt> and
-<tt class="docutils literal"><span class="pre">xapian-bindings-&lt;versionnumber&gt;</span></tt> and ).</p>
+<tt class="docutils literal"><span class="pre">xapian-bindings-&lt;versionnumber&gt;</span></tt>).</p>
 </div>
 <div class="section" id="configuring-and-building-the-xapian-library">
 <h2>Configuring and building the Xapian library</h2>
@@ -340,13 +376,13 @@ summary is all you need to know.</p>
 <p>Building for MSVC is currently handled using a separately maintained set
 of makefiles - you can find a link to these on the <a class="reference external" href="http://xapian.org/download">Xapian download
 page</a>.</p>
-<p>Each directory contains a <tt class="docutils literal"><span class="pre">configure</span></tt> script which checks various
+<p>Each directory contains a <tt class="docutils literal">configure</tt> script which checks various
 features of your system. Assuming this runs successfully, you can then
-run <tt class="docutils literal"><span class="pre">make</span></tt> to build the software, and <tt class="docutils literal"><span class="pre">make</span> <span class="pre">install</span></tt> to actually
-install it. By default, the software installs under <tt class="docutils literal"><span class="pre">/usr/local</span></tt>, but
+run <tt class="docutils literal">make</tt> to build the software, and <tt class="docutils literal">make install</tt> to actually
+install it. By default, the software installs under <tt class="docutils literal">/usr/local</tt>, but
 you can change this by passing <tt class="docutils literal"><span class="pre">--prefix=/path/to/install</span></tt> to
-<tt class="docutils literal"><span class="pre">configure</span></tt>. So for example, you might use the following series of
-commands to build and install xapian-core under <tt class="docutils literal"><span class="pre">/opt</span></tt>:</p>
+<tt class="docutils literal">configure</tt>. So for example, you might use the following series of
+commands to build and install xapian-core under <tt class="docutils literal">/opt</tt>:</p>
 <pre class="literal-block">
 cd xapian-core-&lt;version&gt;
 ./configure --prefix=/opt
@@ -362,12 +398,12 @@ prefix in your home directory, for example:</p>
 <div class="section" id="configuring-and-building-omega">
 <h2>Configuring and building Omega</h2>
 <p>Omega can be built in almost exactly the same way as the core library.
-Omega's <tt class="docutils literal"><span class="pre">configure</span></tt> script will try to locate your Xapian installation
+Omega's <tt class="docutils literal">configure</tt> script will try to locate your Xapian installation
 by looking for the <tt class="docutils literal"><span class="pre">xapian-config</span></tt> script, which is installed as
 <tt class="docutils literal"><span class="pre">&lt;prefix&gt;/bin/xapian-config</span></tt>. If <tt class="docutils literal"><span class="pre">&lt;prefix&gt;/bin/xapian-config</span></tt> isn't
-on your <tt class="docutils literal"><span class="pre">PATH</span></tt>, or you have multiple installations of Xapian (perhaps
+on your <tt class="docutils literal">PATH</tt>, or you have multiple installations of Xapian (perhaps
 a debug and non-debug build, or two different versions), you can specify
-a <tt class="docutils literal"><span class="pre">xapian-config</span></tt> to use by passing <tt class="docutils literal"><span class="pre">XAPIAN_CONFIG</span></tt> on the configure
+a <tt class="docutils literal"><span class="pre">xapian-config</span></tt> to use by passing <tt class="docutils literal">XAPIAN_CONFIG</tt> on the configure
 command line, as shown below:</p>
 <pre class="literal-block">
 cd xapian-omega-&lt;version&gt;
@@ -378,21 +414,21 @@ sudo make install
 <p>Note that we use GNU libtool, which will set the runtime library search
 path if your Xapian installation isn't in the dynamic linker search
 path, so there's no need to mess around with setting
-<tt class="docutils literal"><span class="pre">LD_LIBRARY_PATH</span></tt>.</p>
+<tt class="docutils literal">LD_LIBRARY_PATH</tt>.</p>
 </div>
 <div class="section" id="configuring-and-building-xapian-bindings">
 <h2>Configuring and building Xapian-bindings</h2>
 <p>Xapian-bindings is built much like Omega. One thing to be aware of is
 that by default we install the built bindings where they need to go to
 work without further intervention, so they may get installed under
-<tt class="docutils literal"><span class="pre">/usr</span></tt> even if the prefix is elsewhere. See the <tt class="docutils literal"><span class="pre">INSTALL</span></tt> file for
+<tt class="docutils literal">/usr</tt> even if the prefix is elsewhere. See the <tt class="docutils literal">INSTALL</tt> file for
 xapian-bindings for details of how you can override this, and what steps
 you'll need to take to run scripts which use the bindings if you do.</p>
 </div>
-<div class="section" id="building-from-svn">
-<h2>Building from SVN</h2>
+<div class="section" id="building-from-git">
+<h2>Building from git</h2>
 <p>If you wish to help develop Xapian, read <a class="reference external" href="http://xapian.org/bleeding">how to build from the Xapian
-subversion repository</a>.</p>
+git repository</a>.</p>
 </div>
 </div>
 </div>

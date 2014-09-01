@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Xapian 1.0 Term Indexing/Querying Scheme</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -308,40 +338,40 @@ describes the new scheme, with references to differences from the old.</p>
 <p>Previously all words were indexed stemmed without a prefix, and capitalised words were
 indexed unstemmed (but lower cased) with an 'R' prefix.  The rationale for doing this was
 that people want to be able to search for exact proper nouns (e.g. the English stemmer
-conflates <tt class="docutils literal"><span class="pre">Tony</span></tt> and <tt class="docutils literal"><span class="pre">Toni</span></tt>).  But of course this also indexes words at the start
+conflates <tt class="docutils literal">Tony</tt> and <tt class="docutils literal">Toni</tt>).  But of course this also indexes words at the start
 of sentences, words in titles, and in German all nouns are capitalised so will be indexed.
 Both the normal and R-prefixed terms were indexed with positional information.</p>
 <p>Now we index all words lowercased with positional information, and also stemmed with a
 'Z' prefix (unless they start with a digit), but without positional information.  By default
 a Xapian::Stopper is used to avoid indexed stemmed forms of stopwords (tests show this shaves
 around 1% off the database size).</p>
-<p>The new scheme allows exact phrase searching (which the old scheme didn't).  <tt class="docutils literal"><span class="pre">NEAR</span></tt>
+<p>The new scheme allows exact phrase searching (which the old scheme didn't).  <tt class="docutils literal">NEAR</tt>
 now has to operate on unstemmed forms, but that's reasonable enough.  We can also disable
 stemming of words which are capitalised in the query, to achieve good results for
 proper nouns.  And Omega's $topterms will now always suggest unstemmed forms!</p>
 <p>The main rationale for prefixing the stemmed forms is that there are simply fewer of
 them!  As a side benefit, it opens the way for storing stemmed forms for multiple
 languages (e.g. Z:en:, Z:fr: or something like that).</p>
-<p>The special handling of a trailing <tt class="docutils literal"><span class="pre">.</span></tt> in the QueryParser (which would often
+<p>The special handling of a trailing <tt class="docutils literal">.</tt> in the QueryParser (which would often
 mistakenly trigger for pasted text) has been removed.  This feature was there to
 support Omega's topterms adding stemmed forms, but Omega no longer needs to do this
 as it can suggest unstemmed forms instead.</p>
 </div>
 <div class="section" id="word-characters">
 <h1><a class="toc-backref" href="#id3">Word Characters</a></h1>
-<p>By default, Unicode characters of category CONNECTOR_PUNCTUATION (<tt class="docutils literal"><span class="pre">_</span></tt> and a
+<p>By default, Unicode characters of category CONNECTOR_PUNCTUATION (<tt class="docutils literal">_</tt> and a
 handful of others) are now word characters, which provides better indexing of
 identifiers, without much degradation of other cases.  Previously cases like
-<tt class="docutils literal"><span class="pre">time_t</span></tt> required a phrase search.</p>
-<p>Trailing <tt class="docutils literal"><span class="pre">+</span></tt> and <tt class="docutils literal"><span class="pre">#</span></tt> are still included on terms (up to 3 characters at most), but
-<tt class="docutils literal"><span class="pre">-</span></tt> no longer is by default.  The examples it benefits aren't compelling
-(<tt class="docutils literal"><span class="pre">nethack--</span></tt>, <tt class="docutils literal"><span class="pre">Cl-</span></tt>) and it tends to glue hyphens on to terms.</p>
-<p>A single embedded <tt class="docutils literal"><span class="pre">'</span></tt> (apostrophe) is now included in a term.
+<tt class="docutils literal">time_t</tt> required a phrase search.</p>
+<p>Trailing <tt class="docutils literal">+</tt> and <tt class="docutils literal">#</tt> are still included on terms (up to 3 characters at most), but
+<tt class="docutils literal">-</tt> no longer is by default.  The examples it benefits aren't compelling
+(<tt class="docutils literal"><span class="pre">nethack--</span></tt>, <tt class="docutils literal">Cl-</tt>) and it tends to glue hyphens on to terms.</p>
+<p>A single embedded <tt class="docutils literal">'</tt> (apostrophe) is now included in a term.
 Previously this caused a slow phrase search, and added junk terms to the index
-(<tt class="docutils literal"><span class="pre">didn't</span></tt> -&gt; <tt class="docutils literal"><span class="pre">didn</span></tt> and <tt class="docutils literal"><span class="pre">t</span></tt>, etc).  Various Unicode characters used for apostrophes
+(<tt class="docutils literal">didn't</tt> -&gt; <tt class="docutils literal">didn</tt> and <tt class="docutils literal">t</tt>, etc).  Various Unicode characters used for apostrophes
 are all mapped to the ASCII representation.</p>
 <p>A few other characters (taken from the Unicode definition of a word) are included
-in terms if they occur between two word characters, and <tt class="docutils literal"><span class="pre">.</span></tt>, <tt class="docutils literal"><span class="pre">,</span></tt> and a
+in terms if they occur between two word characters, and <tt class="docutils literal">.</tt>, <tt class="docutils literal">,</tt> and a
 few others are included in terms if they occur between two decimal digit characters.</p>
 </div>
 </div>

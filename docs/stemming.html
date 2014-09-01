@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Stemming Algorithms</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -447,7 +477,7 @@ mandarglielo = mandare (to give) + glielo (it to him)
 </pre>
 <p>If E is the ending, the possible forms are -andoE, -endoE, -arE, -erE,
 -irE, so E is removed in the context -Xndo or Yr, where X is a or e, and
-Y is a or e or i. See the <tt class="docutils literal"><span class="pre">attached_pronoun</span></tt> procedure in the Italian
+Y is a or e or i. See the <tt class="docutils literal">attached_pronoun</tt> procedure in the Italian
 stemmer.</p>
 <p>The most useful criterion for removing an ending, however, is to base
 the decision on the syllable length of the stem that will remain. This
@@ -521,11 +551,11 @@ resolution of these forms.</p>
 <p>An irregularity of English which does cause a problem is the word
 `news'. It is now a singular noun, and is never regarded as the plural
 of `new'. This, and a few more howlers, are placed in a table,
-<tt class="docutils literal"><span class="pre">irregular_forms</span></tt>, in the English stemming algorithm. Similar tables
+<tt class="docutils literal">irregular_forms</tt>, in the English stemming algorithm. Similar tables
 are provided in the other stemming algorithms, with some provisional
 entries. The non-English stemming algorithms have not been used enough
 for a significant list of irregular forms to emerge, but as they do,
-they can be placed in the <tt class="docutils literal"><span class="pre">irregular_forms</span></tt> table.</p>
+they can be placed in the <tt class="docutils literal">irregular_forms</tt> table.</p>
 </div>
 <div class="section" id="using-stemming-in-ir">
 <h1>Using stemming in IR</h1>
@@ -567,7 +597,7 @@ text corpus for a language by frequency, and going down the list picking
 off words to be discarded.</p>
 <p>The stopword list connects in various ways with the stemming algorithm:</p>
 <p>The stemming algorithm can itself be used to detect and remove
-stopwords. One would add into the <tt class="docutils literal"><span class="pre">irregular_forms</span></tt> table something
+stopwords. One would add into the <tt class="docutils literal">irregular_forms</tt> table something
 like this,</p>
 <pre class="literal-block">
 &quot;&quot;, /* null string */
@@ -592,7 +622,7 @@ questa     queste    questi    questo
 quest
 </pre>
 <!-- FIXME: Nice idea, but currently these lists are fictitious:
-In the xapian-data directory in the SVN repository, each language
+In the xapian-data directory in the git repository, each language
 represented in the stemming section has, in addition to a large test
 vocabulary, a useful stopword list in both source and stemmed form. The
 source form, in the file ``stopsource``, is carefully annotated, and the

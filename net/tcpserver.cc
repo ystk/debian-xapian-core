@@ -35,15 +35,16 @@
 
 #ifdef __WIN32__
 # include <process.h>    /* _beginthread, _endthread */
+# include "safewinsock2.h"
 #else
-# include <sys/socket.h>
 # include <netinet/in_systm.h>
 # include <netinet/in.h>
 # include <netinet/ip.h>
 # include <netinet/tcp.h>
 # include <arpa/inet.h>
-# include <netdb.h>
+# include "safenetdb.h"
 # include <signal.h>
+# include <sys/socket.h>
 # include <sys/wait.h>
 #endif
 

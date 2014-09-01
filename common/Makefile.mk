@@ -1,5 +1,6 @@
 noinst_HEADERS +=\
 	common/alltermslist.h\
+	common/append_filename_arg.h\
 	common/autoptr.h\
 	common/bitstream.h\
 	common/closefrom.h\
@@ -51,6 +52,7 @@ noinst_HEADERS +=\
 	common/safedirent.h\
 	common/safeerrno.h\
 	common/safefcntl.h\
+	common/safenetdb.h\
 	common/safesysselect.h\
 	common/safesysstat.h\
 	common/safesyswait.h\

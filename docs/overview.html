@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Overview</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -473,15 +503,17 @@ for a way to do this.</dd>
 <dt>remote</dt>
 <dd><p class="first">This can specify either a &quot;program&quot; or TCP remote backend, for example:</p>
 <pre class="literal-block">
-remote ssh xapian-prog.example.com xapian-progsrv
+remote :ssh xapian-prog.example.com xapian-progsrv
 </pre>
 <p>or:</p>
 <pre class="literal-block">
 remote xapian-tcp.example.com:12345
 </pre>
-<p class="last">Currently the two are distinguished by checking for a colon (<tt class="docutils literal"><span class="pre">:</span></tt>)
-anywhere in the line, so for the &quot;program&quot; backend, your command can't
-contain a colon.</p>
+<p class="last">If the first character of the second word is a colon (<tt class="docutils literal">:</tt>), then this is
+skipped and the remainder of the line is used as the command to run
+xapian-progsrv and the &quot;program&quot; variant of the remote backend is used.
+Otherwise the TCP variant of the remote backend is used, and the rest of
+the line specifies the host and port to connect to.</p>
 </dd>
 </dl>
 </div>
@@ -537,7 +569,7 @@ many terms.</p>
 <a class="reference external" href="apidoc/html/classXapian_1_1Query.html">Xapian::Query</a> object. The
 simplest useful query is one which searches for a single term (and
 several of these can be combined to form more complex queries). A single
-term query can be created as follows (where <tt class="docutils literal"><span class="pre">term</span></tt> is a
+term query can be created as follows (where <tt class="docutils literal">term</tt> is a
 <tt class="docutils literal"><span class="pre">std::string</span></tt> holding the term to be searched for):</p>
 <pre class="literal-block">
 Xapian::Query query(term);
@@ -554,16 +586,16 @@ Xapian::Query(const string &amp; tname_,
         Xapian::termcount wqf_ = 1,
         Xapian::termpos term_pos_ = 0)
 </pre>
-<p>The <tt class="docutils literal"><span class="pre">wqf</span></tt> (Within Query Frequency) is a measure of how common a term is
+<p>The <tt class="docutils literal">wqf</tt> (Within Query Frequency) is a measure of how common a term is
 in the query. This isn't useful for a single term query unless it is going
 to form part of a more complex query. In that case, it's particularly
 useful when generating a query from an existing document, but may also be
 used to increase the &quot;importance&quot; of a term in a query. Another way to
-increase the &quot;importance&quot; of a term is to use <tt class="docutils literal"><span class="pre">OP_SCALE_WEIGHT</span></tt>. But if
+increase the &quot;importance&quot; of a term is to use <tt class="docutils literal">OP_SCALE_WEIGHT</tt>. But if
 the intention is simply to ensure that a particular term is in the query
 results, you should use a boolean AND or AND_MAYBE rather than setting a
 high wqf.</p>
-<p>The <tt class="docutils literal"><span class="pre">term_pos</span></tt> represents the position of the term in the query.
+<p>The <tt class="docutils literal">term_pos</tt> represents the position of the term in the query.
 Again, this isn't useful for a single term query by itself, but is used
 for phrase searching, passage retrieval, and other operations which
 require knowledge of the order of terms in the query (such as returning
@@ -573,7 +605,7 @@ value of 0 may be used.</p>
 <p>Note that it may not make much sense to specify a wqf other than 1 when
 supplying a term position (unless you are trying to affect the
 weighting, as previously described).</p>
-<p>Note also that the results of <tt class="docutils literal"><span class="pre">Xapian::Query(tname,</span> <span class="pre">2)</span></tt> and
+<p>Note also that the results of <tt class="docutils literal"><span class="pre">Xapian::Query(tname,</span> 2)</tt> and
 <tt class="docutils literal"><span class="pre">Xapian::Query(Xapian::Query::OP_OR,</span> <span class="pre">Xapian::Query(tname),</span> <span class="pre">Xapian::Query(tname))</span></tt>
 are exactly equivalent.</p>
 </div>
@@ -796,7 +828,7 @@ Xapian::Query bquery3(&quot;Corporate_Law&quot;);
 
 Xapian::Query bquery(Xapian::Query::OP_AND, bquery1, Xapian::Query(Xapian::Query::OP_AND(bquery2, bquery3)));
 </pre>
-<p>and this can be attached as a filter to <tt class="docutils literal"><span class="pre">query</span></tt> to run the
+<p>and this can be attached as a filter to <tt class="docutils literal">query</tt> to run the
 probabilistic query with a Boolean filter,</p>
 <pre class="literal-block">
 query = Xapian::Query(Xapian::Query::OP_FILTER, query, bquery);
@@ -855,14 +887,14 @@ Xapian::MSet Xapian::Enquire::get_mset(Xapian::doccount first,
                            const Xapian::RSet * rset = 0,
                            const Xapian::MatchDecider * mdecider = 0) const
 </pre>
-<p>When asking for the results, you must specify (in <tt class="docutils literal"><span class="pre">first</span></tt>) the first
+<p>When asking for the results, you must specify (in <tt class="docutils literal">first</tt>) the first
 item in the result set to return, where the numbering starts at zero (so
 a value of zero corresponds to the first item returned being that with
 the highest score, and a value of 10 corresponds to the first 10 items
 being ignored, and the returned items starting at the eleventh).</p>
-<p>You must also specify (in <tt class="docutils literal"><span class="pre">maxitems</span></tt>) the maximum number of items to
+<p>You must also specify (in <tt class="docutils literal">maxitems</tt>) the maximum number of items to
 return. Unless there are not enough matching items, precisely this
-number of items will be returned. If <tt class="docutils literal"><span class="pre">maxitems</span></tt> is zero, no items will
+number of items will be returned. If <tt class="docutils literal">maxitems</tt> is zero, no items will
 be returned, but the usual statistics (such as the maximum possible
 weight which a document could be assigned by the query) will be
 calculated. (See &quot;The Xapian::MSet&quot; below).</p>
@@ -881,7 +913,7 @@ result:</p>
 <dl class="docutils">
 <dt>firstitem</dt>
 <dd>The index of the first item in the result which was put into the MSet.
-(Corresponding to <tt class="docutils literal"><span class="pre">first</span></tt> in <tt class="docutils literal"><span class="pre">Xapian::Enquire::get_mset()</span></tt>)</dd>
+(Corresponding to <tt class="docutils literal">first</tt> in <tt class="docutils literal"><span class="pre">Xapian::Enquire::get_mset()</span></tt>)</dd>
 <dt>max_attained</dt>
 <dd>The greatest weight which is attained in the full results of the search.</dd>
 <dt>max_possible</dt>
@@ -890,8 +922,8 @@ result:</p>
 <dd>The number of documents matching the query considered for the MSet. This
 provides a lower bound on the number of documents in the database which
 have a weight greater than zero. Note that this value may change if the
-search is recalculated with different values for <tt class="docutils literal"><span class="pre">first</span></tt> or
-<tt class="docutils literal"><span class="pre">max_items</span></tt>.</dd>
+search is recalculated with different values for <tt class="docutils literal">first</tt> or
+<tt class="docutils literal">max_items</tt>.</dd>
 </dl>
 <p>See the <a class="reference external" href="apidoc/html/classXapian_1_1MSet.html">automatically extracted
 documentation</a> for more details
@@ -960,7 +992,7 @@ information to modify the search. This is supported by means of
 relevance sets, which are simply sets of document ids which are marked
 as relevant. These are held in
 <a class="reference external" href="apidoc/html/classXapian_1_1RSet.html">Xapian::RSet</a> objects, one
-of which may optionally be supplied to Xapian in the <tt class="docutils literal"><span class="pre">rset</span></tt>
+of which may optionally be supplied to Xapian in the <tt class="docutils literal">rset</tt>
 parameter when calling <tt class="docutils literal"><span class="pre">Xapian::Enquire::get_mset()</span></tt>.</p>
 <div class="section" id="match-options">
 <h2>Match options</h2>
@@ -972,19 +1004,19 @@ The options are as follows.</p>
 <dt>collapse key</dt>
 <dd>Each document in a database may have a set of numbered value slots. The
 contents of each value slot is a string of arbitrary length. The
-<tt class="docutils literal"><span class="pre">set_collapse_key(Xapian::valueno</span> <span class="pre">collapse_key)</span></tt> method specifies a
+<tt class="docutils literal"><span class="pre">set_collapse_key(Xapian::valueno</span> collapse_key)</tt> method specifies a
 value slot number upon which to remove duplicates. Only the most
 recently set duplicate removal key is active at any time, and the
 default is to perform no duplicate removal.</dd>
 <dt>percentage cutoff</dt>
 <dd>It may occasionally be desirable to exclude any documents which have a
 weight less than a given percentage value. This may be done using
-<tt class="docutils literal"><span class="pre">set_cutoff(Xapian::percent</span> <span class="pre">percent_cutoff)</span></tt>.</dd>
+<tt class="docutils literal"><span class="pre">set_cutoff(Xapian::percent</span> percent_cutoff)</tt>.</dd>
 <dt>sort direction</dt>
 <dd><p class="first">Some weighting functions may frequently result in several documents being
 returned with the same weight. In this case, by default, the documents will
 be returned in ascending document id order. This can be changed by using
-<tt class="docutils literal"><span class="pre">set_docid_order()</span></tt> to set the sort direction.</p>
+<tt class="docutils literal">set_docid_order()</tt> to set the sort direction.</p>
 <p class="last"><tt class="docutils literal"><span class="pre">set_docid_order(Xapian::Enquire::DESCENDING)</span></tt> may be useful, for
 example, when it would be best to return the newest documents, and new
 documents are being added to the end of the database (which is what happens
@@ -998,7 +1030,7 @@ by default).</p>
 which can't be easily represented by queries. This can be done using a
 match decision functor. To set such a condition, derive a class from
 <tt class="docutils literal"><span class="pre">Xapian::MatchDecider</span></tt> and override the function operator,
-<tt class="docutils literal"><span class="pre">operator()(const</span> <span class="pre">Xapian::Document</span> <span class="pre">&amp;doc)</span></tt>. The operator can make a
+<tt class="docutils literal"><span class="pre">operator()(const</span> <span class="pre">Xapian::Document</span> &amp;doc)</tt>. The operator can make a
 decision based on the document values via
 <tt class="docutils literal"><span class="pre">Xapian::Document::get_value(Xapian::valueno)</span></tt>.</p>
 <p>The functor will also have access to the document data stored in the
@@ -1024,24 +1056,24 @@ Xapian::ESet Xapian::Enquire::get_eset(Xapian::termcount maxitems,
                            const Xapian::RSet &amp; rset,
                            const Xapian::ExpandDecider * edecider) const
 </pre>
-<p>As for <tt class="docutils literal"><span class="pre">get_mset</span></tt>, up to <tt class="docutils literal"><span class="pre">maxitems</span></tt> expand terms will be returned,
+<p>As for <tt class="docutils literal">get_mset</tt>, up to <tt class="docutils literal">maxitems</tt> expand terms will be returned,
 with fewer being returned if and only if no more terms could be found.</p>
 <p>The expand terms are returned in sorted weight order in an
 <a class="reference external" href="apidoc/html/classXapian_1_1ESet.html">Xapian::ESet</a> item.</p>
 <div class="section" id="exclude-query-terms">
 <h2>exclude_query_terms</h2>
 <p>By default terms which are already in the query will never be returned
-by <tt class="docutils literal"><span class="pre">get_eset()</span></tt>. If <tt class="docutils literal"><span class="pre">exclude_query_terms</span></tt> is <tt class="docutils literal"><span class="pre">false</span></tt>) then query
+by <tt class="docutils literal">get_eset()</tt>. If <tt class="docutils literal">exclude_query_terms</tt> is <tt class="docutils literal">false</tt>) then query
 terms may be returned.</p>
 </div>
 <div class="section" id="use-exact-termfreq">
 <h2>use_exact_termfreq</h2>
 <p>By default, Xapian uses an approximation to the term frequency when
-<tt class="docutils literal"><span class="pre">get_eset()</span></tt> is called when searching over multiple databases. This
+<tt class="docutils literal">get_eset()</tt> is called when searching over multiple databases. This
 approximation improves performance, and usually still returns good
 results. If you're willing to pay the performance penalty, you can get
-Xapian to calculate the exact term frequencies by passing <tt class="docutils literal"><span class="pre">true</span></tt> for
-<tt class="docutils literal"><span class="pre">use_exact_termfreq</span></tt>.</p>
+Xapian to calculate the exact term frequencies by passing <tt class="docutils literal">true</tt> for
+<tt class="docutils literal">use_exact_termfreq</tt>.</p>
 </div>
 <div class="section" id="expand-decision-functors">
 <h2>Expand decision functors</h2>
@@ -1050,9 +1082,9 @@ in the expand set. For example, there may be special terms in the
 database with various prefixes, which should be removed from the expand
 set. This is accomplished by providing a decision functor. To do this,
 derive a class from <tt class="docutils literal"><span class="pre">Xapian::ExpandDecider</span></tt> and override the function
-operator, <tt class="docutils literal"><span class="pre">operator()(const</span> <span class="pre">string</span> <span class="pre">&amp;)</span></tt>. The functor is called with
+operator, <tt class="docutils literal"><span class="pre">operator()(const</span> string &amp;)</tt>. The functor is called with
 each term before it is added to the set, and it may accept (by returning
-<tt class="docutils literal"><span class="pre">true</span></tt>) or reject (by returning <tt class="docutils literal"><span class="pre">false</span></tt>) the term as appropriate.</p>
+<tt class="docutils literal">true</tt>) or reject (by returning <tt class="docutils literal">false</tt>) the term as appropriate.</p>
 </div>
 </div>
 <div class="section" id="thread-safety">

@@ -126,6 +126,10 @@ class XAPIAN_VISIBILITY_DEFAULT Utf8Iterator {
 
     /** Get the current Unicode character value pointed to by the iterator.
      *
+     *  If an invalid UTF-8 sequence is encountered, then the byte values
+     *  comprising it are returned until valid UTF-8 or the end of the input is
+     *  reached.
+     *
      *  Returns unsigned(-1) if the iterator has reached the end of its buffer.
      */
     unsigned operator*() const;
@@ -219,24 +223,26 @@ typedef enum {
 } category;
 
 namespace Internal {
-    /** @internal Extract the information about a character from the Unicode
-     *  character tables.
+    /** @private @internal Extract the information about a character from the
+     *  Unicode character tables.
      *
      *  ch must be a valid Unicode character value (i.e. < 0x110000)
      */
     XAPIAN_VISIBILITY_DEFAULT
     int get_character_info(unsigned ch);
 
-    /** @internal Extract how to convert the case of a Unicode character from
-     *  its info.
+    /** @private @internal Extract how to convert the case of a Unicode
+     *  character from its info.
      */
     inline int get_case_type(int info) { return ((info & 0xe0) >> 5); }
 
-    /// @internal Extract the category of a Unicode character from its info.
+    /** @private @internal Extract the category of a Unicode character from its
+     *  info.
+     */
     inline category get_category(int info) { return static_cast<category>(info & 0x1f); }
 
-    /** @internal Extract the delta to use for case conversion of a character
-     *  from its info.
+    /** @private @internal Extract the delta to use for case conversion of a
+     *  character from its info.
      */
     inline int get_delta(int info) {
 	/* It's implementation defined if sign extension happens on right shift
@@ -244,7 +250,16 @@ namespace Internal {
 	 * spot this and optimise it to a sign-extending shift on architectures
 	 * with a suitable instruction).
 	 */
+#ifdef __GNUC__
+	// GCC 4.7.1 doesn't optimise the more complex expression down
+	// (reported as http://gcc.gnu.org/PR55299), but the documented
+	// behaviour for GCC is that right shift of a signed integer performs
+	// sign extension:
+	// http://gcc.gnu.org/onlinedocs/gcc-4.7.2/gcc/Integers-implementation.html
+	return info >> 15;
+#else
 	return (info >= 0) ? (info >> 15) : (~(~info >> 15));
+#endif
     }
 }
 

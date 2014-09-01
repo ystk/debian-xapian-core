@@ -2,7 +2,7 @@
  *
  * Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2002 Ananova Ltd
- * Copyright 2004,2005,2006,2007,2008,2010 Olly Betts
+ * Copyright 2004,2005,2006,2007,2008,2010,2013 Olly Betts
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -34,10 +34,12 @@
 #include <cmath>
 #include <cstring>
 #ifndef __WIN32__
-# include <netdb.h>
+# include "safenetdb.h"
 # include <netinet/in.h>
 # include <netinet/tcp.h>
 # include <sys/socket.h>
+#else
+# include "safewinsock2.h"
 #endif
 
 using namespace std;

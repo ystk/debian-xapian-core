@@ -596,9 +596,9 @@ RemoteConnection::receive_file(const string &file, double end_time)
 
 #ifdef __WIN32__
     // Do we want to be able to delete the file during writing?
-    int fd = msvc_posix_open(file.c_str(), O_WRONLY|O_CREAT|O_TRUNC);
+    int fd = msvc_posix_open(file.c_str(), O_WRONLY|O_CREAT|O_TRUNC|O_BINARY);
 #else
-    int fd = open(file.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0666);
+    int fd = open(file.c_str(), O_WRONLY|O_CREAT|O_TRUNC|O_BINARY, 0666);
 #endif
     if (fd == -1) throw Xapian::NetworkError("Couldn't open file for writing: " + file, errno);
     fdcloser closefd(fd);
@@ -617,7 +617,9 @@ RemoteConnection::receive_file(const string &file, double end_time)
     unsigned char ch;
     int shift = 0;
     do {
-	if (i == buffer.end() || shift > 28) {
+	// Allow a full 64 bits for message lengths - anything longer than that
+	// is almost certainly a corrupt value.
+	if (i == buffer.end() || shift > 63) {
 	    // Something is very wrong...
 	    throw Xapian::NetworkError("Insane message length specified!");
 	}

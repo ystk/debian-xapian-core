@@ -1,7 +1,7 @@
 /** @file termgenerator_internal.cc
  * @brief TermGenerator class internals
  */
-/* Copyright (C) 2007,2010,2011 Olly Betts
+/* Copyright (C) 2007,2010,2011,2012 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,14 +36,6 @@
 using namespace std;
 
 namespace Xapian {
-
-// Put a limit on the size of terms to help prevent the index being bloated
-// by useless junk terms.
-static const unsigned int MAX_PROB_TERM_LENGTH = 64;
-// FIXME: threshold is currently in bytes of UTF-8 representation, not unicode
-// characters - what actually makes most sense here?
-
-// FIXME: Add API to allow control of how stemming is used?
 
 inline bool
 U_isupper(unsigned ch) {
@@ -168,11 +160,13 @@ TermGenerator::Internal::index_text(Utf8Iterator itor, termcount wdf_inc,
 	}
 
 	while (true) {
-	    if (cjk_ngram && CJK::codepoint_is_cjk(*itor)) {
+	    if (cjk_ngram &&
+		CJK::codepoint_is_cjk(*itor) &&
+		Unicode::is_wordchar(*itor)) {
 		const string & cjk = CJK::get_cjk(itor);
 		for (CJKTokenIterator tk(cjk); tk != CJKTokenIterator(); ++tk) {
 		    const string & cjk_token = *tk;
-		    if (cjk_token.size() > MAX_PROB_TERM_LENGTH) continue;
+		    if (cjk_token.size() > max_word_length) continue;
 
 		    if (stop_mode == STOPWORDS_IGNORE && (*stopper)(cjk_token))
 			continue;
@@ -223,6 +217,7 @@ TermGenerator::Internal::index_text(Utf8Iterator itor, termcount wdf_inc,
 		    if (ch) break;
 		    ++itor;
 		}
+		continue;
 	    }
 	    unsigned prevch;
 	    do {
@@ -270,7 +265,7 @@ TermGenerator::Internal::index_text(Utf8Iterator itor, termcount wdf_inc,
 	}
 
 endofterm:
-	if (term.size() > MAX_PROB_TERM_LENGTH) continue;
+	if (term.size() > max_word_length) continue;
 
 	if (stop_mode == STOPWORDS_IGNORE && (*stopper)(term)) continue;
 

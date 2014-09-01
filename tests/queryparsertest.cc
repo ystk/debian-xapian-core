@@ -1,6 +1,6 @@
 /* queryparsertest.cc: Tests of Xapian::QueryParser
  *
- * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009,2010,2011 Olly Betts
+ * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2013 Olly Betts
  * Copyright (C) 2007,2009 Lemur Consulting Ltd
  *
  * This program is free software; you can redistribute it and/or
@@ -194,6 +194,11 @@ static const test test_or_queries[] = {
     { "category:\"Hello world\"", "0 * XCAT:Hello world" },
     { "category:\"literal \"\"\"", "0 * XCATliteral \"" },
     { "category:\"(unterminated)", "0 * XCAT(unterminated)" },
+    // Feature tests for implicitly closing brackets:
+    { "(foo", "Zfoo:(pos=1)" },
+    { "(foo XOR bar", "(Zfoo:(pos=1) XOR Zbar:(pos=2))" },
+    { "(foo XOR (bar AND baz)", "(Zfoo:(pos=1) XOR (Zbar:(pos=2) AND Zbaz:(pos=3)))" },
+    { "(foo XOR (bar AND baz", "(Zfoo:(pos=1) XOR (Zbar:(pos=2) AND Zbaz:(pos=3)))" },
     // Real world examples from tweakers.net:
     { "Call to undefined function: imagecreate()", "(call:(pos=1) OR Zto:(pos=2) OR Zundefin:(pos=3) OR Zfunction:(pos=4) OR imagecreate:(pos=5))" },
     { "mysql_fetch_row(): supplied argument is not a valid MySQL result resource", "(mysql_fetch_row:(pos=1) OR Zsuppli:(pos=2) OR Zargument:(pos=3) OR Zis:(pos=4) OR Znot:(pos=5) OR Za:(pos=6) OR Zvalid:(pos=7) OR mysql:(pos=8) OR Zresult:(pos=9) OR Zresourc:(pos=10))" },
@@ -643,6 +648,8 @@ static const test test_or_queries[] = {
     { "authortitle:\"richard boulton\"", "((Arichard:(pos=1) PHRASE 2 Aboulton:(pos=2)) OR (XTrichard:(pos=1) PHRASE 2 XTboulton:(pos=2)))"},
     // Some CJK tests.
     { "久有归天愿", "(久:(pos=1) AND 久有:(pos=1) AND 有:(pos=1) AND 有归:(pos=1) AND 归:(pos=1) AND 归天:(pos=1) AND 天:(pos=1) AND 天愿:(pos=1) AND 愿:(pos=1))" },
+    { "久有 归天愿", "((久:(pos=1) AND 久有:(pos=1) AND 有:(pos=1)) OR (归:(pos=2) AND 归天:(pos=2) AND 天:(pos=2) AND 天愿:(pos=2) AND 愿:(pos=2)))" },
+    { "久有！归天愿", "((久:(pos=1) AND 久有:(pos=1) AND 有:(pos=1)) OR (归:(pos=2) AND 归天:(pos=2) AND 天:(pos=2) AND 天愿:(pos=2) AND 愿:(pos=2)))" },
     { "title:久有 归 天愿", "((XT久:(pos=1) AND XT久有:(pos=1) AND XT有:(pos=1)) OR 归:(pos=2) OR (天:(pos=3) AND 天愿:(pos=3) AND 愿:(pos=3)))" },
     { "h众ello万众", "(Zh:(pos=1) OR 众:(pos=2) OR Zello:(pos=3) OR (万:(pos=4) AND 万众:(pos=4) AND 众:(pos=4)))" },
     { "世(の中)TEST_tm", "(世:(pos=1) OR (の:(pos=2) AND の中:(pos=2) AND 中:(pos=2)) OR test_tm:(pos=3))" },
@@ -930,7 +937,7 @@ static bool test_qp_flag_wildcard1()
     qobj = qp.parse_query("main -foo*", flags);
     TEST_STRINGS_EQUAL(qobj.get_description(), "Xapian::Query(main:(pos=1))");
     // Check empty wildcard followed by negation.
-    qobj = qp.parse_query("foo* -main", Xapian::QueryParser::FLAG_WILDCARD);
+    qobj = qp.parse_query("foo* -main", Xapian::QueryParser::FLAG_LOVEHATE|Xapian::QueryParser::FLAG_WILDCARD);
     TEST_STRINGS_EQUAL(qobj.get_description(), "Xapian::Query()");
     // Regression test for bug#484 fixed in 1.2.1 and 1.0.21.
     qobj = qp.parse_query("abc muscl* main", flags);
@@ -1629,6 +1636,8 @@ static const test test_value_daterange2_queries[] = {
     { "created:12/03/99..12/04/01", "VALUE_RANGE 1 19991203 20011204" },
     { "modified:03-12-99..04-14-01", "VALUE_RANGE 2 19990312 20010414" },
     { "accessed:01/30/70..02/02/69", "VALUE_RANGE 3 19700130 20690202" },
+    // In <=1.2.12, and in 1.3.0, this gave "Unknown range operation":
+    { "deleted:12/03/99..12/04/01", "VALUE_RANGE 4 19990312 20010412" },
     { "1999-03-12..2001-04-14", "Unknown range operation" },
     { "12/03/99..created:12/04/01", "Unknown range operation" },
     { "12/03/99created:..12/04/01", "Unknown range operation" },
@@ -1645,9 +1654,14 @@ static bool test_qp_value_daterange2()
     Xapian::DateValueRangeProcessor vrp_cdate(1, "created:", true, true, 1970);
     Xapian::DateValueRangeProcessor vrp_mdate(2, "modified:", true, true, 1970);
     Xapian::DateValueRangeProcessor vrp_adate(3, "accessed:", true, true, 1970);
+    // Regression test - here a const char * was taken as a bool rather than a
+    // std::string when resolving the overloaded forms.  Fixed in 1.2.13 and
+    // 1.3.1.
+    Xapian::DateValueRangeProcessor vrp_ddate(4, "deleted:");
     qp.add_valuerangeprocessor(&vrp_cdate);
     qp.add_valuerangeprocessor(&vrp_mdate);
     qp.add_valuerangeprocessor(&vrp_adate);
+    qp.add_valuerangeprocessor(&vrp_ddate);
     for (const test *p = test_value_daterange2_queries; p->query; ++p) {
 	string expect, parsed;
 	if (p->expect)
@@ -2071,6 +2085,7 @@ static const test test_synonym_op_queries[] = {
     { "+~search terms", "((Zsearch:(pos=1) SYNONYM find:(pos=1)) AND_MAYBE Zterm:(pos=2))" },
     { "-~search terms", "(Zterm:(pos=2) AND_NOT (Zsearch:(pos=1) SYNONYM find:(pos=1)))" },
     { "~search terms", "((Zsearch:(pos=1) SYNONYM find:(pos=1)) OR Zterm:(pos=2))" },
+    { "~foo:search", "(ZXFOOsearch:(pos=1) SYNONYM prefixated:(pos=1))" },
     // FIXME: should look for multi-term synonym...
     { "~\"search terms\"", "(search:(pos=1) PHRASE 2 terms:(pos=2))" },
     { NULL, NULL }
@@ -2087,6 +2102,7 @@ static bool test_qp_synonym3()
     db.add_synonym("Zsearch", "Zlocate");
     db.add_synonym("search", "find");
     db.add_synonym("Zseek", "Zsearch");
+    db.add_synonym("ZXFOOsearch", "prefixated");
 
     db.commit();
 
@@ -2094,6 +2110,7 @@ static bool test_qp_synonym3()
     qp.set_stemmer(Xapian::Stem("english"));
     qp.set_stemming_strategy(Xapian::QueryParser::STEM_SOME);
     qp.set_database(db);
+    qp.add_prefix("foo", "XFOO");
 
     for (const test *p = test_synonym_op_queries; p->query; ++p) {
 	string expect = "Xapian::Query(";
@@ -2221,13 +2238,16 @@ qp_scale1_helper(const Xapian::Database &db, const string & q, unsigned n,
 	n = n_new;
     }
 
+    n /= 5;
+
     string q_n;
     q_n.reserve(q.size() * n);
     for (unsigned i = n; i != 0; --i) {
 	q_n += q;
     }
 
-    double time2 = time_query_parse(db, q_n, 1, flags);
+    // Time 5 repetitions so we average random variations a bit.
+    double time2 = time_query_parse(db, q_n, 5, flags);
     tout << "small=" << time1 << "s, large=" << time2 << "s\n";
 
     // Allow a factor of 2.15 difference, to cover random variation and a
@@ -2579,7 +2599,7 @@ static const test_desc tests[] = {
 int main(int argc, char **argv)
 try {
     // FIXME: It would be better to test with and without XAPIAN_CJK_NGRAM set.
-#ifdef __WIN32__
+#ifdef HAVE__PUTENV_S
     _putenv_s("XAPIAN_CJK_NGRAM", "1");
 #elif defined HAVE_SETENV
     setenv("XAPIAN_CJK_NGRAM", "1", 1);

@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
 <title>Tests</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -157,11 +161,38 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left {
-  clear: left }
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
 
-img.align-right {
-  clear: right }
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -216,10 +247,9 @@ p.topic-title {
 pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
+  font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -296,15 +326,15 @@ ul.auto-toc {
 </div>
 <div class="section" id="a-brief-guide-to-running-tests">
 <span id="running"></span><h1><a class="toc-backref" href="#id1">A Brief Guide to Running Tests</a></h1>
-<p>After a successful &quot;<tt class="docutils literal"><span class="pre">make</span></tt>&quot;, try &quot;<tt class="docutils literal"><span class="pre">make</span> <span class="pre">check</span></tt>&quot;.</p>
+<p>After a successful &quot;<tt class="docutils literal">make</tt>&quot;, try &quot;<tt class="docutils literal">make check</tt>&quot;.</p>
 <p>It's possible to run test cases individually, and get verbose output
 when one fails, etc. For more information, see the &quot;Running test
 programs&quot; section of HACKING.</p>
 </div>
 <div class="section" id="a-brief-guide-to-writing-tests">
 <span id="writing"></span><h1><a class="toc-backref" href="#id2">A Brief Guide to Writing Tests</a></h1>
-<p>Test programs live in <tt class="docutils literal"><span class="pre">tests/</span></tt>. They mostly use a standard test
-harness, in <tt class="docutils literal"><span class="pre">tests/harness/</span></tt>, which wraps each test, reports results,
+<p>Test programs live in <tt class="docutils literal">tests/</tt>. They mostly use a standard test
+harness, in <tt class="docutils literal">tests/harness/</tt>, which wraps each test, reports results,
 and generally packages things up nicely. The test harness counts how
 many testcases pass/fail/skip, catches signals and unhandled exceptions,
 and so forth. It can also also check for memory leaks and accesses to
@@ -315,15 +345,15 @@ suitably recent version is detected).</p>
 top), a table of tests (at the bottom), and a tiny main which sets the
 test harness in motion. It uses the table to figure out what the tests
 are called, and what function to call to run them.</p>
-<p>The most important test system for most people will be <tt class="docutils literal"><span class="pre">apitest</span></tt>. This
+<p>The most important test system for most people will be <tt class="docutils literal">apitest</tt>. This
 also uses the test harness, but has several tables of tests to be run
 depending what facilities each backend supports. A lot of the work is
 done by macros and helper functions, which may make it hard to work out
 quite what is going on, but make life easier once you've grasped what's
-going on. The <tt class="docutils literal"><span class="pre">main()</span></tt> function and other bits are in <tt class="docutils literal"><span class="pre">apitest.cc</span></tt>,
+going on. The <tt class="docutils literal">main()</tt> function and other bits are in <tt class="docutils literal">apitest.cc</tt>,
 and tests themselves are in various other C++ files starting api_. Each
 one of these has its own tables for various different groups of tests
-(eg: <tt class="docutils literal"><span class="pre">api_db.cc</span></tt>, which performs tests on the API that require a
+(eg: <tt class="docutils literal">api_db.cc</tt>, which performs tests on the API that require a
 database backend, has basic tests, a few specialised groups that only
 contain one or two tests, tests that require a writable database, tests
 that require a local database, and finally tests that require a remote
@@ -331,20 +361,20 @@ database).</p>
 <p>To add a new api test, figure out what the test will be dependent on and
 put it in the appropriate place (eg: if adding a test for a bug that
 occurs while writing to a database, you want a writable database, so you
-add a test to <tt class="docutils literal"><span class="pre">api_db.cc</span></tt> and reference it in the <tt class="docutils literal"><span class="pre">writabledb_tests</span></tt>
+add a test to <tt class="docutils literal">api_db.cc</tt> and reference it in the <tt class="docutils literal">writabledb_tests</tt>
 table).</p>
-<p>Currently, there's <tt class="docutils literal"><span class="pre">api_nodb.cc</span></tt> (no db required, largely testing
-query construction and boundary conditions), <tt class="docutils literal"><span class="pre">api_posdb.cc</span></tt> (db with
-positional information required) and <tt class="docutils literal"><span class="pre">api_db.cc</span></tt> (everything else,
+<p>Currently, there's <tt class="docutils literal">api_nodb.cc</tt> (no db required, largely testing
+query construction and boundary conditions), <tt class="docutils literal">api_posdb.cc</tt> (db with
+positional information required) and <tt class="docutils literal">api_db.cc</tt> (everything else,
 with lots of subgroups of tests). It's easiest to base a test on an
 existing one.</p>
-<p>You'll notice in <tt class="docutils literal"><span class="pre">apitest.cc</span></tt> that it runs all appropriate test groups
+<p>You'll notice in <tt class="docutils literal">apitest.cc</tt> that it runs all appropriate test groups
 against each backend that is being built. The backends are inmemory,
 multi, brass, chert, flint, remoteprog and remotetcp. If you need to
 create a new test group with different requirements to any current ones,
 put it in the appropriate api_ file (or create a new one, and add it
 into Makefile.am) and remember to add the group to all pertinent
-backends in <tt class="docutils literal"><span class="pre">apitest.cc</span></tt>.</p>
+backends in <tt class="docutils literal">apitest.cc</tt>.</p>
 <p>Incidentally, when fixing bugs, it's often better to write the test
 before fixing the bug. Firstly, it's easier to assure yourself that the
 bug is (a) genuine, and (b) fixed, because you see the test go from fail
@@ -366,13 +396,13 @@ test and a pointer to the function that is the test. Easy. The procedure
 is even simpler for apitest tests - there you just use DEFINE_TESTCASE
 to define your new testcase, and a script picks it up and makes sure it
 is run.</p>
-<p>Look at the bottom of <tt class="docutils literal"><span class="pre">tests/stemtest.cc</span></tt> for the test_desc array.
+<p>Look at the bottom of <tt class="docutils literal">tests/stemtest.cc</tt> for the test_desc array.
 Now look up about 20 lines to where the test functions are defined. You
 need to write a function like these which will return true or false
 depending on whether it failed or not.</p>
 <p>In addition, there are a bunch of macros to help you perform standards
 testing tasks. Things like TEST_EQUAL are all in
-<tt class="docutils literal"><span class="pre">tests/harness/testsuite.h</span></tt>. They're pretty simple to use.</p>
+<tt class="docutils literal">tests/harness/testsuite.h</tt>. They're pretty simple to use.</p>
 </div>
 </div>
 </body>

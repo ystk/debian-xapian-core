@@ -52,10 +52,10 @@ class Weight;
 class XAPIAN_VISIBILITY_DEFAULT MSet {
     public:
 	class Internal;
-	/// @internal Reference counted internals.
+	/// @private @internal Reference counted internals.
 	Xapian::Internal::RefCntPtr<Internal> internal;
 
-	/// @internal Constructor for internal use.
+	/// @private @internal Constructor for internal use.
 	explicit MSet(MSet::Internal * internal_);
 
 	/// Create an empty Xapian::MSet.
@@ -424,7 +424,7 @@ class ESetIterator;
 class XAPIAN_VISIBILITY_DEFAULT ESet {
     public:
 	class Internal;
-	/// @internal Reference counted internals.
+	/// @private @internal Reference counted internals.
 	Xapian::Internal::RefCntPtr<Internal> internal;
 
 	/// Construct an empty ESet
@@ -573,7 +573,7 @@ class XAPIAN_VISIBILITY_DEFAULT RSet {
 	/// Class holding details of RSet
 	class Internal;
 
-	/// @internal Reference counted internals.
+	/// @private @internal Reference counted internals.
 	Xapian::Internal::RefCntPtr<Internal> internal;
 
 	/// Copy constructor
@@ -652,7 +652,7 @@ class XAPIAN_VISIBILITY_DEFAULT Enquire {
 	void operator=(const Enquire & other);
 
 	class Internal;
-	/// @internal Reference counted internals.
+	/// @private @internal Reference counted internals.
 	Xapian::Internal::RefCntPtr<Internal> internal;
 
 	/** Create a Xapian::Enquire object.
@@ -904,7 +904,13 @@ class XAPIAN_VISIBILITY_DEFAULT Enquire {
 	 *
 	 * @param sort_key  value number to sort on.
 	 *
-	 * @param reverse   If true, reverses the sort order.
+	 * @param reverse   If true, reverses the sort order of sort_key.
+	 *		    Beware that in 1.2.16 and earlier, the sense
+	 *		    of this parameter was incorrectly inverted
+	 *		    and inconsistent with the other set_sort_by_...
+	 *		    methods.  This was fixed in 1.2.17, so make that
+	 *		    version a minimum requirement if this detail
+	 *		    matters to your application.
 	 */
 	void set_sort_by_relevance_then_value(Xapian::valueno sort_key,
 					      bool reverse);
@@ -923,7 +929,13 @@ class XAPIAN_VISIBILITY_DEFAULT Enquire {
 	 *
 	 * @param sorter    The functor to use for generating keys.
 	 *
-	 * @param reverse   If true, reverses the sort order.
+	 * @param reverse   If true, reverses the sort order of the generated
+	 *		    keys.  Beware that in 1.2.16 and earlier, the sense
+	 *		    of this parameter was incorrectly inverted
+	 *		    and inconsistent with the other set_sort_by_...
+	 *		    methods.  This was fixed in 1.2.17, so make that
+	 *		    version a minimum requirement if this detail
+	 *		    matters to your application.
 	 */
 	void set_sort_by_relevance_then_key(Xapian::KeyMaker * sorter,
 					    bool reverse);
@@ -969,27 +981,27 @@ class XAPIAN_VISIBILITY_DEFAULT Enquire {
 	 *		     assumed to be a relatively expensive test so may
 	 *		     be applied in a lazier fashion.
 	 *
-	 *		     @deprecated this parameter is deprecated - use the
+	 *  @deprecated      The matchspy parameter is deprecated - use the
 	 *		     newer MatchSpy class and add_matchspy() method
 	 *		     instead.
 	 *
-	 *  @return	     A Xapian::MSet object containing the results of the
+	 * @return	     A Xapian::MSet object containing the results of the
 	 *		     query.
 	 *
 	 *  @exception Xapian::InvalidArgumentError  See class documentation.
 	 *
 	 *  @{
 	 */
-	MSet get_mset(Xapian::doccount first, Xapian::doccount maxitems,
-		      Xapian::doccount checkatleast = 0,
-		      const RSet * omrset = 0,
-		      const MatchDecider * mdecider = 0) const;
 	XAPIAN_DEPRECATED(
 	MSet get_mset(Xapian::doccount first, Xapian::doccount maxitems,
 		      Xapian::doccount checkatleast,
 		      const RSet * omrset,
 		      const MatchDecider * mdecider,
 		      const MatchDecider * matchspy) const);
+	MSet get_mset(Xapian::doccount first, Xapian::doccount maxitems,
+		      Xapian::doccount checkatleast = 0,
+		      const RSet * omrset = 0,
+		      const MatchDecider * mdecider = 0) const;
 	MSet get_mset(Xapian::doccount first, Xapian::doccount maxitems,
 		      const RSet * omrset,
 		      const MatchDecider * mdecider = 0) const {

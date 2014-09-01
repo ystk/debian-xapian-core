@@ -201,9 +201,11 @@ BrassTable::read_block(uint4 n, byte * p) const
 	ssize_t bytes_read = pread(handle, reinterpret_cast<char *>(p), m,
 				   offset);
 	// normal case - read succeeded, so return.
-	if (bytes_read == m) return;
+	if (bytes_read == m) break;
 	if (bytes_read == -1) {
 	    if (errno == EINTR) continue;
+	    if (errno == EBADF && handle == -2)
+		BrassTable::throw_database_closed();
 	    string message = "Error reading block " + str(n) + ": ";
 	    message += strerror(errno);
 	    throw Xapian::DatabaseError(message);
@@ -221,6 +223,8 @@ BrassTable::read_block(uint4 n, byte * p) const
     }
 #else
     if (lseek(handle, off_t(block_size) * n, SEEK_SET) == -1) {
+	if (errno == EBADF && handle == -2)
+	    BrassTable::throw_database_closed();
 	string message = "Error seeking to block: ";
 	message += strerror(errno);
 	throw Xapian::DatabaseError(message);
@@ -228,6 +232,13 @@ BrassTable::read_block(uint4 n, byte * p) const
 
     io_read(handle, reinterpret_cast<char *>(p), block_size, block_size);
 #endif
+
+    int dir_end = DIR_END(p);
+    if (rare(dir_end < DIR_START || unsigned(dir_end) > block_size)) {
+	string msg("dir_end invalid in block ");
+	msg += str(n);
+	throw Xapian::DatabaseCorruptError(msg);
+    }
 }
 
 /** write_block(n, p) writes block n in the DB file from address p.
@@ -360,7 +371,7 @@ BrassTable::block_to_cursor(Brass::Cursor * C_, int j, uint4 n) const
 
     // Check if the block is in the built-in cursor (potentially in
     // modified form).
-    if (writable && n == C[j].n) {
+    if (n == C[j].n) {
 	if (p != C[j].p)
 	    memcpy(p, C[j].p, block_size);
     } else {
@@ -454,7 +465,7 @@ BrassTable::alter()
 int
 BrassTable::find_in_block(const byte * p, Key key, bool leaf, int c)
 {
-    LOGCALL_STATIC(DB, int, "BrassTable::find_in_block", (void*)p | (const void *)key.get_address() | leaf | c);
+    LOGCALL_STATIC(DB, int, "BrassTable::find_in_block", (const void*)p | (const void *)key.get_address() | leaf | c);
     int i = DIR_START;
     if (leaf) i -= D2;
     int j = DIR_END(p);
@@ -1696,7 +1707,6 @@ BrassTable::create_and_open(unsigned int block_size_)
     Assert(writable);
     close();
 
-    if (block_size_ == 0) abort();
     set_block_size(block_size_);
 
     // FIXME: it would be good to arrange that this works such that there's
@@ -1708,7 +1718,7 @@ BrassTable::create_and_open(unsigned int block_size_)
     /* create the base file */
     BrassTable_base base_;
     base_.set_revision(revision_number);
-    base_.set_block_size(block_size_);
+    base_.set_block_size(block_size);
     base_.set_have_fakeroot(true);
     base_.set_sequential(true);
     base_.write_to_file(name + "baseA", 'A', string(), -1, NULL);
