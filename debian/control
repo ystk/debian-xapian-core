@@ -2,8 +2,8 @@ Source: xapian-core
 Section: libs
 Priority: important
 Maintainer: Olly Betts <olly@survex.com>
-Standards-Version: 3.9.5
-Build-Depends: debhelper (>= 7), autotools-dev, zlib1g-dev, uuid-dev
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 7), autotools-dev, zlib1g-dev, uuid-dev, dh-autoreconf
 Homepage: http://xapian.org/
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/xapian-core.git
 Vcs-git: git://anonscm.debian.org/collab-maint/xapian-core.git

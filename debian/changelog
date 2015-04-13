@@ -1,3 +1,20 @@
+xapian-core (1.2.19-1) unstable; urgency=low
+
+  * New upstream release.
+  * Ack NMU.
+  * New patch force-serial-tests.patch to clean up fall out from
+    dh-autoreconf change.
+  * debian/control.in: "Standards-Version: 3.9.6" (no changes required).
+
+ -- Olly Betts <olly@survex.com>  Wed, 22 Oct 2014 00:50:39 +1300
+
+xapian-core (1.2.18-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload with maintainer permission.
+  * Build using dh-autoreconf.  (Closes: #746238, #757155).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 02 Sep 2014 16:12:09 +0200
+
 xapian-core (1.2.18-1) unstable; urgency=medium
 
   * New upstream release.

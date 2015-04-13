@@ -1,0 +1,21 @@
+Description: Force serial-tests in automake
+ Newer automake defaults to a parallel test driver, which swallows all output
+ until the test program has finished.  This may lead to builds timing out due
+ to not producing any output for changes, and is generally less helpful for
+ debugging a FTBFS in the testsuite, so force the serial-tests option, which
+ was the only option in older automake.  This option was added in automake
+ 1.12, so we require that too.
+Author: Olly Betts <olly@survex.com>
+Forwarded: not-needed
+Last-Update: 2014-10-21
+
+--- xapian-core-1.2.19.orig/tests/Makefile.am
++++ xapian-core-1.2.19/tests/Makefile.am
+@@ -1,6 +1,6 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+-AUTOMAKE_OPTIONS = 1.5 subdir-objects
++AUTOMAKE_OPTIONS = 1.12 serial-tests subdir-objects
+ 
+ # `make QUIET=' overrides `./configure --enable-quiet'.
+ # `make QUIET=y' overrides `./configure' without `--enable-quiet'.

@@ -126,11 +126,7 @@ configure: configure-stamp
 configure-stamp: debian/control
 	dh_testdir
 
-	# Use the latest config.sub and config.guess from the autotools-dev
-	# package.
-	rm -f config.sub config.guess
-	ln -s /usr/share/misc/config.sub config.sub
-	ln -s /usr/share/misc/config.guess config.guess
+	dh_autoreconf
 
 	# Report kernel and compiler version so upstream PLATFORMS file can be
 	# updated from buildd logs.
@@ -246,7 +242,7 @@ clean: debian/control
 	dh_testdir
 	dh_testroot
 	rm -rf build build-sse2
-	rm -f config.sub config.guess
+	dh_autoreconf_clean
 	dh_clean
 
 .PHONY: maint maintclean configure build build-arch build-indep install binary binary-arch binary-indep clean
