@@ -1,3 +1,137 @@
+Tue Oct 21 00:32:49 GMT 2014  Olly Betts <olly@survex.com>
+
+	* NEWS,configure.ac: Update for 1.2.19.
+
+Mon Oct 20 10:49:23 GMT 2014  Olly Betts <olly@survex.com>
+
+	* NEWS: Update.
+
+Mon Oct 20 09:40:14 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* matcher/phrasepostlist.cc,tests/api_backend.cc: If the anchor term
+	  for a phrase is the first or last, set the min or max to its
+	  position respectively.  Fixes the testcase in #657, but may not be
+	  a complete fix.
+
+Sun Oct 19 08:14:51 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* matcher/exactphrasepostlist.cc: We never try to build an
+	  ExactPhrasePostList over 0 or 1 terms, so simply assert we don't,
+	  rather than having an explicit check for it in the code.
+
+Sun Oct 12 06:08:05 GMT 2014  Olly Betts <olly@survex.com>
+
+	* NEWS: Update.
+
+Fri Oct 10 11:18:43 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* backends/chert/chert_btreebase.cc,backends/chert/chert_table.cc:
+	  Only full sync the final base file written.
+
+Fri Oct 10 03:20:03 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* common/debuglog.h: Suppress unused typedef warnings from debugging
+	  logging macros, which occur in functions which always exit via
+	  throwing an exception.
+
+Thu Oct 09 23:01:37 GMT 2014  Olly Betts <olly@survex.com>
+
+	* backends/brass/brass_database.cc,
+	  backends/brass/brass_spellingwordslist.cc,
+	  backends/chert/chert_database.cc,
+	  backends/chert/chert_spellingwordslist.cc,matcher/mergepostlist.cc:
+	  Fix mismatched return type in debug logging annotations so that code
+	  compiles when configured with --enable-log.  These are already fixed
+	  on trunk.
+
+Thu Oct 09 22:59:34 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* common/pretty.h: Fix debug logging code to compile with clang.
+	  (fixes #657, reported by Germán M. Bravo)
+
+Thu Oct 09 10:41:59 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* tests/Makefile.am: Remove .replicatmp upon "make clean".
+
+Thu Oct 09 10:31:53 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* docs/overview.rst: Add missing database path to example of using
+	  xapian-progsrv in a stub database file.
+
+Thu Oct 09 10:26:48 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* tests/harness/fdtracker.cc: Fix code typo in recent change to skip
+	  apparent leaks of /dev/urandom.
+
+Sat Sep 06 02:11:02 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* tests/harness/fdtracker.cc: Don't report apparent leaks of fds
+	  opened on /dev/urandom - at least on Linux, something in the C
+	  library seems to lazily open it, and the report of a possible leak
+	  followed by assurance that it's OK really is just noise we could
+	  do without.
+
+Fri Sep 05 15:11:46 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* include/xapian/compactor.h: Fix formatting of doxygen comment.
+
+Fri Sep 05 15:10:17 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* HACKING: freecode no longer accepts updates, so drop that item from
+	  the release checklist.
+
+Fri Sep 05 14:51:46 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* api/,backends/brass/,backends/chert/,backends/dbfactory_remote.cc,
+	  matcher/mergepostlist.cc,matcher/remotesubmatch.cc,
+	  net/progclient.cc: Add missing RETURN() markup for debug logging,
+	  highlighted by warning from recent GCC.
+
+Fri Sep 05 14:34:26 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* backends/dbfactory.cc: Fix incorrect return type in logging
+	  annotations for InMemory::open().
+
+Mon Aug 11 05:59:35 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* configure.ac: For Sun's C++ compiler, pass -library=Crun separately
+	  since libtool looks for " -library=stlport4 " (with the spaces).
+	  (fixes#650)
+
+Mon Aug 11 05:55:54 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* configure.ac: Rename XAPIAN_TEST_CXXFLAGS_ to XAPIAN_TEST_CXXFLAGS
+	  (since the latter is never used) and make it take a variable to
+	  add the flags to.  Also, fix it to restore CXXFLAGS correctly if
+	  the success case contains "break".
+
+Sat Aug 02 09:43:04 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* weight/bm25weight.cc: Improve BM25 upper bound in the case when our
+	  wdf upper bound > our document length lower bound.  Thanks to
+	  Craig Macdonald for pointing out this trick.
+
+Sat Aug 02 06:42:18 GMT 2014  Olly Betts <olly@survex.com>
+
+	* Backport change from trunk:
+	* weight/bm25weight.cc: Pre-multiply termweight by (param_k1 + 1).
+
 Sun Jun 22 04:26:30 GMT 2014  Olly Betts <olly@survex.com>
 
 	* AUTHORS,NEWS,configure.ac: Update for 1.2.18.

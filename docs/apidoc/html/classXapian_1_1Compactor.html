@@ -193,7 +193,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Set the compaction level. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">compaction</td><td>Available values are: - Xapian::Compactor::STANDARD - Don't split items unnecessarily. - Xapian::Compactor::FULL - Split items whenever it saves space (the default). - Xapian::Compactor::FULLER - Allow oversize items to save more space (not recommended if you ever plan to update the compacted database). </td></tr>
+    <tr><td class="paramname">compaction</td><td>Available values are:<ul>
+<li>Xapian::Compactor::STANDARD - Don't split items unnecessarily.</li>
+<li>Xapian::Compactor::FULL - Split items whenever it saves space (the default).</li>
+<li>Xapian::Compactor::FULLER - Allow oversize items to save more space (not recommended if you ever plan to update the compacted database). </li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
@@ -324,8 +329,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><!-- contents -->
 <hr>
 <address><small>
-Documentation for Xapian (version 1.2.18).<br>
-Generated on Sun Jun 22 2014 by
+Documentation for Xapian (version 1.2.19).<br>
+Generated on Tue Oct 21 2014 by
 <a href="http://www.doxygen.org/">Doxygen 1.8.5</a>.
 </small></address>
 </body>
