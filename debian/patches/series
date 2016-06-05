@@ -1,1 +1,2 @@
 force-serial-tests.patch
+increment-cursor-version-on-cancel-or-reopen.patch

@@ -1,3 +1,10 @@
+xapian-core (1.2.19-1+deb8u1) stable; urgency=medium
+
+  * New patch increment-cursor-version-on-cancel-or-reopen.patch fixing
+    possible database corruption, especially with recoll.  (Closes: #808610)
+
+ -- Olly Betts <olly@survex.com>  Tue, 19 Apr 2016 11:49:06 +1200
+
 xapian-core (1.2.19-1) unstable; urgency=low
 
   * New upstream release.
